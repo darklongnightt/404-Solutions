@@ -44,7 +44,7 @@ if (isset($_POST['submit'])){
 
 <section class="container grey-text">
 	<h4 class="center">New Product</h4>
-	<form action="AddProduct.php" class="white" method="POST">
+	<form action="AddProduct.php" class="grey" method="POST">
 		<label>Title: </label>
 		<input type="text" name="title" value="<?php echo htmlspecialchars($title); ?>">
 		<div class="red-text"><?php echo htmlspecialchars($errors['title']); ?></div>
