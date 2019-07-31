@@ -1,6 +1,8 @@
 <?php 
-
-
+	$conn = mysqli_connect('localhost', 'xavier', 'pw1234', 'product_listing');
+	if (!$conn) {
+		echo 'Connection Error: '.mysqli_connect_error();
+	}
  ?>
  
 <!DOCTYPE html>
