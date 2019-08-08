@@ -1,10 +1,5 @@
 <?php
-// Connecting to mySQL database
-$conn = mysqli_connect('localhost', 'xavier', 'pw1234', 'super_data');
-if (!$conn) {
-	echo 'Connection Error: ' . mysqli_connect_error();
-}
-
+include('config/db_connect.php');
 // Getting data from table: product_listing as associative array
 $query = 'SELECT title, description, price FROM product_listing ORDER BY created_at DESC';
 $result = mysqli_query($conn, $query);

@@ -1,6 +1,6 @@
 
 <head>
-	<title>WebMart Analytics</title>
+	<title>Super Data</title>
 	<!-- Compiled and minified CSS -->
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
 
@@ -22,10 +22,10 @@
 <body class="grey lighten-4">
 	<nav class="white z-depth-0">
 		<div class="container">
-			<a href="#" class="brand-logo brand-text center">WebMart Analytics</a>
+			<a href="index.php" class="brand-logo brand-text center">Super Data</a>
 			<ul id="nav-mobile" class="right hide-on-small-and-down">
 				<li>
-					<a href="#" class="btn brand z-depth-0">List Product</a>
+					<a href="list_product.php" class="btn brand z-depth-0">List Product</a>
 				</li>
 			</ul> 
 		</div>

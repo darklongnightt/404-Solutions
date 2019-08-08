@@ -1,4 +1,6 @@
 <?php
+include('config/db_connect.php');
+
 $title = $desc = $price = '';
 $errors = array('title'=>'', 'desc'=>'', 'price'=>'');
 
@@ -25,15 +27,22 @@ if (isset($_POST['submit'])){
 		$errors['price'] = 'Product price is required!';
 	} else {
 		$price = $_POST['price'];
-		if (!preg_match('/^[0-9]+$/', $price)) {
-			$errors['price'] = 'Price must be in numbers only!';
-		}
 	}
 	
 	// Checks if form is error free
 	if (!array_filter($errors)) {
-		//Saves data to db and redirects user to homepage
-		header('Location: index.php');
+		// Formatting string for db security
+		$title = mysqli_real_escape_string($conn, $_POST['title']);
+		$desc = mysqli_real_escape_string($conn, $_POST['desc']);
+		
+		// Inserts data to db and redirects user to homepage
+		$sql = "INSERT INTO product_listing(title, description, price) 
+		VALUES('$title', '$desc', '$price')";
+		if(mysqli_query($conn, $sql)) {
+			header('Location: index.php');
+		} else {
+			echo 'Query Error: '.mysqli_error($conn);
+		}
 	}
 }
 ?>
@@ -44,7 +53,7 @@ if (isset($_POST['submit'])){
 
 <section class="container grey-text">
 	<h4 class="center">New Product</h4>
-	<form action="AddProduct.php" class="white" method="POST">
+	<form action="list_product.php" class="white" method="POST">
 		<label>Title: </label>
 		<input type="text" name="title" value="<?php echo htmlspecialchars($title); ?>">
 		<div class="red-text"><?php echo htmlspecialchars($errors['title']); ?></div>
@@ -54,7 +63,7 @@ if (isset($_POST['submit'])){
 		<div class="red-text"><?php echo htmlspecialchars($errors['desc']); ?></div>
 
 		<label>Price: </label>
-		<input type="text" name="price" value="<?php echo htmlspecialchars($price); ?>">
+		<input type="number" name="price" min="0" value="<?php echo htmlspecialchars($price); ?>" step=".01">
 		<div class="red-text"><?php echo htmlspecialchars($errors['price']); ?></div>
 
 		<div class="center">
