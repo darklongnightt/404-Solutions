@@ -1,20 +1,29 @@
-
 <head>
 	<title>Super Data</title>
 	<!-- Compiled and minified CSS -->
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
 
 	<style type="text/css">
-		.brand{
+		.brand {
 			background: #cbb09c !important;
 		}
-		.brand-text{
+
+		.brand-text {
 			color: #cbb09c !important;
 		}
-		form{
+
+		form {
 			max-width: 460px;
 			margin: 20px auto;
 			padding: 20px;
+		}
+
+		.product-icon {
+			width: 100px;
+			margin: 40px auto -30px;
+			display: block;
+			position: relative;
+			top: -30px;
 		}
 	</style>
 </head>
@@ -27,6 +36,6 @@
 				<li>
 					<a href="list_product.php" class="btn brand z-depth-0">List Product</a>
 				</li>
-			</ul> 
+			</ul>
 		</div>
 	</nav>
