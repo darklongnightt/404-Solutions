@@ -1,7 +1,7 @@
 <?php
 include('config/db_connect.php');
-// Getting data from table: product_listing as associative array
-$query = 'SELECT title, description, price, id FROM product_listing ORDER BY created_at DESC';
+// Getting data from table: product as associative array
+$query = 'SELECT PDTNAME, DESCRIPTION, CATEGORY, BRAND, CSTPRICE, PDTPRICE, PDTDISCNT, PDTID FROM product ORDER BY CREATED_AT DESC';
 $result = mysqli_query($conn, $query);
 $productList = mysqli_fetch_all($result, MYSQLI_ASSOC);
 
@@ -22,11 +22,11 @@ mysqli_close($conn);
 				<div class="card z-depth-0">
 					<img src="img/product_icon.svg" class="product-icon">
 					<div class="card-content center">
-						<h6> <?php echo htmlspecialchars($product['title']); ?> </h6>
-						<div> <?php echo htmlspecialchars($product['description']); ?> </div>
-						<div> <?php echo htmlspecialchars('$'.$product['price']); ?> </div>
+						<h6> <?php echo htmlspecialchars($product['PDTNAME']); ?> </h6>
+						<div> <?php echo htmlspecialchars($product['DESCRIPTION']); ?> </div>
+						<div> <?php echo htmlspecialchars('$'.$product['PDTPRICE']); ?> </div>
 						<div class="card-action right-align">
-							<a href="product_details.php?id=<?php echo $product['id']; ?>" class="brand-text">more info</a>
+							<a href="product_details.php?id=<?php echo $product['PDTID']; ?>" class="brand-text">more info</a>
 						</div>
 					</div>
 				</div>

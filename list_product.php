@@ -1,18 +1,18 @@
 <?php
 include('config/db_connect.php');
 
-$title = $desc = $price = '';
-$errors = array('title'=>'', 'desc'=>'', 'price'=>'');
+$pdtname = $desc = $brand = $category = $pdtqty = $pdtprice = $cstprice = $discount = '';
+$errors = array('pdtname'=>'', 'desc'=>'', 'brand'=>'', 'category'=>'', 'pdtqty'=>'', 'pdtprice'=>'', 'cstprice'=>'', 'discount'=>'');
 
 //Checks if button of name="submit" is clicked
 if (isset($_POST['submit'])){
 	//Gets data from the POST request 
-	if (empty($_POST['title'])) {
-		$errors['title'] = 'Product title is required!';
+	if (empty($_POST['pdtname'])) {
+		$errors['pdtname'] = 'Product name is required!';
 	} else {
-		$title = $_POST['title'];
-		if (!preg_match('/^[a-zA-Z\s]+$/', $title)) {
-			$errors['title'] = 'Title must be letters and spaces only!';
+		$pdtname = $_POST['pdtname'];
+		if (!preg_match('/^[a-zA-Z\s]+$/', $pdtname)) {
+			$errors['pdtname'] = 'Product name must be letters and spaces only!';
 		}
 	}
 
@@ -20,24 +20,59 @@ if (isset($_POST['submit'])){
 		$errors['desc'] = 'Product description is required!';
 	} else {
 		$desc = $_POST['desc'];
+	
+	}
+
+	if (empty($_POST['brand'])) {
+		$errors['brand'] = 'Product brand is required!';
+	} else {
+		$brand = $_POST['brand'];
 		
 	}
 
-	if (empty($_POST['price'])) {
-		$errors['price'] = 'Product price is required!';
+	if (empty($_POST['category'])) {
+		$errors['desc'] = 'Product category is required!';
 	} else {
-		$price = $_POST['price'];
+		$category = $_POST['category'];
+		
+	}
+
+	if (empty($_POST['pdtqty'])) {
+		$errors['pdtqty'] = 'Product quantity is required!';
+	} else {
+		$pdtqty = $_POST['pdtqty'];
+		
+	}
+
+	if (empty($_POST['pdtprice'])) {
+		$errors['pdtprice'] = 'Product price is required!';
+	} else {
+		$pdtprice = $_POST['pdtprice'];
+	}
+
+	if (empty($_POST['cstprice'])) {
+		$errors['cstprice'] = 'Cost price is required!';
+	} else {
+		$cstprice = $_POST['cstprice'];
+	}
+
+	if (empty($_POST['discount'])) {
+		$errors['discount'] = 'Product discount is required!';
+	} else {
+		$discount = $_POST['discount'];
 	}
 	
 	// Checks if form is error free
 	if (!array_filter($errors)) {
 		// Formatting string for db security
-		$title = mysqli_real_escape_string($conn, $_POST['title']);
+		$pdtname = mysqli_real_escape_string($conn, $_POST['pdtname']);
 		$desc = mysqli_real_escape_string($conn, $_POST['desc']);
+		$brand = mysqli_real_escape_string($conn, $_POST['brand']);
+		$category = mysqli_real_escape_string($conn, $_POST['category']);
 		
 		// Inserts data to db and redirects user to homepage
-		$sql = "INSERT INTO product_listing(title, description, price) 
-		VALUES('$title', '$desc', '$price')";
+		$sql = "INSERT INTO product(PDTNAME, DESCRIPTION, BRAND, CATEGORY, PDTQTY, CSTPRICE, PDTPRICE, PDTDISCNT) 
+		VALUES('$pdtname', '$desc', '$brand', '$category', '$pdtqty', '$cstprice', '$pdtprice', '$discount')";
 		if(mysqli_query($conn, $sql)) {
 			header('Location: index.php');
 		} else {
@@ -54,17 +89,37 @@ if (isset($_POST['submit'])){
 <section class="container grey-text">
 	<h4 class="center">New Product</h4>
 	<form action="list_product.php" class="white" method="POST">
-		<label>Title: </label>
-		<input type="text" name="title" value="<?php echo htmlspecialchars($title); ?>">
-		<div class="red-text"><?php echo htmlspecialchars($errors['title']); ?></div>
+		<label>Product Name: </label>
+		<input type="text" name="pdtname" value="<?php echo htmlspecialchars($pdtname); ?>">
+		<div class="red-text"><?php echo htmlspecialchars($errors['pdtname']); ?></div>
 
 		<label>Description: </label>
 		<input type="text" name="desc" value="<?php echo htmlspecialchars($desc); ?>">
 		<div class="red-text"><?php echo htmlspecialchars($errors['desc']); ?></div>
 
-		<label>Price: </label>
-		<input type="number" name="price" min="0" value="<?php echo htmlspecialchars($price); ?>" step=".01">
-		<div class="red-text"><?php echo htmlspecialchars($errors['price']); ?></div>
+		<label>Brand: </label>
+		<input type="text" name="brand" value="<?php echo htmlspecialchars($brand); ?>">
+		<div class="red-text"><?php echo htmlspecialchars($errors['brand']); ?></div>
+
+		<label>Category: </label>
+		<input type="text" name="category" value="<?php echo htmlspecialchars($category); ?>">
+		<div class="red-text"><?php echo htmlspecialchars($errors['category']); ?></div>
+
+		<label>Quantity Available: </label>
+		<input type="number" name="pdtqty" value="<?php echo htmlspecialchars($pdtqty); ?>">
+		<div class="red-text"><?php echo htmlspecialchars($errors['pdtqty']); ?></div>
+
+		<label>Product Price: </label>
+		<input type="number" name="pdtprice" min="0" value="<?php echo htmlspecialchars($pdtprice); ?>" step=".01">
+		<div class="red-text"><?php echo htmlspecialchars($errors['pdtprice']); ?></div>
+
+		<label>Cost Price: </label>
+		<input type="number" name="cstprice" min="0" value="<?php echo htmlspecialchars($cstprice); ?>" step=".01">
+		<div class="red-text"><?php echo htmlspecialchars($errors['cstprice']); ?></div>
+
+		<label>Discount: </label>
+		<input type="number" name="discount" min="0" value="<?php echo htmlspecialchars($discount); ?>" step=".01">
+		<div class="red-text"><?php echo htmlspecialchars($errors['discount']); ?></div>
 
 		<div class="center">
 			<input type="submit" name="submit" type="submit" class="btn brand z-depth-0">
