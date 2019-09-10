@@ -31,7 +31,7 @@ if (isset($_POST['submit'])){
 	}
 
 	if (empty($_POST['category'])) {
-		$errors['desc'] = 'Product category is required!';
+		$errors['category'] = 'Product category is required!';
 	} else {
 		$category = $_POST['category'];
 		
@@ -57,7 +57,7 @@ if (isset($_POST['submit'])){
 	}
 
 	if (empty($_POST['discount'])) {
-		$errors['discount'] = 'Product discount is required!';
+		$discount = 0;
 	} else {
 		$discount = $_POST['discount'];
 	}

@@ -36,6 +36,14 @@
 				<li>
 					<a href="list_product.php" class="btn brand z-depth-0">List Product</a>
 				</li>
+
+				<li>
+					<a href="register.php" class="btn brand z-depth-0">Register</a>
+				</li>
+
+				<li>
+					<a href="login.php" class="btn brand z-depth-0">Log In</a>
+				</li>
 			</ul>
 		</div>
 	</nav>

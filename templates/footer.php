@@ -1,3 +1,3 @@
 <footer class="section">
-	<div class="center grey-text">Copyright 404-Solutions 2019</div>
+	<div class="center grey-text">© 404-Solutions</div>
 </footer>
