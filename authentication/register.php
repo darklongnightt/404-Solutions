@@ -2,8 +2,9 @@
 include('../config/db_connect.php');
 include('../templates/header.php');
 
-$password = $retypedpassword = $hashedpassword = $firstname = $lastname = $dob = $email = $gender = $userid = '';
+$password = $retypedpassword = $hashedpassword = $firstname = $lastname = $dob = $email = $gender = $userid = $phoneno ='';
 $errors = array('password' => '', 'retypedpassword' => '', 'firstname' => '', 'lastname' => '', 'dob' => '', 'email' => '', 'gender' => '', 'phoneno' => '');
+$today = date('Y-m-d');
 
 //Checks if button of name="submit" is clicked
 if (isset($_POST['submit'])) {
@@ -50,6 +51,15 @@ if (isset($_POST['submit'])) {
         $dob = $_POST['dob'];
     }
 
+    if (empty($_POST['phoneno'])) {
+        $errors['phoneno'] = 'Phone number is required!';
+    } else {
+        $phoneno = $_POST['phoneno'];
+        if (!preg_match('/^[0-9]*$/', $phoneno)) {
+			$errors['phoneno'] = 'Phone number must be numeric!';
+		}
+    }
+
     if (empty($_POST['password'])) {
         $errors['password'] = 'Password is required!';
     } else {
@@ -74,6 +84,7 @@ if (isset($_POST['submit'])) {
         $firstname = mysqli_real_escape_string($conn, $_POST['firstname']);
         $lastname = mysqli_real_escape_string($conn, $_POST['lastname']);
         $password = mysqli_real_escape_string($conn, $_POST['password']);
+        $phoneno = mysqli_real_escape_string($conn, $_POST['phoneno']);
 
         // Usage of password_hash() that with inbuild default generated salt
         $hashedpassword = mysqli_real_escape_string($conn, password_hash($password, PASSWORD_DEFAULT));
@@ -91,8 +102,8 @@ if (isset($_POST['submit'])) {
         } while (!$unique);
 
         // Inserts data to db and redirects user to homepage
-        $sql = "INSERT INTO customer(EMAIL, FIRSTNAME, LASTNAME, PASSWORD, DOB, GENDER, USERID) 
-		VALUES('$email', '$firstname', '$lastname', '$hashedpassword', '$dob', '$gender', '$userid')";
+        $sql = "INSERT INTO customer(EMAIL, FIRSTNAME, LASTNAME, PASSWORD, DOB, GENDER, USERID, PHONENO) 
+		VALUES('$email', '$firstname', '$lastname', '$hashedpassword', '$dob', '$gender', '$userid', '$phoneno')";
         if (mysqli_query($conn, $sql)) {
             // Set session variables
             $_SESSION['U_UID'] = $userid;
@@ -136,27 +147,31 @@ if (isset($_POST['submit'])) {
         <label>Gender: </label>
         <p>
             <label>
-                <input name="gender" type="radio" value="M" <?php if (isset($gender) && $gender=="m") echo "checked";?> />
+                <input name="gender" type="radio" value="M" <?php if (isset($gender) && $gender=="M") echo "checked";?>>
                 <span>Male</span>
             </label>
         </p>
         <p>
             <label>
-                <input name="gender" type="radio" value="F" <?php if (isset($gender) && $gender=="f") echo "checked";?>/>
+                <input name="gender" type="radio" value="F" <?php if (isset($gender) && $gender=="F") echo "checked";?>>
                 <span>Female</span>
             </label>
         </p>
         <p>
             <label>
-                <input name="gender" type="radio" value="O" <?php if (isset($gender) && $gender=="o") echo "checked";?>/>
+                <input name="gender" type="radio" value="O" <?php if (isset($gender) && $gender=="O") echo "checked";?>>
                 <span>Other</span>
             </label>
         </p>
         <div class="red-text"><?php echo htmlspecialchars($errors['gender']); ?></div>
 
         <label>Birthday: </label>
-        <input type="date" name="dob" value="<?php echo htmlspecialchars($dob); ?>">
+        <input type="date" name="dob" min="1900-01-01" max="<?php echo $today ?>" value="<?php echo $dob ?>">
         <div class="red-text"><?php echo htmlspecialchars($errors['dob']); ?></div>
+
+        <label>Phone Number: </label>
+        <input type="text" name="phoneno" value="<?php echo htmlspecialchars($phoneno); ?>">
+        <div class="red-text"><?php echo htmlspecialchars($errors['phoneno']); ?></div>
 
         <label>Password: </label>
         <input type="password" name="password" value="<?php echo htmlspecialchars($password); ?>">
@@ -167,7 +182,7 @@ if (isset($_POST['submit'])) {
         <div class="red-text"><?php echo htmlspecialchars($errors['retypedpassword']); ?></div>
 
         <div class="center">
-            <input type="submit" name="submit" type="submit" class="btn brand z-depth-0">
+            <input type="submit" name="submit" value="register" class="btn brand z-depth-0">
         </div>
     </form>
 </section>
