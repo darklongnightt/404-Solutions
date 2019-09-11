@@ -1,5 +1,7 @@
 <?php
 include('config/db_connect.php');
+include("templates/header.php");
+
 // Getting data from table: product as associative array
 $query = 'SELECT PDTNAME, DESCRIPTION, CATEGORY, BRAND, CSTPRICE, PDTPRICE, PDTDISCNT, PDTID FROM product ORDER BY CREATED_AT DESC';
 $result = mysqli_query($conn, $query);
@@ -12,7 +14,6 @@ mysqli_close($conn);
 
 <!DOCTYPE html>
 <html>
-<?php include("templates/header.php"); ?>
 
 <h4 class="center grey-text">Products</h4>
 <div class="container">
@@ -24,10 +25,11 @@ mysqli_close($conn);
 					<div class="card-content center">
 						<h6> <?php echo htmlspecialchars($product['PDTNAME']); ?> </h6>
 						<div> <?php echo htmlspecialchars($product['DESCRIPTION']); ?> </div>
-						<div> <?php echo htmlspecialchars('$'.$product['PDTPRICE']); ?> </div>
+						<div> <?php echo htmlspecialchars('$' . $product['PDTPRICE']); ?> </div>
 						<div class="card-action right-align">
 							<a href="product_details.php?id=<?php echo $product['PDTID']; ?>" class="brand-text">more info</a>
 						</div>
+
 					</div>
 				</div>
 			</div>

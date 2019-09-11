@@ -1,3 +1,7 @@
+<?php
+session_start();
+?>
+
 <head>
 	<title>Super Data</title>
 	<!-- Compiled and minified CSS -->
@@ -33,16 +37,27 @@
 		<div class="container">
 			<a href="index.php" class="brand-logo brand-text center">Super Data</a>
 			<ul id="nav-mobile" class="right hide-on-small-and-down">
+
+				<?php if (isset($_SESSION['U_UID'])) { ?>
+					<li>
+						<a href="../index.php" class="btn btn-floating red lighten-2"><?php echo $_SESSION['U_INITIALS'] ?></a>
+					</li>
+
+					<li>
+						<a href="../authentication/logout.php" class="btn brand z-depth-0">Logout</a>
+					</li>
+				<?php } else { ?>
+					<li>
+						<a href="../authentication/register.php" class="btn brand z-depth-0">Register</a>
+					</li>
+
+					<li>
+						<a href="../authentication/login.php" class="btn brand z-depth-0">Login</a>
+					</li>
+				<?php } ?>
+
 				<li>
 					<a href="list_product.php" class="btn brand z-depth-0">List Product</a>
-				</li>
-
-				<li>
-					<a href="register.php" class="btn brand z-depth-0">Register</a>
-				</li>
-
-				<li>
-					<a href="login.php" class="btn brand z-depth-0">Log In</a>
 				</li>
 			</ul>
 		</div>

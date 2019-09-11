@@ -1,5 +1,6 @@
 <?php
 include("config/db_connect.php");
+include("templates/header.php");
 
 // Checks if link contains product id
 if (isset($_GET['id'])) {
@@ -29,14 +30,12 @@ if (isset($_POST['delete'])) {
 ?>
 
 <html>
-<?php include("templates/header.php"); ?>
 <?php if ($product) : ?>
     <div class="container center">
         <h4><?php echo htmlspecialchars($product['PDTNAME']); ?></h4>
         <p><?php echo 'Description: ' . htmlspecialchars($product['DESCRIPTION']); ?></p>
         <p><?php echo 'Category: ' . htmlspecialchars($product['CATEGORY']); ?></p>
         <p><?php echo 'Brand: ' . htmlspecialchars($product['BRAND']); ?></p>
-
 
         <p><?php echo 'Product Price: $' . htmlspecialchars($product['PDTPRICE']); ?></p>
         <p><?php echo 'Cost Price: $' . htmlspecialchars($product['CSTPRICE']); ?></p>

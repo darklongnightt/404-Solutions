@@ -1,5 +1,6 @@
 <?php
-include('config/db_connect.php');
+include('../config/db_connect.php');
+include('../templates/header.php');
 
 $password = $retypedpassword = $hashedpassword = $firstname = $lastname = $dob = $email = $gender = $userid = '';
 $errors = array('password' => '', 'retypedpassword' => '', 'firstname' => '', 'lastname' => '', 'dob' => '', 'email' => '', 'gender' => '', 'phoneno' => '');
@@ -93,7 +94,16 @@ if (isset($_POST['submit'])) {
         $sql = "INSERT INTO customer(EMAIL, FIRSTNAME, LASTNAME, PASSWORD, DOB, GENDER, USERID) 
 		VALUES('$email', '$firstname', '$lastname', '$hashedpassword', '$dob', '$gender', '$userid')";
         if (mysqli_query($conn, $sql)) {
-            header('Location: index.php');
+            // Set session variables
+            $_SESSION['U_UID'] = $userid;
+            $_SESSION['U_FIRSTNAME'] = $firstname;
+            $_SESSION['U_LASTNAME'] = $lastname;
+            $_SESSION['U_EMAIL'] = $email;
+            $_SESSION['U_GENDER'] = $gender;
+            $_SESSION['U_DOB'] = $dob;
+            $_SESSION['U_INITIALS'] = $firstname[0] . $lastname[0];
+
+            header('Location: ../index.php?register=success');
         } else {
             echo 'Query Error: ' . mysqli_error($conn);
         }
@@ -106,7 +116,7 @@ if (isset($_POST['submit'])) {
 
 <!DOCTYPE html>
 <html>
-<?php include("templates/header.php"); ?>
+
 
 <section class="container grey-text">
     <h4 class="center">Register New Account</h4>
@@ -162,6 +172,6 @@ if (isset($_POST['submit'])) {
     </form>
 </section>
 
-<?php include("templates/footer.php"); ?>
+<?php include("../templates/footer.php"); ?>
 
 </html>

@@ -1,5 +1,6 @@
 <?php
-include('config/db_connect.php');
+include('../config/db_connect.php');
+include("../templates/header.php");
 
 $password = $email = $checkPassword = '';
 $errors = array('password' => '', 'email' => '');
@@ -25,7 +26,6 @@ if (isset($_POST['submit'])) {
         // Formatting string for db security
         $email = mysqli_real_escape_string($conn, $_POST['email']);
         $password = mysqli_real_escape_string($conn, $_POST['password']);
-        $hashedPassword = mysqli_real_escape_string($conn, hash('sha256', $password));
 
         // Gets a customer record from db as a single associative array
         $sql = "SELECT * FROM customer WHERE EMAIL = '$email'";
@@ -33,16 +33,28 @@ if (isset($_POST['submit'])) {
         if ($customer = mysqli_fetch_assoc($result)) {
             // Usage of password_verify() results in constant time preventing timing attacks
             $checkPassword = password_verify($password, $customer['PASSWORD']);
+
+            // Default deny policy
+            if (!$checkPassword) {
+                $errors['password'] = 'Invalid email or password!';
+            } else if ($checkPassword) {
+                // Set session variables
+                $_SESSION['U_UID'] = $customer['USERID'];
+                $_SESSION['U_FIRSTNAME'] = $customer['FIRSTNAME'];
+                $_SESSION['U_LASTNAME'] = $customer['LASTNAME'];
+                $_SESSION['U_EMAIL'] = $customer['EMAIL'];
+                $_SESSION['U_GENDER'] = $customer['GENDER'];
+                $_SESSION['U_DOB'] = $customer['DOB'];
+                $_SESSION['U_INITIALS'] = $customer['FIRSTNAME'][0] . $customer['LASTNAME'][0];
+
+                header('Location: ../index.php?login=success');
+            }
+        } else {
+            echo 'Query Error: ' . mysqli_error($conn);
         }
 
         mysqli_free_result($result);
         mysqli_close($conn);
-
-        if ($checkPassword) {
-            header('Location: index.php');
-        } else {
-            $errors['password'] = 'Invalid email or password!';
-        }
     }
 }
 ?>
@@ -50,7 +62,6 @@ if (isset($_POST['submit'])) {
 
 <!DOCTYPE html>
 <html>
-<?php include("templates/header.php"); ?>
 
 <section class="container grey-text">
     <h4 class="center">Log In</h4>
@@ -69,5 +80,6 @@ if (isset($_POST['submit'])) {
     </form>
 </section>
 
-<?php include("templates/footer.php"); ?>
+<?php include("../templates/footer.php"); ?>
+
 </html>

@@ -1,5 +1,6 @@
 <?php
 include('config/db_connect.php');
+include("templates/header.php");
 
 $pdtname = $desc = $brand = $category = $pdtqty = $pdtprice = $cstprice = $discount = '';
 $errors = array('pdtname'=>'', 'desc'=>'', 'brand'=>'', 'category'=>'', 'pdtqty'=>'', 'pdtprice'=>'', 'cstprice'=>'', 'discount'=>'');
@@ -84,7 +85,6 @@ if (isset($_POST['submit'])){
 
 <!DOCTYPE html>
 <html>
-<?php include("templates/header.php"); ?>
 
 <section class="container grey-text">
 	<h4 class="center">New Product</h4>
