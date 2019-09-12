@@ -1,8 +1,8 @@
 <?php
 include('config/db_connect.php');
-include("templates/header.php");
+include('templates/header.php');
 
-$pdtname = $desc = $brand = $category = $pdtqty = $pdtprice = $cstprice = $discount = '';
+$pdtname = $desc = $brand = $category = $pdtqty = $pdtprice = $cstprice = $discount = $checkResult = $pdtid = '';
 $errors = array('pdtname'=>'', 'desc'=>'', 'brand'=>'', 'category'=>'', 'pdtqty'=>'', 'pdtprice'=>'', 'cstprice'=>'', 'discount'=>'');
 
 //Checks if button of name="submit" is clicked
@@ -70,10 +70,22 @@ if (isset($_POST['submit'])){
 		$desc = mysqli_real_escape_string($conn, $_POST['desc']);
 		$brand = mysqli_real_escape_string($conn, $_POST['brand']);
 		$category = mysqli_real_escape_string($conn, $_POST['category']);
+
+		// Generate unique uid for the product
+        $unique = true;
+        do {
+            $pdtid = uniqid('PDT', true);
+            $sql = "SELECT * FROM product WHERE PDTID = $pdtid";
+            $result = mysqli_query($conn, $sql);
+            $checkResult = mysqli_num_rows($result);
+            if ($checkResult > 0) {
+                $unique = false;
+            }
+        } while (!$unique);
 		
 		// Inserts data to db and redirects user to homepage
-		$sql = "INSERT INTO product(PDTNAME, DESCRIPTION, BRAND, CATEGORY, PDTQTY, CSTPRICE, PDTPRICE, PDTDISCNT) 
-		VALUES('$pdtname', '$desc', '$brand', '$category', '$pdtqty', '$cstprice', '$pdtprice', '$discount')";
+		$sql = "INSERT INTO product(PDTID, PDTNAME, DESCRIPTION, BRAND, CATEGORY, PDTQTY, CSTPRICE, PDTPRICE, PDTDISCNT) 
+		VALUES('$pdtid', '$pdtname', '$desc', '$brand', '$category', '$pdtqty', '$cstprice', '$pdtprice', '$discount')";
 		if(mysqli_query($conn, $sql)) {
 			header('Location: index.php');
 		} else {

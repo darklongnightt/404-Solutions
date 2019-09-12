@@ -46,6 +46,11 @@ session_start();
 					<li>
 						<a href="../authentication/logout.php" class="btn brand z-depth-0">Logout</a>
 					</li>
+
+					<li>
+						<a href="../cart.php" class="btn brand z-depth-0">Cart</a>
+					</li>
+
 				<?php } else { ?>
 					<li>
 						<a href="../authentication/register.php" class="btn brand z-depth-0">Register</a>

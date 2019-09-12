@@ -1,9 +1,10 @@
 <?php
 include('config/db_connect.php');
-include("templates/header.php");
+include('templates/header.php');
 
 // Getting data from table: product as associative array
-$query = 'SELECT PDTNAME, DESCRIPTION, CATEGORY, BRAND, CSTPRICE, PDTPRICE, PDTDISCNT, PDTID FROM product ORDER BY CREATED_AT DESC';
+$query = 'SELECT PDTNAME, DESCRIPTION, CATEGORY, BRAND, CSTPRICE, PDTPRICE, PDTDISCNT, PDTID 
+FROM product ORDER BY CREATED_AT DESC';
 $result = mysqli_query($conn, $query);
 $productList = mysqli_fetch_all($result, MYSQLI_ASSOC);
 
@@ -19,7 +20,7 @@ mysqli_close($conn);
 <div class="container">
 	<div class="row">
 		<?php foreach ($productList as $product) { ?>
-			<div class="col s6 md3">
+			<div class="col s4 md2">
 				<div class="card z-depth-0">
 					<img src="img/product_icon.svg" class="product-icon">
 					<div class="card-content center">

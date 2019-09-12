@@ -1,18 +1,18 @@
 <?php
 include("config/db_connect.php");
-include("templates/header.php");
+include('templates/header.php');
+
+$id = $product = '';
 
 // Checks if link contains product id
 if (isset($_GET['id'])) {
     // To translate any possible user input before query the db
     $id = mysqli_real_escape_string($conn, $_GET['id']);
-    $sql = "SELECT * FROM product WHERE PDTID = $id";
+    $sql = "SELECT * FROM product WHERE PDTID = '$id'";
     $result = mysqli_query($conn, $sql);
 
     // To fetch the result as a single associative array
     $product = mysqli_fetch_assoc($result);
-    mysqli_free_result($result);
-    mysqli_close($conn);
 }
 
 // Checks if delete button is clicked
@@ -21,12 +21,43 @@ if (isset($_POST['delete'])) {
     $sql = "DELETE FROM product WHERE PDTID = $id_to_delete";
 
     // Checks if query is successful
-    if(mysqli_query($conn, $sql)) {
+    if (mysqli_query($conn, $sql)) {
         header('Location: index.php');
     } else {
         echo 'Query Error' . mysqli_error($conn);
     }
 }
+
+if (isset($_POST['cart'])) {
+    if ($_SESSION['U_UID']) {
+        $uid = mysqli_real_escape_string($conn, $_SESSION['U_UID']);
+        $id = mysqli_real_escape_string($conn, $id);
+
+        // Check that cart item exists 
+        $sql = "SELECT * FROM cart WHERE PDTID='$id' AND USERID='$uid'";
+        $result = mysqli_query($conn, $sql);
+        if (mysqli_num_rows($result) > 0) {
+            // Increment product qty by 1
+            $sql = "UPDATE cart SET CARTQTY=CARTQTY+1 WHERE PDTID='$id' AND USERID='$uid'";
+        } else {
+            // Add to db cart with qty of 1
+            $sql = "INSERT INTO cart(PDTID, USERID, CARTQTY) VALUES('$id', '$uid', '1')";   
+        }
+
+        if (mysqli_query($conn, $sql)) {
+            echo 'Successfully added product to cart!';
+        } else {
+            echo 'Query Error: ' . mysqli_error($conn);
+        }
+    } else {
+        // Temporary stores cart items as cookie / session
+        // For now redirect to login page
+        header('Location: /authentication/login.php');
+    }
+}
+
+mysqli_free_result($result);
+mysqli_close($conn);
 ?>
 
 <html>
@@ -43,9 +74,11 @@ if (isset($_POST['delete'])) {
         <p><?php echo 'Discounted Price: $' . round(htmlspecialchars($product['PDTPRICE']) / 100 * (100 - htmlspecialchars($product['PDTDISCNT'])), 2); ?></p>
         <p><?php echo 'Listed At: ' . date($product['CREATED_AT']); ?></p>
 
-        <form action="product_details.php" method="POST">
+        <form action="product_details.php?id=<?php echo $id; ?>" method="POST">
             <input type="hidden" name="id_to_delete" value="<?php echo $product['PDTID']; ?>" />
             <input type="submit" name="delete" value="delete" class="btn brand z-depth-0" />
+
+            <input type="submit" name="cart" value="add to cart" class="btn brand z-depth-0" />
         </form>
     </div>
 <?php else : ?>
