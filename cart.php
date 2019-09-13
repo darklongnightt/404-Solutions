@@ -60,15 +60,19 @@ mysqli_close($conn);
 
         <div class="col s6 m3 offset-m1">
             <div class="card z-depth-0">
-                <h5>Order Summary</h5>
-                <div>Subtotal: $<?php echo htmlspecialchars($sumSubTotal); ?> </div>
-                <div>Savings: $<?php echo htmlspecialchars($sumSavings); ?></div>
-                <div class="divider"></div>
-                <div>Total: $<?php echo htmlspecialchars($sumTotal); ?> </div>
+                <div class="card-content">
+                    <h5>Order Summary</h5>
+                    <div>Subtotal: $<?php echo htmlspecialchars($sumSubTotal); ?> </div>
+                    <div>Savings: -$<?php echo htmlspecialchars($sumSavings); ?></div>
+                    <div class="divider"></div>
+                    <strong>
+                        <div>Total: $<?php echo htmlspecialchars($sumTotal); ?> </div>
+                    </strong>
 
-                <form action="cart.php" method="POST" class="center">
-                    <input type="submit" name="cart" value="Checkout" class="btn brand z-depth-0" />
-                </form>
+                    <form action="cart.php" method="POST" class="center">
+                        <input type="submit" name="cart" value="Checkout" class="btn brand z-depth-0" />
+                    </form>
+                </div>
             </div>
         </div>
 
