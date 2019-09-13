@@ -21,7 +21,7 @@ if (isset($_POST['submit'])){
 		$errors['desc'] = 'Product description is required!';
 	} else {
 		$desc = $_POST['desc'];
-	
+
 	}
 
 	if (empty($_POST['brand'])) {

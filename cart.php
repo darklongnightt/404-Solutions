@@ -4,6 +4,7 @@ include('templates/header.php');
 
 $totalPrice = $totalDiscount = $netPrice = 0;
 $sumSubTotal = $sumSavings = $sumTotal = 0;
+$transactionId = '';
 
 // Getting data from table: all elements from product, cartqty from cart associated with the same product
 $uid = mysqli_real_escape_string($conn, $_SESSION['U_UID']);
@@ -14,10 +15,56 @@ WHERE product.PDTID = cart.PDTID AND cart.USERID = '$uid'";
 $result = mysqli_query($conn, $sql);
 $cartList = mysqli_fetch_all($result, MYSQLI_ASSOC);
 
+if (isset($_POST['checkout']) && $cartList) {
+
+    // Generate a transaction id for the series of orders
+    $unique = true;
+    do {
+        $transactionId = uniqid('ORD', true);
+        $sql = "SELECT * FROM orders WHERE TRANSACTIONID = '$transactionId'";
+        $result = mysqli_query($conn, $sql);
+        $checkResult = mysqli_num_rows($result);
+        if ($checkResult > 0) {
+            $unique = false;
+        }
+    } while (!$unique);
+
+
+    // Add an order entry for each product in cart
+    foreach ($cartList as $product) {
+        $totalPrice =  mysqli_real_escape_string($conn, $product['PDTPRICE'] * $product['CARTQTY']);
+        $totalDiscount = mysqli_real_escape_string($conn, round($totalPrice / 100 * $product['PDTDISCNT'], 2));
+        $netPrice = mysqli_real_escape_string($conn, round($totalPrice - $totalDiscount, 2));;
+        $pdtId = mysqli_real_escape_string($conn, $product['PDTID']);
+        $orderQty = mysqli_real_escape_string($conn, $product['CARTQTY']);
+        $deliveryStatus = mysqli_real_escape_string($conn, 'Out for Delivery');
+        $deliveryDate = mysqli_real_escape_string($conn, date('Y-m-d', strtotime(date('Y-m-d') . ' + 3 days')));
+        $payType = mysqli_real_escape_string($conn, $_POST['payment']);
+
+        // Insert into orders table
+        $sql = "INSERT INTO orders(TRANSACTIONID, PDTID, USERID, ORDERQTY, 
+        DELVRYSTS, PMENTTYPE, TTLPRICE, TTLDISCNTPRICE, NETPRICE, DELVRYDATE)
+        VALUES('$transactionId', '$pdtId', '$uid', '$orderQty', '$deliveryStatus', 
+        '$payType', '$totalPrice', '$totalDiscount', '$netPrice', '$deliveryDate')";
+
+        // Check if insert statement returns an error
+        if (mysqli_query($conn, $sql)) {
+            // Empty cart
+            $sql = "DELETE FROM cart WHERE USERID='$uid'";
+            if (mysqli_query($conn, $sql)) {
+                header('Location: cart.php');
+            } else {
+                echo 'Query Error: ' . mysqli_error($conn);
+            }
+        } else {
+            echo 'Query Error: ' . mysqli_error($conn);
+        }
+    }
+}
+
 // Free memory of result and close connection
 mysqli_free_result($result);
 mysqli_close($conn);
-
 ?>
 
 <!DOCTYPE html>
@@ -69,8 +116,16 @@ mysqli_close($conn);
                         <div>Total: $<?php echo htmlspecialchars($sumTotal); ?> </div>
                     </strong>
 
-                    <form action="cart.php" method="POST" class="center">
-                        <input type="submit" name="cart" value="Checkout" class="btn brand z-depth-0" />
+                    <div class="divider"></div>
+                    <label>Payment: </label>
+                    <select class="browser-default" name="payment" form="checkout">
+                        <option value="MasterCard">MasterCard</option>
+                        <option value="PayPal">PayPal</option>
+                        <option value="Bank Transfer">Bank Transfer</option>
+                    </select>
+
+                    <form action="cart.php" method="POST" class="center" id="checkout">
+                        <input type="submit" name="checkout" value="Checkout" class="btn brand z-depth-0" />
                     </form>
                 </div>
             </div>
