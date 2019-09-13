@@ -15,8 +15,19 @@ WHERE product.PDTID = cart.PDTID AND cart.USERID = '$uid'";
 $result = mysqli_query($conn, $sql);
 $cartList = mysqli_fetch_all($result, MYSQLI_ASSOC);
 
-if (isset($_POST['checkout']) && $cartList) {
+// To remove a single product from cart
+if (isset($_GET['remove'])) {
+    $removePdt = mysqli_real_escape_string($conn, $_GET['remove']);
+    $sql = "DELETE FROM cart WHERE PDTID = '$removePdt' AND USERID = '$uid'";
+    if (mysqli_query($conn, $sql)) {
+        header('Location: cart.php');
+    } else {
+        echo 'Query Error: ' . mysqli_error($conn);
+    }
+}
 
+// To checkout all products from cart
+if (isset($_POST['checkout']) && $cartList) {
     // Generate a transaction id for the series of orders
     $unique = true;
     do {
@@ -91,12 +102,19 @@ mysqli_close($conn);
                             <img src="img/product_icon.svg" class="product-icon"> </a>
                         <div class="card-content center">
                             <h6> <?php echo htmlspecialchars($product['PDTNAME']); ?> </h6>
-                            <div> <?php echo htmlspecialchars('Net Price: $' . $netPrice); ?> </div>
-                            <div class="grey-text">
-                                <strike><?php echo htmlspecialchars('$' . $totalPrice); ?></strike>
-                                <?php echo htmlspecialchars('-' . $product['PDTDISCNT'] . '%'); ?>
-                            </div>
+                            <div> <?php echo htmlspecialchars('Net Price: $' . number_format($netPrice, 2, '.', '')); ?> </div>
+
+                            <?php if ($product['PDTDISCNT'] > 0) { ?>
+                                <div class="grey-text">
+                                    <strike><?php echo htmlspecialchars('$' . number_format($totalPrice, 2, '.', '')); ?></strike>
+                                    <?php echo htmlspecialchars('-' . $product['PDTDISCNT'] . '%'); ?>
+                                </div>
+                            <?php } ?>
+
                             <div> <?php echo htmlspecialchars('Quantity: ' . $product['CARTQTY']); ?> </div>
+                            <div class="card-action right-align">
+                                <a href="cart.php?remove=<?php echo $product['PDTID']; ?>" class="brand-text">Remove</a>
+                            </div>
                         </div>
                     </div>
                 <?php }
@@ -109,11 +127,11 @@ mysqli_close($conn);
             <div class="card z-depth-0">
                 <div class="card-content">
                     <h5>Order Summary</h5>
-                    <div>Subtotal: $<?php echo htmlspecialchars($sumSubTotal); ?> </div>
-                    <div>Savings: -$<?php echo htmlspecialchars($sumSavings); ?></div>
+                    <div>Subtotal: $<?php echo htmlspecialchars(number_format($sumSubTotal, 2, '.', '')); ?> </div>
+                    <div>Savings: -$<?php echo htmlspecialchars(number_format($sumSavings, 2, '.', '')); ?></div>
                     <div class="divider"></div>
                     <strong>
-                        <div>Total: $<?php echo htmlspecialchars($sumTotal); ?> </div>
+                        <div>Total: $<?php echo htmlspecialchars(number_format($sumTotal, 2, '.', '')); ?> </div>
                     </strong>
 
                     <div class="divider"></div>

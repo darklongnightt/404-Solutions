@@ -35,11 +35,13 @@ session_start();
 <body class="grey lighten-4">
 	<nav class="white z-depth-0">
 		<div class="container">
-			<a href="../index.php" class="brand-logo brand-text center">Super Data</a>
+			<strong>
+				<a href="../index.php" class="brand-logo brand-text left">SuperData</a>
+			</strong>
 			<ul id="nav-mobile" class="right hide-on-small-and-down">
 
 				<?php if (isset($_SESSION['U_UID'])) { ?>
-					<li>
+					<li class="right">
 						<a href="../index.php" class="btn btn-floating red lighten-2"><?php echo $_SESSION['U_INITIALS'] ?></a>
 					</li>
 
@@ -49,6 +51,10 @@ session_start();
 
 					<li>
 						<a href="../cart.php" class="btn brand z-depth-0">Cart</a>
+					</li>
+
+					<li>
+						<a href="../my_orders.php" class="btn brand z-depth-0">My Orders</a>
 					</li>
 
 				<?php } else { ?>
