@@ -29,6 +29,10 @@ session_start();
 			position: relative;
 			top: -30px;
 		}
+
+		.bold {
+			font-weight: bold;
+		}
 	</style>
 </head>
 
@@ -55,6 +59,10 @@ session_start();
 
 					<li>
 						<a href="../my_orders.php" class="btn brand z-depth-0">My Orders</a>
+					</li>
+
+					<li>
+						<a href="../inventory_management.php" class="btn brand z-depth-0">Inventory Management</a>
 					</li>
 
 				<?php } else { ?>
