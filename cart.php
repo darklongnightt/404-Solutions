@@ -1,15 +1,22 @@
 <?php
 include('config/db_connect.php');
 include('templates/header.php');
+$uid = mysqli_real_escape_string($conn, $_SESSION['U_UID']);
+
+// Pagination for all results
+$currDir = "cart.php";
+$query = "SELECT * FROM product, cart
+WHERE product.PDTID = cart.PDTID AND cart.USERID = '$uid'";
+include('templates/pagination_query.php');
 
 $totalPrice = $totalDiscount = $netPrice = 0;
 $sumSubTotal = $sumSavings = $sumTotal = 0;
 $transactionId = '';
 
 // Getting data from table: all elements from product, cartqty from cart associated with the same product
-$uid = mysqli_real_escape_string($conn, $_SESSION['U_UID']);
 $sql = "SELECT * FROM product, cart
-WHERE product.PDTID = cart.PDTID AND cart.USERID = '$uid'";
+WHERE product.PDTID = cart.PDTID AND cart.USERID = '$uid'
+LIMIT $startingLimit, $resultsPerPage";
 
 // Fetch all as assoc array
 $result = mysqli_query($conn, $sql);
@@ -153,6 +160,9 @@ mysqli_close($conn);
     </div>
 </div>
 
-<?php include("templates/footer.php"); ?>
+<?php
+include("templates/pagination_output.php");
+include("templates/footer.php");
+?>
 
 </html>

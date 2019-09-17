@@ -2,9 +2,16 @@
 include("config/db_connect.php");
 include('templates/header.php');
 
-// Getting data from table: product as associative array
+// Pagination for all results
+$currDir = "inventory_management.php";
 $query = 'SELECT PDTNAME, CATEGORY, BRAND, PDTID, PDTQTY
-FROM product ORDER BY CREATED_AT DESC';
+FROM product';
+include('templates/pagination_query.php');
+
+// Getting data from table: product as associative array
+$query = "SELECT PDTNAME, CATEGORY, BRAND, PDTID, PDTQTY
+FROM product ORDER BY CREATED_AT DESC 
+LIMIT $startingLimit , $resultsPerPage";
 $result = mysqli_query($conn, $query);
 $productList = mysqli_fetch_all($result, MYSQLI_ASSOC);
 
@@ -37,6 +44,9 @@ mysqli_close($conn);
     </ul>
 </div>
 
-<?php include("templates/footer.php"); ?>
+<?php 
+include("templates/pagination_output.php");
+include("templates/footer.php"); 
+?>
 
 </html>

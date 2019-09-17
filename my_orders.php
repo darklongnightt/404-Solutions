@@ -1,11 +1,19 @@
 <?php
 include("config/db_connect.php");
 include('templates/header.php');
+$uid = mysqli_real_escape_string($conn, $_SESSION['U_UID']);
+
+// Pagination for all results
+$currDir = "my_orders.php";
+$query = "SELECT * FROM orders, product 
+WHERE orders.USERID = '$uid' AND product.PDTID = orders.PDTID";
+include('templates/pagination_query.php');
 
 // Retrieve orders from order and product table as assoc array
-$uid = mysqli_real_escape_string($conn, $_SESSION['U_UID']);
 $sql = "SELECT * FROM orders, product 
-WHERE orders.USERID = '$uid' AND product.PDTID = orders.PDTID";
+WHERE orders.USERID = '$uid' AND product.PDTID = orders.PDTID
+LIMIT $startingLimit, $resultsPerPage";
+
 $result = mysqli_query($conn, $sql);
 $orderList = mysqli_fetch_all($result, MYSQLI_ASSOC);
 
@@ -72,6 +80,9 @@ mysqli_close($conn);
             <h4 class="center">Order list is empty!</h4>
         <?php } ?>
 
-        <?php include("templates/footer.php"); ?>
+        <?php 
+        include("templates/pagination_output.php");
+        include("templates/footer.php"); 
+        ?>
 
 </html>
