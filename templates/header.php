@@ -7,7 +7,7 @@ session_start();
 	<!-- Compiled and minified CSS -->
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
 	<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-	
+
 	<style type="text/css">
 		.brand {
 			background: #cbb09c !important;
@@ -33,6 +33,15 @@ session_start();
 
 		.bold {
 			font-weight: bold;
+		}
+
+		.flex {
+			display: flex;
+		}
+
+		.no-pad {
+			margin: 0px;
+			padding: 0px;
 		}
 	</style>
 </head>
