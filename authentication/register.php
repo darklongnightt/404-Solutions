@@ -2,7 +2,7 @@
 include('../config/db_connect.php');
 include('../templates/header.php');
 
-$password = $retypedpassword = $hashedpassword = $firstname = $lastname = $dob = $email = $gender = $userid = $phoneno ='';
+$password = $retypedpassword = $hashedpassword = $firstname = $lastname = $dob = $email = $gender = $userid = $phoneno = '';
 $errors = array('password' => '', 'retypedpassword' => '', 'firstname' => '', 'lastname' => '', 'dob' => '', 'email' => '', 'gender' => '', 'phoneno' => '');
 $today = date('Y-m-d');
 
@@ -56,8 +56,8 @@ if (isset($_POST['submit'])) {
     } else {
         $phoneno = $_POST['phoneno'];
         if (!preg_match('/^[0-9]*$/', $phoneno)) {
-			$errors['phoneno'] = 'Phone number must be numeric!';
-		}
+            $errors['phoneno'] = 'Phone number must be numeric!';
+        }
     }
 
     if (empty($_POST['password'])) {
@@ -114,7 +114,9 @@ if (isset($_POST['submit'])) {
             $_SESSION['U_DOB'] = $dob;
             $_SESSION['U_INITIALS'] = $firstname[0] . $lastname[0];
 
-            header('Location: ../index.php?register=success');
+            mysqli_free_result($result);
+            mysqli_close($conn);
+            header('Location: shipping_details.php');
         } else {
             echo 'Query Error: ' . mysqli_error($conn);
         }
@@ -131,6 +133,7 @@ if (isset($_POST['submit'])) {
 
 <section class="container grey-text">
     <h4 class="center">Register New Account</h4>
+
     <form action="register.php" class="white" method="POST">
         <label>Email Address: </label>
         <input type="text" name="email" value="<?php echo htmlspecialchars($email); ?>">
@@ -147,19 +150,19 @@ if (isset($_POST['submit'])) {
         <label>Gender: </label>
         <p>
             <label>
-                <input name="gender" type="radio" value="M" <?php if (isset($gender) && $gender=="M") echo "checked";?>>
+                <input name="gender" type="radio" value="M" <?php if (isset($gender) && $gender == "M") echo "checked"; ?>>
                 <span>Male</span>
             </label>
         </p>
         <p>
             <label>
-                <input name="gender" type="radio" value="F" <?php if (isset($gender) && $gender=="F") echo "checked";?>>
+                <input name="gender" type="radio" value="F" <?php if (isset($gender) && $gender == "F") echo "checked"; ?>>
                 <span>Female</span>
             </label>
         </p>
         <p>
             <label>
-                <input name="gender" type="radio" value="O" <?php if (isset($gender) && $gender=="O") echo "checked";?>>
+                <input name="gender" type="radio" value="O" <?php if (isset($gender) && $gender == "O") echo "checked"; ?>>
                 <span>Other</span>
             </label>
         </p>

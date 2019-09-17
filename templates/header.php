@@ -6,6 +6,7 @@ session_start();
 	<title>Super Data</title>
 	<!-- Compiled and minified CSS -->
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+	<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 
 	<style type="text/css">
 		.brand {
@@ -28,6 +29,19 @@ session_start();
 			display: block;
 			position: relative;
 			top: -30px;
+		}
+
+		.bold {
+			font-weight: bold;
+		}
+
+		.flex {
+			display: flex;
+		}
+
+		.no-pad {
+			margin: 0px;
+			padding: 0px;
 		}
 	</style>
 </head>
@@ -55,6 +69,10 @@ session_start();
 
 					<li>
 						<a href="../my_orders.php" class="btn brand z-depth-0">My Orders</a>
+					</li>
+
+					<li>
+						<a href="../inventory_management.php" class="btn brand z-depth-0">Inventory Management</a>
 					</li>
 
 				<?php } else { ?>
