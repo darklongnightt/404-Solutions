@@ -10,7 +10,7 @@ WHERE product.PDTID = cart.PDTID AND cart.USERID = '$uid'";
 include('templates/pagination_query.php');
 
 $totalPrice = $totalDiscount = $netPrice = 0;
-$sumSubTotal = $sumSavings = $sumTotal = 0;
+$sumSubTotal = $sumSavings = $sumTotal = $totalQty = 0;
 $transactionId = '';
 
 // Getting data from table: all elements from product, cartqty from cart associated with the same product
@@ -55,7 +55,7 @@ if (isset($_POST['checkout']) && $cartList) {
         $netPrice = mysqli_real_escape_string($conn, round($totalPrice - $totalDiscount, 2));;
         $pdtId = mysqli_real_escape_string($conn, $product['PDTID']);
         $orderQty = mysqli_real_escape_string($conn, $product['CARTQTY']);
-        $deliveryStatus = mysqli_real_escape_string($conn, 'Out for Delivery');
+        $deliveryStatus = mysqli_real_escape_string($conn, 'Delivering');
         $deliveryDate = mysqli_real_escape_string($conn, date('Y-m-d', strtotime(date('Y-m-d') . ' + 3 days')));
         $payType = mysqli_real_escape_string($conn, $_POST['payment']);
 
@@ -93,27 +93,32 @@ mysqli_close($conn);
     <div class="row">
         <div class="col s14 m8">
             <?php if ($cartList) {
-                foreach ($cartList as $product) { ?>
-                    <?php
-                            $totalPrice =  $product['PDTPRICE'] * $product['CARTQTY'];
-                            $totalDiscount = round($totalPrice / 100 * $product['PDTDISCNT'], 2);
-                            $netPrice = round($totalPrice - $totalDiscount, 2);
+                foreach ($cartList as $product) {
+                    $unitPrice = round($product['PDTPRICE'], 2);
+                    $unitDiscount = round($unitPrice / 100 * $product['PDTDISCNT'], 2);
+                    $netUnit = round($unitPrice - $unitDiscount, 2);
 
-                            $sumSubTotal += $totalPrice;
-                            $sumSavings += $totalDiscount;
-                            $sumTotal += $netPrice;
-                            ?>
+                    $totalPrice = $product['PDTPRICE'] * $product['CARTQTY'];
+                    $totalDiscount = round($totalPrice / 100 * $product['PDTDISCNT'], 2);
+                    $netPrice = round($totalPrice - $totalDiscount, 2);
+
+                    $sumSubTotal += $totalPrice;
+                    $sumSavings += $totalDiscount;
+                    $sumTotal += $netPrice;
+
+                    $totalQty += $product['CARTQTY'];
+                    ?>
 
                     <div class="card z-depth-0">
                         <a href="product_details.php?id=<?php echo $product['PDTID']; ?>">
                             <img src="img/product_icon.svg" class="product-icon"> </a>
                         <div class="card-content center">
                             <h6> <?php echo htmlspecialchars($product['PDTNAME']); ?> </h6>
-                            <div> <?php echo htmlspecialchars('Net Price: $' . number_format($netPrice, 2, '.', '')); ?> </div>
+                            <div> <?php echo htmlspecialchars('Unit Price: $' . number_format($netUnit, 2, '.', '')); ?> </div>
 
                             <?php if ($product['PDTDISCNT'] > 0) { ?>
                                 <div class="grey-text">
-                                    <strike><?php echo htmlspecialchars('$' . number_format($totalPrice, 2, '.', '')); ?></strike>
+                                    <strike><?php echo htmlspecialchars('$' . number_format($unitPrice, 2, '.', '')); ?></strike>
                                     <?php echo htmlspecialchars('-' . $product['PDTDISCNT'] . '%'); ?>
                                 </div>
                             <?php } ?>
@@ -150,7 +155,7 @@ mysqli_close($conn);
                     </select>
 
                     <form action="cart.php" method="POST" class="center" id="checkout">
-                        <input type="submit" name="checkout" value="Checkout" class="btn brand z-depth-0" />
+                        <input type="submit" name="checkout" value="Checkout(<?php echo $totalQty; ?>)" class="btn brand z-depth-0" />
                     </form>
                 </div>
             </div>

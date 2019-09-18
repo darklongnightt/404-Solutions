@@ -28,6 +28,7 @@ if (isset($_POST['delete'])) {
     }
 }
 
+// Checks if add to cart button is clicked
 if (isset($_POST['cart'])) {
     if ($_SESSION['U_UID']) {
         $uid = mysqli_real_escape_string($conn, $_SESSION['U_UID']);
@@ -41,11 +42,37 @@ if (isset($_POST['cart'])) {
             $sql = "UPDATE cart SET CARTQTY=CARTQTY+1 WHERE PDTID='$id' AND USERID='$uid'";
         } else {
             // Add to db cart with qty of 1
-            $sql = "INSERT INTO cart(PDTID, USERID, CARTQTY) VALUES('$id', '$uid', '1')";   
+            $sql = "INSERT INTO cart(PDTID, USERID, CARTQTY) VALUES('$id', '$uid', '1')";
         }
 
         if (mysqli_query($conn, $sql)) {
             echo 'Successfully added product to cart!';
+        } else {
+            echo 'Query Error: ' . mysqli_error($conn);
+        }
+    } else {
+        // Temporary stores cart items as cookie / session
+        // For now redirect to login page
+        header('Location: /authentication/login.php');
+    }
+}
+
+// Checks if add to favourite button is clicked
+if (isset($_POST['favourite'])) {
+    if ($_SESSION['U_UID']) {
+        $uid = mysqli_real_escape_string($conn, $_SESSION['U_UID']);
+        $id = mysqli_real_escape_string($conn, $id);
+
+        // Check that fave item exists 
+        $sql = "SELECT * FROM favourite WHERE PDTID='$id' AND USERID='$uid'";
+        $result = mysqli_query($conn, $sql);
+        if (mysqli_num_rows($result) < 1) {
+            // Add to fave in db
+            $sql = "INSERT INTO favourite(PDTID, USERID) VALUES('$id', '$uid')";
+        }
+
+        if (mysqli_query($conn, $sql)) {
+            echo 'Successfully added product to favourite!';
         } else {
             echo 'Query Error: ' . mysqli_error($conn);
         }
@@ -77,8 +104,8 @@ mysqli_close($conn);
         <form action="product_details.php?id=<?php echo $id; ?>" method="POST">
             <input type="hidden" name="id_to_delete" value="<?php echo $product['PDTID']; ?>" />
             <input type="submit" name="delete" value="delete" class="btn brand z-depth-0" />
-
-            <input type="submit" name="cart" value="add to cart" class="btn brand z-depth-0" />
+            <input type="submit" name="cart" value="+cart" class="btn brand z-depth-0" />
+            <input type="submit" name="favourite" value="+favourite" class="btn brand z-depth-0" />
         </form>
     </div>
 <?php else : ?>

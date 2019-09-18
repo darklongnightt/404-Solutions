@@ -68,11 +68,15 @@ session_start();
 					</li>
 
 					<li>
-						<a href="../my_orders.php" class="btn brand z-depth-0">My Orders</a>
+						<a href="../my_orders.php" class="btn brand z-depth-0">Orders</a>
 					</li>
 
 					<li>
 						<a href="../inventory_management.php" class="btn brand z-depth-0">Inventory Management</a>
+					</li>
+
+					<li>
+						<a href="../my_favourites.php" class="btn brand z-depth-0">Favourites</a>
 					</li>
 
 				<?php } else { ?>

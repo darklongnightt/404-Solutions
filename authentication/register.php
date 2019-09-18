@@ -93,7 +93,7 @@ if (isset($_POST['submit'])) {
         $unique = true;
         do {
             $userid = uniqid('CUS', true);
-            $sql = "SELECT * FROM CUSTOMER WHERE USERID = $userid";
+            $sql = "SELECT * FROM customer WHERE USERID = '$userid'";
             $result = mysqli_query($conn, $sql);
             $checkResult = mysqli_num_rows($result);
             if ($checkResult > 0) {

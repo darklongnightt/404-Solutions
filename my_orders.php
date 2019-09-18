@@ -48,7 +48,7 @@ mysqli_close($conn);
                             <h6 class="bold grey-text"> <?php echo htmlspecialchars($order['PDTNAME']); ?> </h6>
                         </a>
 
-                        <div> <?php echo htmlspecialchars('Net Price: $' . number_format($order['NETPRICE'], 2, '.', '')); ?> </div>
+                        <div> <?php echo htmlspecialchars('Net Total Price: $' . number_format($order['NETPRICE'], 2, '.', '')); ?> </div>
 
                         <?php if ($order['PDTDISCNT'] > 0) { ?>
                             <div class="grey-text">
