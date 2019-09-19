@@ -31,7 +31,7 @@ mysqli_close($conn);
 					<img src="img/product_icon.svg" class="product-icon">
 					<div class="card-content center">
 						<h6> <?php echo htmlspecialchars($product['PDTNAME']); ?> </h6>
-						<div> <?php echo htmlspecialchars($product['DESCRIPTION']); ?> </div>
+						<div> <?php echo htmlspecialchars($product['WEIGHT']); ?> </div>
 						<div> <?php echo htmlspecialchars('$' . $product['PDTPRICE']); ?> </div>
 						<div class="card-action right-align">
 							<a href="product_details.php?id=<?php echo $product['PDTID']; ?>" class="brand-text">more info</a>

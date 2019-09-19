@@ -55,8 +55,8 @@ if (isset($_POST['checkout']) && $cartList) {
         $netPrice = mysqli_real_escape_string($conn, round($totalPrice - $totalDiscount, 2));;
         $pdtId = mysqli_real_escape_string($conn, $product['PDTID']);
         $orderQty = mysqli_real_escape_string($conn, $product['CARTQTY']);
-        $deliveryStatus = mysqli_real_escape_string($conn, 'Delivering');
-        $deliveryDate = mysqli_real_escape_string($conn, date('Y-m-d', strtotime(date('Y-m-d') . ' + 3 days')));
+        $deliveryStatus = mysqli_real_escape_string($conn, 'Not Delivered');
+        $deliveryDate = mysqli_real_escape_string($conn, date('Y-m-d h:i:sa', strtotime(date('Y-m-d h:i:sa') . ' + 5 days')));
         $payType = mysqli_real_escape_string($conn, $_POST['payment']);
 
         // Insert into orders table
