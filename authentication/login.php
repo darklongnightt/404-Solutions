@@ -29,8 +29,8 @@ if (isset($_POST['submit'])) {
 
         // Gets a customer record from db as a single associative array
         $sql = "SELECT * FROM customer WHERE EMAIL = '$email'";
-        $result = mysqli_query($conn, $sql);
-        if ($customer = mysqli_fetch_assoc($result)) {
+        if ($result = mysqli_query($conn, $sql)) {
+            $customer = mysqli_fetch_assoc($result);
             // Usage of password_verify() results in constant time preventing timing attacks
             $checkPassword = password_verify($password, $customer['PASSWORD']);
 
