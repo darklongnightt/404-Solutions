@@ -97,9 +97,11 @@ if ($_POST) {
 }
 
 $query .= "\nLIMIT $startingLimit , $resultsPerPage";
+
 // Getting data from table: product as associative array
 $result = mysqli_query($conn, $query);
 $productList = mysqli_fetch_all($result, MYSQLI_ASSOC);
+
 // Free memory of result and close connection
 mysqli_free_result($result);
 mysqli_close($conn);

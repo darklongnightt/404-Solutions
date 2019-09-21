@@ -103,9 +103,15 @@ mysqli_close($conn);
 
         <form action="product_details.php?id=<?php echo $id; ?>" method="POST">
             <input type="hidden" name="id_to_delete" value="<?php echo $product['PDTID']; ?>" />
-            <input type="submit" name="delete" value="delete" class="btn brand z-depth-0" />
-            <input type="submit" name="cart" value="+cart" class="btn brand z-depth-0" />
-            <input type="submit" name="favourite" value="+favourite" class="btn brand z-depth-0" />
+
+            <?php if ($uid) { ?>
+                <?php if (substr($uid, 0, 3) == 'CUS') { ?>
+                    <input type="submit" name="cart" value="+cart" class="btn brand z-depth-0" />
+                    <input type="submit" name="favourite" value="+favourite" class="btn brand z-depth-0" />
+                <?php } else if (substr($uid, 0, 3) == 'ADM') { ?>
+                    <input type="submit" name="delete" value="delete" class="btn brand z-depth-0" />
+                <?php } ?>
+            <?php } ?>
         </form>
     </div>
 <?php else : ?>

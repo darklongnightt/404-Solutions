@@ -1,5 +1,8 @@
 <?php
 session_start();
+$uid = '';
+if (isset($_SESSION['U_UID']))
+	$uid = $_SESSION['U_UID'];
 ?>
 
 <head>
@@ -119,7 +122,7 @@ session_start();
 			</strong>
 			<ul id="nav-mobile" class="right hide-on-small-and-down">
 
-				<?php if (isset($_SESSION['U_UID'])) { ?>
+				<?php if ($uid) { ?>
 					<li class="right">
 						<a href="../index.php" class="btn btn-floating red lighten-2"><?php echo $_SESSION['U_INITIALS'] ?></a>
 					</li>
@@ -128,21 +131,15 @@ session_start();
 						<a href="../authentication/logout.php" class="btn brand z-depth-0">Logout</a>
 					</li>
 
-					<li>
-						<a href="../cart.php" class="btn brand z-depth-0">Cart</a>
-					</li>
-
-					<li>
-						<a href="../my_orders.php" class="btn brand z-depth-0">Orders</a>
-					</li>
-
-					<li>
-						<a href="../inventory_management.php" class="btn brand z-depth-0">Inventory Management</a>
-					</li>
-
-					<li>
-						<a href="../my_favourites.php" class="btn brand z-depth-0">Favourites</a>
-					</li>
+					<?php if (substr($uid, 0, 3) == 'CUS') {
+						include('customer_nav.php');
+					} else if (substr($uid, 0, 3) == 'ADM') {
+						include('admin_nav.php');
+					} else if (substr($uid, 0, 3) == 'ANL') {
+						include('analyst_nav.php');
+					}
+					?>
+					
 
 				<?php } else { ?>
 					<li>
@@ -154,9 +151,6 @@ session_start();
 					</li>
 				<?php } ?>
 
-				<li>
-					<a href="/list_product.php" class="btn brand z-depth-0">List Product</a>
-				</li>
 			</ul>
 		</div>
 	</nav>
