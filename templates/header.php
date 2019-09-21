@@ -7,6 +7,8 @@ session_start();
 	<!-- Compiled and minified CSS -->
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
 	<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+	<script src="https://code.jquery.com/jquery-1.10.2.js"></script>
+	<script src="https://code.jquery.com/ui/1.10.4/jquery-ui.js"></script>
 
 	<style type="text/css">
 		.brand {
@@ -42,6 +44,69 @@ session_start();
 		.no-pad {
 			margin: 0px;
 			padding: 0px;
+		}
+
+		/* for index.php */
+		.sidebar {
+			height: 100%;
+			width: 245px;
+			position: fixed;
+			z-index: 1;
+			overflow-x: hidden;
+			border-right: 1px solid white;
+		}
+
+		.container {
+			margin-left: 250px;
+		}
+
+		/* slider range for index.php */
+		.ui-slider {
+			position: relative;
+			text-align: left;
+		}
+
+		.ui-slider .ui-slider-handle {
+			position: absolute;
+			z-index: 2;
+			width: 1.2em;
+			height: 1.2em;
+		}
+
+		.ui-slider .ui-slider-range {
+			position: absolute;
+			z-index: 1;
+			font-size: 0.7em;
+			display: block;
+		}
+
+		.ui-slider-horizontal {
+			height: 0.8em;
+		}
+
+		.ui-slider-horizontal .ui-slider-handle {
+			top: -0.3em;
+			margin-left: -0.6em;
+		}
+
+		.ui-slider-horizontal .ui-slider-range {
+			height: 100%;
+		}
+
+		.ui-widget.ui-widget-content {
+			border: 1px solid #c5c5c5;
+		}
+
+		.ui-widget-header {
+			background: #e9e9e9;
+		}
+
+		.ui-widget-content .ui-state-default,
+		.ui-widget-header .ui-state-default,
+		html .ui-button.ui-state-disabled:active {
+			border: 1px solid #c5c5c5;
+			background: #f6f6f6;
+			color: #454545;
 		}
 	</style>
 </head>

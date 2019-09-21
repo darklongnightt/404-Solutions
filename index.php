@@ -4,7 +4,7 @@ include('templates/header.php');
 
 // Pagination for all results
 $currDir = "index.php";
-$query = "SELECT * FROM product";
+$query = 'SELECT * FROM product';
 include('templates/pagination_query.php');
 
 // Get category to filter products
@@ -15,34 +15,54 @@ $filterCat = mysqli_fetch_all($catResult, MYSQLI_ASSOC);
 
 <!DOCTYPE html>
 <html>
-
 <h4 class="center grey-text">Products</h4>
+<script>
+	$(function() {
+		$("#pRange").slider({
+			range: true,
+			min: 0,
+			max: 20,
+			values: [0, 20],
+			slide: function(event, ui) {
+				$("#range").val("$" + ui.values[0] + " - $" + ui.values[1]);
+			}
+		});
+		$("#range").val("$" + $("#pRange").slider("values", 0) +
+			" - $" + $("#pRange").slider("values", 1));
+	});
+</script>
+<div class="sidebar">
+	<form id="sfform" method="post">
 
-<form id="sfform" method="post">
-	<label> Sort By: </label>
-	<select class="browser-default" name="selectS">
-		<option value="default" selected>Default</option>
-		<option value="PDTPRICE DESC">Price - High to Low </option>
-		<option value="PDTPRICE ASC">Price - Low to High</option>
-		<option value="PDTDISCNT ASC">Discount - Low to High</option>
-		<option value="PDTDISCNT DESC">Discount - High to Low</option>
-		<option value="PDTQTY DESC">Quantity - High to Low </option>
-		<option value="PDTQTY ASC">Quantity - Low to High</option>
-	</select>
-	<label> Filter By Category: </label>
-	<select class="browser-default" name="selectF">
-		<option value="all">All</option>
-		<?php
+		<h6 class="grey-text">Category</h6>
+		<select class="browser-default" name="selectF">
+			<option value="all">All</option>
+			<?php
 
-		foreach ($filterCat as $filtered) {
-			echo "<option value=" . str_replace(' ', '-', $filtered['CATEGORY']) . ">" . $filtered['CATEGORY'] . "</option>";
-		}
-		?>
-	</select>
-
-	<input type="submit" name="submit" value="Go!" class="btn brand z-depth-0">
-</form>
-
+			foreach ($filterCat as $filtered) {
+				echo "<option value=" . str_replace(' ', '-', $filtered['CATEGORY']) . ">" . $filtered['CATEGORY'] . "</option>";
+			}
+			?>
+		</select>
+		<br>
+		<h6 class="grey-text">Sort</h6>
+		<select class="browser-default" name="selectS">
+			<option value="default" selected>Default</option>
+			<option value="PDTPRICE DESC">Price - High to Low </option>
+			<option value="PDTPRICE ASC">Price - Low to High</option>
+			<option value="PDTDISCNT ASC">Discount - Low to High</option>
+			<option value="PDTDISCNT DESC">Discount - High to Low</option>
+			<option value="PDTQTY DESC">Quantity - High to Low </option>
+			<option value="PDTQTY ASC">Quantity - Low to High</option>
+		</select>
+		<br>
+		<h6 class="grey-text">Price Range</h6>
+		<input type="text" name="priceR" id="range" readonly>
+		<div id="pRange"></div>
+		<br>
+		<input type="submit" name="submit" value="Search" class="btn brand z-depth-0">
+	</form>
+</div>
 <?php
 if ($_POST) {
 	// get user's selection for sort
@@ -50,10 +70,17 @@ if ($_POST) {
 	// replace - with space for sql filter by category
 	$rFilter = str_replace('-', ' ', $getFilter);
 	$getSort = htmlspecialchars($_POST['selectS']);
+	$getPriceR = str_replace('$', '', $_POST['priceR']);
+	$price = explode('-', $getPriceR);
+	// get min and max price
+	$pMin = $price[0];
+	$pMax = $price[1];
+	$query .= ' WHERE PDTPRICE >="' . $pMin . '" AND PDTPRICE <= "' . $pMax . '"';
 	//if user uses filter function
 	if ($getFilter != "all") {
-		$query .= ' WHERE CATEGORY = "' . $rFilter . '"';
+		$query .= ' AND CATEGORY = "' . $rFilter . '"';
 	}
+
 	//if user use sort function
 	if ($getSort != "default") {
 		$query .= ' ORDER BY ' . $getSort;
@@ -84,9 +111,14 @@ mysqli_close($conn);
 				<div class="card z-depth-0">
 					<img src="img/product_icon.svg" class="product-icon">
 					<div class="card-content center">
-						<h6> <?php echo htmlspecialchars($product['PDTNAME']); ?> </h6>
-						<div> <?php echo htmlspecialchars($product['WEIGHT']); ?> </div>
-						<div> <?php echo htmlspecialchars('$' . $product['PDTPRICE']); ?> </div>
+						<h6> <?php echo htmlspecialchars($product['PDTNAME'] . ' - ' . $product['WEIGHT']); ?> </h6>
+						<div> <?php echo htmlspecialchars('$' . $product['PDTPRICE']); ?>
+							<label><?php if ($product['PDTDISCNT'] > 0) {
+											echo htmlspecialchars(' -' . $product['PDTDISCNT'] . '% OFF');
+										}
+										?>
+							</label>
+						</div>
 						<div class="card-action right-align">
 							<a href="product_details.php?id=<?php echo $product['PDTID']; ?>" class="brand-text">more info</a>
 						</div>
