@@ -118,7 +118,7 @@ if (isset($_SESSION['U_UID']))
 	<nav class="white z-depth-0">
 		<div class="container">
 			<strong>
-				<a href="../index.php" class="brand-logo brand-text left">SuperData</a>
+				<a href="../index.php" class="brand-logo grey-text left">SuperData</a>
 			</strong>
 			<ul id="nav-mobile" class="right hide-on-small-and-down">
 
@@ -127,8 +127,8 @@ if (isset($_SESSION['U_UID']))
 						<a href="../index.php" class="btn btn-floating red lighten-2"><?php echo $_SESSION['U_INITIALS'] ?></a>
 					</li>
 
-					<li>
-						<a href="../authentication/logout.php" class="btn brand z-depth-0">Logout</a>
+					<li class="right">
+						<a href="../authentication/logout.php" class="brand-text bold">Logout</a>
 					</li>
 
 					<?php if (substr($uid, 0, 3) == 'CUS') {
