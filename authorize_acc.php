@@ -42,17 +42,22 @@ if (isset($_POST['submit'])) {
 
         if ($checkResult > 0) {
             // Gets admin user account to check password
-            $sql = "SELECT * FROM customer WHERE EMAIL = '$email'";
+            $sql = "SELECT * FROM customer JOIN salt on customer.EMAIL = salt.EMAIL 
+            WHERE customer.EMAIL = '$email'";
             if ($result = mysqli_query($conn, $sql)) {
                 $customer = mysqli_fetch_assoc($result);
-                // Usage of password_verify() results in constant time preventing timing attacks
-                $checkPassword = password_verify($password, $customer['PASSWORD']);
+
+                // Usage of secured sha256 to hash password concat with generated salt
+                $password .= $customer['SALT'];
+                $password = hash('sha256', $password);
+                echo $password;
+                $checkPassword = ($password == $customer['PASSWORD'] ? TRUE : FALSE);
 
                 // Default deny policy
                 if (!$checkPassword) {
                     $errors['password'] = 'Password is wrong!';
                 } else if ($checkPassword) {
-
+                    
                     // Generate new unique uid for the customer
                     $unique = true;
                     $userid = '';

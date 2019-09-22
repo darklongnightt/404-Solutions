@@ -90,7 +90,7 @@ mysqli_close($conn);
 <html>
 <?php if ($product) : ?>
     <div class="container center">
-        <h4><?php echo htmlspecialchars($product['PDTNAME']); ?></h4>
+        <h4><?php echo htmlspecialchars($product['PDTNAME']) . ' - ' . htmlspecialchars($product['WEIGHT']); ?></h4>
         <p><?php echo 'Description: ' . htmlspecialchars($product['DESCRIPTION']); ?></p>
         <p><?php echo 'Category: ' . htmlspecialchars($product['CATEGORY']); ?></p>
         <p><?php echo 'Brand: ' . htmlspecialchars($product['BRAND']); ?></p>

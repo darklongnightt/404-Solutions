@@ -86,8 +86,10 @@ if (isset($_POST['submit'])) {
         $password = mysqli_real_escape_string($conn, $_POST['password']);
         $phoneno = mysqli_real_escape_string($conn, $_POST['phoneno']);
 
-        // Usage of password_hash() that with inbuild default generated salt
-        $hashedpassword = mysqli_real_escape_string($conn, password_hash($password, PASSWORD_DEFAULT));
+        // Usage of secured sha256 to hash password concat with generated salt
+        $salt = uniqid();
+        $password .= $salt;
+        $hashedpassword = hash('sha256', $password);
 
         // Generate unique uid for the customer
         $unique = true;
@@ -103,20 +105,27 @@ if (isset($_POST['submit'])) {
 
         // Inserts data to db and redirects user to homepage
         $sql = "INSERT INTO customer(EMAIL, FIRSTNAME, LASTNAME, PASSWORD, DOB, GENDER, USERID, PHONENO) 
-		VALUES('$email', '$firstname', '$lastname', '$hashedpassword', '$dob', '$gender', '$userid', '$phoneno')";
-        if (mysqli_query($conn, $sql)) {
-            // Set session variables
-            $_SESSION['U_UID'] = $userid;
-            $_SESSION['U_FIRSTNAME'] = $firstname;
-            $_SESSION['U_LASTNAME'] = $lastname;
-            $_SESSION['U_EMAIL'] = $email;
-            $_SESSION['U_GENDER'] = $gender;
-            $_SESSION['U_DOB'] = $dob;
-            $_SESSION['U_INITIALS'] = $firstname[0] . $lastname[0];
+        VALUES('$email', '$firstname', '$lastname', '$hashedpassword', '$dob', '$gender', '$userid', '$phoneno')";
 
-            mysqli_free_result($result);
-            mysqli_close($conn);
-            header('Location: shipping_details.php');
+        if (mysqli_query($conn, $sql)) {
+            $sql = "INSERT INTO salt(SALT, EMAIL) VALUES('$salt', '$email')";
+            if (mysqli_query($conn, $sql)) {
+                // Successfully registered user into db, set session variables
+                $_SESSION['U_UID'] = $userid;
+                $_SESSION['U_FIRSTNAME'] = $firstname;
+                $_SESSION['U_LASTNAME'] = $lastname;
+                $_SESSION['U_EMAIL'] = $email;
+                $_SESSION['U_GENDER'] = $gender;
+                $_SESSION['U_DOB'] = $dob;
+                $_SESSION['U_INITIALS'] = $firstname[0] . $lastname[0];
+    
+                mysqli_free_result($result);
+                mysqli_close($conn);
+                header('Location: shipping_details.php');
+
+            } else {
+                echo 'Query Error: ' . mysqli_error($conn);
+            }
         } else {
             echo 'Query Error: ' . mysqli_error($conn);
         }

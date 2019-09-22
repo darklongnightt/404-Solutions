@@ -2,8 +2,8 @@
 include('config/db_connect.php');
 include('templates/header.php');
 
-$pdtname = $desc = $brand = $category = $pdtqty = $pdtprice = $cstprice = $discount = $checkResult = $pdtid = '';
-$errors = array('pdtname' => '', 'desc' => '', 'brand' => '', 'category' => '', 'pdtqty' => '', 'pdtprice' => '', 'cstprice' => '', 'discount' => '');
+$pdtname = $desc = $brand = $category = $pdtqty = $pdtprice = $cstprice = $discount = $checkResult = $pdtid = $weight = '';
+$errors = array('pdtname' => '', 'weight' => '', 'desc' => '', 'brand' => '', 'category' => '', 'pdtqty' => '', 'pdtprice' => '', 'cstprice' => '', 'discount' => '');
 
 //Checks if button of name="submit" is clicked
 if (isset($_POST['submit'])) {
@@ -59,6 +59,12 @@ if (isset($_POST['submit'])) {
 		$discount = $_POST['discount'];
 	}
 
+	if (empty($_POST['weight'])) {
+		$errors['weight'] = 'Product weight is required!';
+	} else {
+		$weight = $_POST['weight'];
+	}
+
 	// Checks if form is error free
 	if (!array_filter($errors)) {
 		// Formatting string for db security
@@ -66,6 +72,7 @@ if (isset($_POST['submit'])) {
 		$desc = mysqli_real_escape_string($conn, $_POST['desc']);
 		$brand = mysqli_real_escape_string($conn, $_POST['brand']);
 		$category = mysqli_real_escape_string($conn, $_POST['category']);
+		$weight = mysqli_real_escape_string($conn, $_POST['weight']);
 
 		// Generate unique uid for the product
 		$unique = true;
@@ -80,8 +87,8 @@ if (isset($_POST['submit'])) {
 		} while (!$unique);
 
 		// Inserts data to db and redirects user to homepage
-		$sql = "INSERT INTO product(PDTID, PDTNAME, DESCRIPTION, BRAND, CATEGORY, PDTQTY, CSTPRICE, PDTPRICE, PDTDISCNT) 
-		VALUES('$pdtid', '$pdtname', '$desc', '$brand', '$category', '$pdtqty', '$cstprice', '$pdtprice', '$discount')";
+		$sql = "INSERT INTO product(PDTID, PDTNAME, WEIGHT, DESCRIPTION, BRAND, CATEGORY, PDTQTY, CSTPRICE, PDTPRICE, PDTDISCNT) 
+		VALUES('$pdtid', '$pdtname', '$weight', '$desc', '$brand', '$category', '$pdtqty', '$cstprice', '$pdtprice', '$discount')";
 		if (mysqli_query($conn, $sql)) {
 			header('Location: index.php');
 		} else {
@@ -100,6 +107,10 @@ if (isset($_POST['submit'])) {
 		<label>Product Name: </label>
 		<input type="text" name="pdtname" value="<?php echo htmlspecialchars($pdtname); ?>">
 		<div class="red-text"><?php echo htmlspecialchars($errors['pdtname']); ?></div>
+
+		<label>Product Weight: </label>
+		<input type="text" name="weight" value="<?php echo htmlspecialchars($weight); ?>">
+		<div class="red-text"><?php echo htmlspecialchars($errors['weight']); ?></div>
 
 		<label>Description: </label>
 		<input type="text" name="desc" value="<?php echo htmlspecialchars($desc); ?>">

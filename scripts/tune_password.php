@@ -8,28 +8,27 @@ $uid = '';
 
 // Hash password for each user
 foreach ($userList as $user) {
+    $email = mysqli_real_escape_string($conn, $user['EMAIL']);
     $userid = mysqli_real_escape_string($conn, $user['USERID']);
     $password = mysqli_real_escape_string($conn, $user['PASSWORD']);
-    $hashedpassword = mysqli_real_escape_string($conn, password_hash($password, PASSWORD_DEFAULT));
 
+    // Generate random salt value and hash password using sha256
+    $salt = uniqid();
+    $password .= $salt;
+    $hashedpassword = mysqli_real_escape_string($conn, hash('sha256', $password));
+
+    // Update db
     $sql = "UPDATE customer SET PASSWORD='$hashedpassword' 
     WHERE USERID='$userid'";
     if (!mysqli_query($conn, $sql)) {
         echo 'Query Error: ' . mysqli_error($conn);
+    } else {
+        $sql = "INSERT INTO salt(SALT, EMAIL) VALUES('$salt', '$email')";
+        if (!mysqli_query($conn, $sql)) {
+            echo 'Query Error: ' . mysqli_error($conn);
+        }
     }
 }
-
-// Generate unique uid for the customer
-$unique = true;
-do {
-    $uid = uniqid('CUS', true);
-    $sql = "SELECT * FROM CUSTOMER WHERE USERID = '$uid'";
-    $result = mysqli_query($conn, $sql);
-    $checkResult = mysqli_num_rows($result);
-    if ($checkResult > 0) {
-        $unique = false;
-    }
-} while (!$unique);
 
 mysqli_free_result($result);
 mysqli_close($conn);
@@ -39,7 +38,8 @@ mysqli_close($conn);
 <!DOCTYPE HTML>
 <html>
 
+<h4 class="center grey-text">Successfully hashed and salted all password in the database!</h4>
 
-<?php include("templates/footer.php"); ?>
+<?php include("../templates/footer.php"); ?>
 
 </html>

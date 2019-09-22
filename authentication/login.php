@@ -28,11 +28,16 @@ if (isset($_POST['submit'])) {
         $password = mysqli_real_escape_string($conn, $_POST['password']);
 
         // Gets a customer record from db as a single associative array
-        $sql = "SELECT * FROM customer WHERE EMAIL = '$email'";
+        $sql = "SELECT * FROM customer JOIN salt on customer.EMAIL = salt.EMAIL 
+        WHERE customer.EMAIL = '$email'";
         if ($result = mysqli_query($conn, $sql)) {
             $customer = mysqli_fetch_assoc($result);
-            // Usage of password_verify() results in constant time preventing timing attacks
-            $checkPassword = password_verify($password, $customer['PASSWORD']);
+
+            // Usage of secured sha256 to hash password concat with generated salt
+            $password .= $customer['SALT'];
+            $password = hash('sha256', $password);
+            echo $password;
+            $checkPassword = ($password == $customer['PASSWORD'] ? TRUE : FALSE);
 
             // Default deny policy
             if (!$checkPassword) {
