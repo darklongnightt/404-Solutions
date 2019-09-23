@@ -10,19 +10,19 @@ $currDir = "index.php";
 $query = 'SELECT * FROM product';
 include('templates/pagination_query.php');
 
-// Get category to filter products
+// Get all product categories for filtering
 $getCat = "SELECT DISTINCT CATEGORY FROM product";
 $catResult = mysqli_query($conn, $getCat);
 $filterCat = mysqli_fetch_all($catResult, MYSQLI_ASSOC);
 
-// Default range
-$minRange = $catMin = 0.04;
-$maxRange = $catMax = 19.9;
+// Get min and max product price for range slider default
+$getCatRange = "SELECT MIN(PDTPRICE) AS MINPRICE, MAX(PDTPRICE) AS MAXPRICE FROM product";
+$result = mysqli_query($conn, $getCatRange);
+$defaultRange = mysqli_fetch_assoc($result);
+$minRange = $catMin = $defaultRange['MINPRICE'];
+$maxRange = $catMax = $defaultRange['MAXPRICE'];
 
-// Get price range from specific category
-$getCatRange = 'SELECT MIN(PDTPRICE), MAX(PDTPRICE) FROM product';
-
-if ($_POST) {
+if (isset($_POST['submit'])) {
 	// Get user's selection for sort, replace - with space for sql filter by category
 	$getFilter = $_POST['selectF'];
 	$rFilter = str_replace('-', ' ', $getFilter);
@@ -46,8 +46,8 @@ if ($_POST) {
 	// Get price range for specific category
 	$catRange = mysqli_query($conn, $getCatRange);
 	$catPriceRange = mysqli_fetch_all($catRange, MYSQLI_ASSOC);
-	$catMin = (float) $catPriceRange[0]['MIN(PDTPRICE)'];
-	$catMax = (float) $catPriceRange[0]['MAX(PDTPRICE)'];
+	$catMin = (float) $catPriceRange[0]['MINPRICE'];
+	$catMax = (float) $catPriceRange[0]['MAXPRICE'];
 
 	// If user selection misfit min and max for specific category
 	if (($minRange == 0) || ($maxRange == 0) || ($minRange < $catMin) || ($maxRange > $catMax) || ($minRange > $catMax) || ($maxRange < $catMin)) {
