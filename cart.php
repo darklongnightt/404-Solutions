@@ -153,17 +153,18 @@ mysqli_close($conn);
                     <div>Savings: -$<?php echo htmlspecialchars(number_format($sumSavings, 2, '.', '')); ?></div>
                     <div class="divider"></div>
                     <strong>
-                        <div>Total: $<?php echo htmlspecialchars(number_format($sumTotal, 2, '.', '')); ?> </div>
+                        <div class="bold">Total: $<?php echo htmlspecialchars(number_format($sumTotal, 2, '.', '')); ?> </div>
                     </strong>
 
-<!--                     <div class="divider"></div>
+                    <div class="divider"></div>
                     <label>Payment: </label>
                     <select class="browser-default" name="payment" form="checkout">
                         <option value="MasterCard">MasterCard</option>
                         <option value="PayPal">PayPal</option>
                         <option value="Bank Transfer">Bank Transfer</option>
-                    </select> -->
+                    </select>
 
+                    <br>
                     <form action="cart.php" method="POST" class="center" id="checkout">
                         <input type="submit" name="checkout" value="Checkout(<?php echo $totalQty; ?>)" class="btn brand z-depth-0" />
                     </form>

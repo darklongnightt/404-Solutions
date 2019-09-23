@@ -150,7 +150,7 @@ mysqli_close($conn);
 					<img src="img/product_icon.svg" class="product-icon">
 					<div class="card-content center">
 						<h6> <?php echo htmlspecialchars($product['PDTNAME']); ?> </h6> 
-						<h6> <?php echo htmlspecialchars(' - ' . $product['WEIGHT']); ?> </h6>
+						<div> <?php echo htmlspecialchars($product['WEIGHT']); ?> </div>
 						<div> <?php echo htmlspecialchars($product['BRAND']); ?> </div>
 						<div> <?php echo htmlspecialchars('$' . $product['PDTPRICE']); ?>
 							<label class="red-text"><?php if ($product['PDTDISCNT'] > 0) {
