@@ -68,8 +68,8 @@ if (isset($_POST['submit'])) {
 <html>
 
 <section class="container grey-text">
-    <h4 class="center">Log In</h4>
-    <form action="login.php" class="white" method="POST">
+    <h4 class="center">Login</h4>
+    <form action="login.php" class="EditForm" method="POST">
         <label>Email Address: </label>
         <input type="text" name="email" value="<?php echo htmlspecialchars($email); ?>">
         <div class="red-text"><?php echo htmlspecialchars($errors['email']); ?></div>

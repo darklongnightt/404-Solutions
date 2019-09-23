@@ -105,7 +105,7 @@ mysqli_close($conn);
 			" - $" + $("#pRange").slider("values", 1));
 	});
 </script>
-<div class="sidebar">
+<div class="sidebar sidebar-padding">
 	<form id="sfform" name="sfform" method="post">
 		<h6 class="grey-text">Category</h6>
 		<p id="testrange"></p>
@@ -149,7 +149,8 @@ mysqli_close($conn);
 				<div class="card z-depth-0 small">
 					<img src="img/product_icon.svg" class="product-icon">
 					<div class="card-content center">
-						<h6> <?php echo htmlspecialchars($product['PDTNAME'] . ' - ' . $product['WEIGHT']); ?> </h6>
+						<h6> <?php echo htmlspecialchars($product['PDTNAME']); ?> </h6> 
+						<h6> <?php echo htmlspecialchars(' - ' . $product['WEIGHT']); ?> </h6>
 						<div> <?php echo htmlspecialchars($product['BRAND']); ?> </div>
 						<div> <?php echo htmlspecialchars('$' . $product['PDTPRICE']); ?>
 							<label class="red-text"><?php if ($product['PDTDISCNT'] > 0) {

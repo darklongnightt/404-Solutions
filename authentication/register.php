@@ -139,11 +139,10 @@ if (isset($_POST['submit'])) {
 <!DOCTYPE html>
 <html>
 
-
 <section class="container grey-text">
     <h4 class="center">Register New Account</h4>
 
-    <form action="register.php" class="white" method="POST">
+    <form action="register.php" class="EditForm" method="POST">
         <label>Email Address: </label>
         <input type="text" name="email" value="<?php echo htmlspecialchars($email); ?>">
         <div class="red-text"><?php echo htmlspecialchars($errors['email']); ?></div>

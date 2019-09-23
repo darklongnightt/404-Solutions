@@ -149,19 +149,20 @@ mysqli_close($conn);
                 <div class="card-content">
                     <h5>Order Summary</h5>
                     <div>Subtotal: $<?php echo htmlspecialchars(number_format($sumSubTotal, 2, '.', '')); ?> </div>
+                    
                     <div>Savings: -$<?php echo htmlspecialchars(number_format($sumSavings, 2, '.', '')); ?></div>
                     <div class="divider"></div>
                     <strong>
                         <div>Total: $<?php echo htmlspecialchars(number_format($sumTotal, 2, '.', '')); ?> </div>
                     </strong>
 
-                    <div class="divider"></div>
+<!--                     <div class="divider"></div>
                     <label>Payment: </label>
                     <select class="browser-default" name="payment" form="checkout">
                         <option value="MasterCard">MasterCard</option>
                         <option value="PayPal">PayPal</option>
                         <option value="Bank Transfer">Bank Transfer</option>
-                    </select>
+                    </select> -->
 
                     <form action="cart.php" method="POST" class="center" id="checkout">
                         <input type="submit" name="checkout" value="Checkout(<?php echo $totalQty; ?>)" class="btn brand z-depth-0" />
