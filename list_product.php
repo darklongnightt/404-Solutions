@@ -103,7 +103,7 @@ if (isset($_POST['submit'])) {
 
 <section class="container grey-text">
 	<h4 class="center">New Product</h4>
-	<form action="list_product.php" class="white" method="POST">
+	<form action="list_product.php" class="EditForm" method="POST">
 		<label>Product Name: </label>
 		<input type="text" name="pdtname" value="<?php echo htmlspecialchars($pdtname); ?>">
 		<div class="red-text"><?php echo htmlspecialchars($errors['pdtname']); ?></div>

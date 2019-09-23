@@ -3,11 +3,7 @@
 </li>
 
 <li>
-    <a href="../analysis/future_sales.php" class="brand-text bold">Future Sales</a>
-</li>
-
-<li>
-    <a href="../analysis/revenue_forecast.php" class="brand-text bold">Revenue Forecasting</a>
+    <a href="../analysis/future_sales.php" class="brand-text bold">Sales Analysis</a>
 </li>
 
 <li>

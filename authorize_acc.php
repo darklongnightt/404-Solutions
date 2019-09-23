@@ -98,7 +98,7 @@ if (isset($_POST['submit'])) {
 
 <section class="container grey-text">
     <h4 class="center">Authorize Account</h4>
-    <form action="authorize_acc.php" class="white" method="POST">
+    <form action="authorize_acc.php" class="EditForm" method="POST">
         <label>Account Email: </label>
         <input type="text" name="email_to_auth" value="<?php echo htmlspecialchars($email_to_auth); ?>">
         <div class="red-text"><?php echo htmlspecialchars($errors['email_to_auth']); ?></div>

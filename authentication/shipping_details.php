@@ -63,7 +63,6 @@ if (isset($_POST['submit'])) {
         }
     }
 }
-
 ?>
 
 <!DOCTYPE HTML>
@@ -71,7 +70,7 @@ if (isset($_POST['submit'])) {
 <section class="container grey-text">
     <h4 class="center">Shipping Details</h4>
 
-    <form action="shipping_details.php" class="white" method="POST">
+    <form action="shipping_details.php" class="EditForm" method="POST">
         <label>Main Shipping Address: </label>
         <input type="text" name="addr1" value="<?php echo htmlspecialchars($addr1); ?>">
         <div class="red-text"><?php echo htmlspecialchars($errors['addr1']); ?></div>

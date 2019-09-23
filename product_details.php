@@ -148,7 +148,8 @@ mysqli_close($conn);
                 </div>
             </div>
         </div>
-        <div class="row center green-text">
+
+        <div class="row center grey-text">
             <?php echo $message; ?>
         </div>
     </div>
