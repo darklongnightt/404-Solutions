@@ -89,33 +89,43 @@ mysqli_close($conn);
 
 <html>
 <?php if ($product) : ?>
-    <div class="container center">
-        <h4><?php echo htmlspecialchars($product['PDTNAME']) . ' - ' . htmlspecialchars($product['WEIGHT']); ?></h4>
-        <p><?php echo 'Description: ' . htmlspecialchars($product['DESCRIPTION']); ?></p>
-        <p><?php echo 'Category: ' . htmlspecialchars($product['CATEGORY']); ?></p>
-        <p><?php echo 'Brand: ' . htmlspecialchars($product['BRAND']); ?></p>
+    <div class="container">
+        <div class="row">
+            <div class="col s6 m3">
+                <div>image</div>
+            </div>
+            <div class="col s8 m4 offset-m1">
+                <h4><?php echo htmlspecialchars($product['PDTNAME']) . ' - ' . htmlspecialchars($product['WEIGHT']); ?></h4>
+                <p><?php echo 'Description: ' . htmlspecialchars($product['DESCRIPTION']); ?></p>
+                <p><?php echo 'Category: ' . htmlspecialchars($product['CATEGORY']); ?></p>
+                <p><?php echo 'Brand: ' . htmlspecialchars($product['BRAND']); ?></p>
 
-        <p><?php echo 'Product Price: $' . htmlspecialchars($product['PDTPRICE']); ?></p>
-        <p><?php echo 'Cost Price: $' . htmlspecialchars($product['CSTPRICE']); ?></p>
-        <p><?php echo 'Product Discount: ' . htmlspecialchars($product['PDTDISCNT']) . '%'; ?></p>
-        <p><?php echo 'Discounted Price: $' . round(htmlspecialchars($product['PDTPRICE']) / 100 * (100 - htmlspecialchars($product['PDTDISCNT'])), 2); ?></p>
-        <p><?php echo 'Listed At: ' . date($product['CREATED_AT']); ?></p>
+                <p><?php echo 'Product Price: $' . htmlspecialchars($product['PDTPRICE']); ?></p>
+                <p><?php echo 'Cost Price: $' . htmlspecialchars($product['CSTPRICE']); ?></p>
+                <p><?php echo 'Product Discount: ' . htmlspecialchars($product['PDTDISCNT']) . '%'; ?></p>
+                <p><?php echo 'Discounted Price: $' . round(htmlspecialchars($product['PDTPRICE']) / 100 * (100 - htmlspecialchars($product['PDTDISCNT'])), 2); ?></p>
+                <p><?php echo 'Listed At: ' . date($product['CREATED_AT']); ?></p>
 
-        <form action="product_details.php?id=<?php echo $id; ?>" method="POST">
-            <input type="hidden" name="id_to_delete" value="<?php echo $product['PDTID']; ?>" />
+                <form action="product_details.php?id=<?php echo $id; ?>" method="POST">
+                    <input type="hidden" name="id_to_delete" value="<?php echo $product['PDTID']; ?>" />
 
-            <?php if ($uid) { ?>
-                <?php if (substr($uid, 0, 3) == 'CUS') { ?>
-                    <input type="submit" name="cart" value="+cart" class="btn brand z-depth-0" />
-                    <input type="submit" name="favourite" value="+favourite" class="btn brand z-depth-0" />
-                <?php } else if (substr($uid, 0, 3) == 'ADM') { ?>
-                    <input type="submit" name="delete" value="delete" class="btn brand z-depth-0" />
-                <?php } ?>
-            <?php } ?>
-        </form>
+                    <?php if ($uid) { ?>
+                        <?php if (substr($uid, 0, 3) == 'CUS') { ?>
+                            <input type="submit" name="cart" value="+cart" class="btn brand z-depth-0" />
+                            <input type="submit" name="favourite" value="+favourite" class="btn brand z-depth-0" />
+                        <?php } else if (substr($uid, 0, 3) == 'ADM') { ?>
+                            <input type="submit" name="delete" value="delete" class="btn brand z-depth-0" />
+                        <?php } ?>
+                    <?php } ?>
+                </form>
+            </div>
+            <div class="col s4 m2 offset-m1">
+                <div>buttons</div>
+            </div>
+        </div>
     </div>
 <?php else : ?>
-    <h4 class="center">Error: No such product exists!</h4>
+    <h4 class="center">Error 404: No such product exists!</h4>
 <?php endif; ?>
 
 <?php include("templates/footer.php"); ?>
