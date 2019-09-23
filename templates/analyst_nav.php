@@ -1,19 +1,19 @@
 <li>
-    <a href="../market_basket.php" class="brand-text bold">Market Basket</a>
+    <a href="../analysis/market_basket.php" class="brand-text bold">Market Basket</a>
 </li>
 
 <li>
-    <a href="../sales_analysis.php" class="brand-text bold">Future Sales</a>
+    <a href="../analysis/future_sales.php" class="brand-text bold">Future Sales</a>
 </li>
 
 <li>
-    <a href="../revenue_forecast.php" class="brand-text bold">Revenue Forecasting</a>
+    <a href="../analysis/revenue_forecast.php" class="brand-text bold">Revenue Forecasting</a>
 </li>
 
 <li>
-    <a href="../demographics_analysis.php" class="brand-text bold">Demographics</a>
+    <a href="../analysis/demographics_analysis.php" class="brand-text bold">Demographics</a>
 </li>
 
 <li>
-    <a href="../satisfaction_analysis.php" class="brand-text bold">Satisfaction Analysis</a>
+    <a href="../analysis/satisfaction_analysis.php" class="brand-text bold">Satisfaction Analysis</a>
 </li>
