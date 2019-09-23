@@ -45,7 +45,7 @@ mysqli_close($conn);
                 <div class="card z-depth-0">
                     <div class="card-content center">
                         <a href="product_details.php?id=<?php echo $order['PDTID']; ?>">
-                            <h6 class="bold grey-text"> <?php echo htmlspecialchars($order['PDTNAME']); ?> </h6>
+                            <h6 class="black-text"> <?php echo htmlspecialchars($order['PDTNAME'] . ' - ' . $order['WEIGHT']); ?> </h6>
                         </a>
 
                         <div> <?php echo htmlspecialchars('Net Total Price: $' . number_format($order['NETPRICE'], 2, '.', '')); ?> </div>

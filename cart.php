@@ -70,6 +70,15 @@ if (isset($_POST['checkout']) && $cartList) {
             // Empty cart
             $sql = "DELETE FROM cart WHERE USERID='$uid'";
             if (mysqli_query($conn, $sql)) {
+                // Update product qty in products table
+                $sql = "UPDATE product SET PDTQTY=PDTQTY-'$orderQty' WHERE PDTID = '$pdtId'";
+                if (mysqli_query($conn, $sql)) {
+                    // Navigate to else payment page
+                    header('Location: cart.php');
+                } else {
+                    echo 'Query Error: ' . mysqli_error($conn);
+                }
+
                 header('Location: cart.php');
             } else {
                 echo 'Query Error: ' . mysqli_error($conn);
@@ -113,7 +122,7 @@ mysqli_close($conn);
                         <a href="product_details.php?id=<?php echo $product['PDTID']; ?>">
                             <img src="img/product_icon.svg" class="product-icon"> </a>
                         <div class="card-content center">
-                            <h6> <?php echo htmlspecialchars($product['PDTNAME']); ?> </h6>
+                            <h6> <?php echo htmlspecialchars($product['PDTNAME'] . ' - ' . $product['WEIGHT']); ?> </h6>
                             <div> <?php echo htmlspecialchars('Unit Price: $' . number_format($netUnit, 2, '.', '')); ?> </div>
 
                             <?php if ($product['PDTDISCNT'] > 0) { ?>

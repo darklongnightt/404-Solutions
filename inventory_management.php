@@ -4,12 +4,12 @@ include('templates/header.php');
 
 // Pagination for all results
 $currDir = "inventory_management.php";
-$query = 'SELECT PDTNAME, CATEGORY, BRAND, PDTID, PDTQTY
+$query = 'SELECT PDTNAME, CATEGORY, BRAND, PDTID, PDTQTY, THRESHOLD, WEIGHT
 FROM product';
 include('templates/pagination_query.php');
 
 // Getting data from table: product as associative array
-$query = "SELECT PDTNAME, CATEGORY, BRAND, PDTID, PDTQTY
+$query = "SELECT PDTNAME, CATEGORY, BRAND, PDTID, PDTQTY, THRESHOLD, WEIGHT
 FROM product ORDER BY CREATED_AT DESC 
 LIMIT $startingLimit , $resultsPerPage";
 $result = mysqli_query($conn, $query);
@@ -46,7 +46,9 @@ mysqli_close($conn);
 
         <?php foreach ($productList as $product) { ?>
             <li class="collection-item avatar">
-                <img src="img/product_icon1.svg" alt="" class="circle">
+                <a href="product_details.php?id=<?php echo htmlspecialchars($product['PDTID']) ?>">
+                    <img src="img/product_icon1.svg" alt="" class="circle">
+                </a>
                 <form class="secondary-content flex no-pad" method="POST" action="inventory_management.php">
                     <label>Update Quantity: </label>
                     <input type="number" name="updateqty" value="<?php echo htmlspecialchars($product['PDTQTY']); ?>">
@@ -54,13 +56,14 @@ mysqli_close($conn);
                     <input type="submit" name="submit" value="update" class="btn-small brand z-depth-0">
                 </form>
 
-                <span class="title bold grey-text"><?php echo htmlspecialchars($product['PDTNAME']); ?></span>
-                <div class="grey-text"><?php echo htmlspecialchars($product['BRAND']) . ' | ' . htmlspecialchars($product['CATEGORY']); ?></div>
-                <div class="grey-text"><?php echo htmlspecialchars('Quantity: ' . htmlspecialchars($product['PDTQTY'])); ?></div>
-                <span class="grey-text"><?php echo htmlspecialchars(htmlspecialchars($product['PDTID'])); ?></span>
-
-
-
+                <span class="title black-text"><?php echo htmlspecialchars($product['PDTNAME'] . ' - ' . $product['WEIGHT']); ?></span>
+                <div class="black-text"><?php echo htmlspecialchars($product['BRAND']) . ' | ' . htmlspecialchars($product['CATEGORY']); ?></div>
+                <?php if ($product['PDTQTY'] <= $product['THRESHOLD']) { ?>
+                    <div class="red-text bold"><?php echo htmlspecialchars('Quantity: ' . htmlspecialchars($product['PDTQTY'])); ?></div>
+                <?php } else { ?>
+                    <div class="black-text"><?php echo htmlspecialchars('Quantity: ' . htmlspecialchars($product['PDTQTY'])); ?></div>
+                <?php } ?>
+                <span class="black-text"><?php echo htmlspecialchars(htmlspecialchars($product['PDTID'])); ?></span>
 
             </li>
         <?php } ?>
