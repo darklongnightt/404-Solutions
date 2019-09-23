@@ -18,7 +18,7 @@ if (isset($_GET['id'])) {
 // Checks if delete button is clicked
 if (isset($_POST['delete'])) {
     $id_to_delete = mysqli_real_escape_string($conn, $_POST['id_to_delete']);
-    $sql = "DELETE FROM product WHERE PDTID = $id_to_delete";
+    $sql = "DELETE FROM product WHERE PDTID = '$id_to_delete'";
 
     // Checks if query is successful
     if (mysqli_query($conn, $sql)) {
