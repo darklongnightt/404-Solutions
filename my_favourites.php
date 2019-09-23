@@ -71,7 +71,7 @@ mysqli_close($conn);
                 <a href="product_details.php?id=<?php echo $product['PDTID']; ?>">
                     <img src="img/product_icon.svg" class="product-icon"> </a>
                 <div class="card-content center">
-                    <h6> <?php echo htmlspecialchars($product['PDTNAME']); ?> </h6>
+                    <h6> <?php echo htmlspecialchars($product['PDTNAME'] . ' - ' . $product['WEIGHT']); ?> </h6>
                     <div> <?php echo htmlspecialchars('Net Price: $' . number_format($netPrice, 2, '.', '')); ?> </div>
 
                     <?php if ($product['PDTDISCNT'] > 0) { ?>

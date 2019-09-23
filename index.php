@@ -146,12 +146,13 @@ mysqli_close($conn);
 	<div class="row">
 		<?php foreach ($productList as $product) { ?>
 			<div class="col s4 md2">
-				<div class="card z-depth-0">
+				<div class="card z-depth-0 small">
 					<img src="img/product_icon.svg" class="product-icon">
 					<div class="card-content center">
 						<h6> <?php echo htmlspecialchars($product['PDTNAME'] . ' - ' . $product['WEIGHT']); ?> </h6>
+						<div> <?php echo htmlspecialchars($product['BRAND']); ?> </div>
 						<div> <?php echo htmlspecialchars('$' . $product['PDTPRICE']); ?>
-							<label><?php if ($product['PDTDISCNT'] > 0) {
+							<label class="red-text"><?php if ($product['PDTDISCNT'] > 0) {
 											echo htmlspecialchars(' -' . $product['PDTDISCNT'] . '% OFF');
 										}
 										?>

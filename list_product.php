@@ -108,7 +108,7 @@ if (isset($_POST['submit'])) {
 		<input type="text" name="pdtname" value="<?php echo htmlspecialchars($pdtname); ?>">
 		<div class="red-text"><?php echo htmlspecialchars($errors['pdtname']); ?></div>
 
-		<label>Product Weight: </label>
+		<label>Weight: </label>
 		<input type="text" name="weight" value="<?php echo htmlspecialchars($weight); ?>">
 		<div class="red-text"><?php echo htmlspecialchars($errors['weight']); ?></div>
 
@@ -128,7 +128,7 @@ if (isset($_POST['submit'])) {
 		<input type="number" name="pdtqty" value="<?php echo htmlspecialchars($pdtqty); ?>">
 		<div class="red-text"><?php echo htmlspecialchars($errors['pdtqty']); ?></div>
 
-		<label>Product Price: </label>
+		<label>Selling Price: </label>
 		<input type="number" name="pdtprice" min="0" value="<?php echo htmlspecialchars($pdtprice); ?>" step=".01">
 		<div class="red-text"><?php echo htmlspecialchars($errors['pdtprice']); ?></div>
 
