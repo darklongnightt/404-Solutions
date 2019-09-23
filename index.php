@@ -19,8 +19,8 @@ $filterCat = mysqli_fetch_all($catResult, MYSQLI_ASSOC);
 $getCatRange = "SELECT MIN(PDTPRICE) AS MINPRICE, MAX(PDTPRICE) AS MAXPRICE FROM product";
 $result = mysqli_query($conn, $getCatRange);
 $defaultRange = mysqli_fetch_assoc($result);
-$minRange = $catMin = $defaultRange['MINPRICE'];
-$maxRange = $catMax = $defaultRange['MAXPRICE'];
+$minRange = $catMin = (float) $defaultRange['MINPRICE'];
+$maxRange = $catMax = (float) $defaultRange['MAXPRICE'];
 
 if (isset($_POST['submit'])) {
 	// Get user's selection for sort, replace - with space for sql filter by category
@@ -37,17 +37,17 @@ if (isset($_POST['submit'])) {
 	// If user uses filter function
 	if ($getFilter != "all") {
 		$query .= ' WHERE CATEGORY = "' . $rFilter . '" AND';
-		
+
 		// Price range by category
 		$getCatRange .= ' WHERE CATEGORY = "' . $rFilter . '"';
 	} else
 		$query .= ' WHERE';
 
 	// Get price range for specific category
-	$catRange = mysqli_query($conn, $getCatRange);
-	$catPriceRange = mysqli_fetch_all($catRange, MYSQLI_ASSOC);
-	$catMin = (float) $catPriceRange[0]['MINPRICE'];
-	$catMax = (float) $catPriceRange[0]['MAXPRICE'];
+	$result = mysqli_query($conn, $getCatRange);
+	$catPriceRange = mysqli_fetch_assoc($result);
+	$catMin = (float) $catPriceRange['MINPRICE'];
+	$catMax = (float) $catPriceRange['MAXPRICE'];
 
 	// If user selection misfit min and max for specific category
 	if (($minRange == 0) || ($maxRange == 0) || ($minRange < $catMin) || ($maxRange > $catMax) || ($minRange > $catMax) || ($maxRange < $catMin)) {
