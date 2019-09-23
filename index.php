@@ -138,7 +138,9 @@ mysqli_close($conn);
 		<input type="text" name="priceR" id="range" readonly>
 		<div id="pRange"></div>
 		<br>
-		<input type="submit" name="submit" value="Search" class="btn brand z-depth-0">
+		<div class="center">
+			<input type="submit" name="submit" value="Search" class="btn brand z-depth-0">
+		</div>
 	</form>
 </div>
 
@@ -149,14 +151,14 @@ mysqli_close($conn);
 				<div class="card z-depth-0 small">
 					<img src="img/product_icon.svg" class="product-icon">
 					<div class="card-content center">
-						<h6> <?php echo htmlspecialchars($product['PDTNAME']); ?> </h6> 
+						<h6> <?php echo htmlspecialchars($product['PDTNAME']); ?> </h6>
 						<div> <?php echo htmlspecialchars($product['WEIGHT']); ?> </div>
 						<div> <?php echo htmlspecialchars($product['BRAND']); ?> </div>
 						<div> <?php echo htmlspecialchars('$' . $product['PDTPRICE']); ?>
 							<label class="red-text"><?php if ($product['PDTDISCNT'] > 0) {
-											echo htmlspecialchars(' -' . $product['PDTDISCNT'] . '% OFF');
-										}
-										?>
+															echo htmlspecialchars(' -' . $product['PDTDISCNT'] . '% OFF');
+														}
+														?>
 							</label>
 						</div>
 						<div class="card-action right-align">

@@ -166,7 +166,7 @@ mysqli_close($conn);
 
                     <br>
                     <form action="cart.php" method="POST" class="center" id="checkout">
-                        <input type="submit" name="checkout" value="Checkout(<?php echo $totalQty; ?>)" class="btn brand z-depth-0" />
+                        <input type="submit" name="checkout" value="Checkout(<?php echo $totalQty; ?>)" class="btn red z-depth-0" />
                     </form>
                 </div>
             </div>
