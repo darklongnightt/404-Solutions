@@ -36,8 +36,7 @@ if (isset($_POST['submit'])) {
             // Usage of secured sha256 to hash password concat with generated salt
             $password .= $customer['SALT'];
             $password = hash('sha256', $password);
-            echo $password;
-            $checkPassword = ($password == $customer['PASSWORD'] ? TRUE : FALSE);
+            $checkPassword = hash_equals($customer['PASSWORD'], $password) ? TRUE : FALSE;
 
             // Default deny policy
             if (!$checkPassword) {
