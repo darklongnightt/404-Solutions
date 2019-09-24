@@ -13,6 +13,25 @@ if (isset($_GET['id'])) {
 
     // To fetch the result as a single associative array
     $product = mysqli_fetch_assoc($result);
+
+    // Fetch product recommendations
+    $sql = "SELECT * FROM product_recommendation WHERE PDTID = '$id'";
+    $result = mysqli_query($conn, $sql);
+    $recommendations = explode(' ', mysqli_fetch_assoc($result)['RECOMMENDATIONS']);
+
+    // Fetch as product list
+    $recommendation_list = array();
+    foreach ($recommendations as $reco) {
+        $sql = "SELECT * FROM product WHERE PDTID = '$reco'";
+        $result = mysqli_query($conn, $sql);
+        if ($result) {
+            $recommended_product = mysqli_fetch_assoc($result);
+            if ($recommended_product)
+                array_push($recommendation_list, $recommended_product);
+        } else {
+            echo 'Query Error: ' . mysqli_error($conn);
+        }
+    }
 }
 
 // Checks if delete button is clicked
@@ -124,7 +143,7 @@ mysqli_close($conn);
                                     <?php echo htmlspecialchars(' -' . $product['PDTDISCNT'] . '% OFF'); ?>
                                 </label>
                             </div>
-                            <div><?php echo 'Savings: -$' . round(htmlspecialchars($product['PDTPRICE']) / 100 * htmlspecialchars($product['PDTDISCNT']), 2); ?></div>
+                            <div><?php echo 'Savings: -$' . number_format(htmlspecialchars($product['PDTPRICE']) / 100 * htmlspecialchars($product['PDTDISCNT']), 2, '.', ''); ?></div>
                         <?php } ?>
 
                         <div class="bold"><?php echo 'Net Price: $' . number_format(htmlspecialchars($product['PDTPRICE']) / 100 * (100 - htmlspecialchars($product['PDTDISCNT'])), 2, '.', ''); ?></div>
@@ -151,6 +170,35 @@ mysqli_close($conn);
 
         <div class="row center grey-text">
             <?php echo $message; ?>
+        </div>
+
+        <div class="row center">
+            <h6>People Who Bought This Also Bought</h6>
+            <?php foreach ($recommendation_list as $recommendation) { ?>
+                <div class="col s2 md1">
+                    <div class="card z-depth-0 small">
+                        <img src="img/product_icon.svg" class="product-icon">
+                        <div class="card-content center">
+                            <h6> <?php echo htmlspecialchars($recommendation['PDTNAME']); ?> <label> <?php echo htmlspecialchars($product['WEIGHT']); ?> </label></h6>
+
+                            <?php if ($recommendation['PDTDISCNT'] > 0) { ?>
+                                <label> <?php echo htmlspecialchars('$' . $recommendation['PDTPRICE']); ?> </label>
+                                <label class="red-text">
+                                    <?php echo htmlspecialchars(' -' . $recommendation['PDTDISCNT'] . '% OFF'); ?>
+                                </label>
+
+                            <?php } ?>
+
+                            <div class="black-text"><?php echo '$' . number_format(htmlspecialchars($recommendation['PDTPRICE']) / 100 * htmlspecialchars(100 - $product['PDTDISCNT']), 2, '.', ''); ?></div>
+
+                            <div class="card-action right-align">
+                                <a href="product_details.php?id=<?php echo $recommendation['PDTID']; ?>" class="brand-text">more info</a>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            <?php } ?>
         </div>
     </div>
 <?php else : ?>

@@ -151,16 +151,21 @@ mysqli_close($conn);
 				<div class="card z-depth-0 small">
 					<img src="img/product_icon.svg" class="product-icon">
 					<div class="card-content center">
-						<h6> <?php echo htmlspecialchars($product['PDTNAME']); ?> </h6>
-						<div> <?php echo htmlspecialchars($product['WEIGHT']); ?> </div>
-						<div> <?php echo htmlspecialchars($product['BRAND']); ?> </div>
-						<div> <?php echo htmlspecialchars('$' . $product['PDTPRICE']); ?>
-							<label class="red-text"><?php if ($product['PDTDISCNT'] > 0) {
-															echo htmlspecialchars(' -' . $product['PDTDISCNT'] . '% OFF');
-														}
-														?>
+						<h6> <?php echo htmlspecialchars($product['PDTNAME']); ?> <label> <?php echo htmlspecialchars($product['WEIGHT']); ?> </label></h6>
+
+						<label> <?php echo htmlspecialchars($product['BRAND']); ?> </label>
+						<br>
+
+						<?php if ($product['PDTDISCNT'] > 0) { ?>
+							<label> <?php echo htmlspecialchars('$' . $product['PDTPRICE']); ?> </label>
+							<label class="red-text">
+								<?php echo htmlspecialchars(' -' . $product['PDTDISCNT'] . '% OFF'); ?>
 							</label>
-						</div>
+
+						<?php } ?>
+
+						<div class="black-text flow-text"><?php echo '$' . number_format(htmlspecialchars($product['PDTPRICE']) / 100 * htmlspecialchars(100 - $product['PDTDISCNT']), 2, '.', ''); ?></div>
+
 						<div class="card-action right-align">
 							<a href="product_details.php?id=<?php echo $product['PDTID']; ?>" class="brand-text">more info</a>
 						</div>

@@ -1,0 +1,11 @@
+.analytics {
+  width: 1150px;
+  height: 1000px;
+}
+
+.analytics-padding {
+  padding-top: 40px;
+  padding-bottom: 40px;
+  padding-right: 190px;
+  padding-left: 190px;
+}

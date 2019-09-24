@@ -38,7 +38,7 @@ if (isset($_POST['checkout']) && $cartList) {
     // Generate a transaction id for the series of orders
     $unique = true;
     do {
-        $transactionId = uniqid('ORD', true);
+        $transactionId = uniqid('ORD');
         $sql = "SELECT * FROM orders WHERE TRANSACTIONID = '$transactionId'";
         $result = mysqli_query($conn, $sql);
         $checkResult = mysqli_num_rows($result);

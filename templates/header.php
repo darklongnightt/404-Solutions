@@ -19,6 +19,7 @@ if (isset($_SESSION['U_UID']))
 	<link href="../css/ui-slider.css" type="text/css" rel="stylesheet"/>
 	<link href="../css/headers.css" type="text/css" rel="stylesheet"/>
 	<link href="../css/form.css" type="text/css" rel="stylesheet"/>
+	<link href="../css/analytics.css" type="text/css" rel="stylesheet"/>
 </head>
 
 <body class="grey lighten-4">

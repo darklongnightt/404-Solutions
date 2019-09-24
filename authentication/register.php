@@ -94,7 +94,7 @@ if (isset($_POST['submit'])) {
         // Generate unique uid for the customer
         $unique = true;
         do {
-            $userid = uniqid('CUS', true);
+            $userid = uniqid('CUS');
             $sql = "SELECT * FROM customer WHERE USERID = '$userid'";
             $result = mysqli_query($conn, $sql);
             $checkResult = mysqli_num_rows($result);

@@ -61,7 +61,7 @@ if (isset($_POST['submit'])) {
                     $unique = true;
                     $userid = '';
                     do {
-                        $userid = uniqid($acc_type, true);
+                        $userid = uniqid($acc_type);
                         $sql = "SELECT * FROM customer WHERE USERID = '$userid'";
                         $result = mysqli_query($conn, $sql);
                         $checkResult = mysqli_num_rows($result);

@@ -77,7 +77,7 @@ if (isset($_POST['submit'])) {
 		// Generate unique uid for the product
 		$unique = true;
 		do {
-			$pdtid = uniqid('PDT', true);
+			$pdtid = uniqid('PDT');
 			$sql = "SELECT * FROM product WHERE PDTID = $pdtid";
 			$result = mysqli_query($conn, $sql);
 			$checkResult = mysqli_num_rows($result);
