@@ -4,6 +4,34 @@ include('templates/header.php');
 
 $id = $product = $message = '';
 
+function addCart($conn, $id) {
+    if ($_SESSION['U_UID']) {
+        $uid = mysqli_real_escape_string($conn, $_SESSION['U_UID']);
+        $id = mysqli_real_escape_string($conn, $id);
+
+        // Check that cart item exists 
+        $sql = "SELECT * FROM cart WHERE PDTID='$id' AND USERID='$uid'";
+        $result = mysqli_query($conn, $sql);
+        if (mysqli_num_rows($result) > 0) {
+            // Increment product qty by 1
+            $sql = "UPDATE cart SET CARTQTY=CARTQTY+1 WHERE PDTID='$id' AND USERID='$uid'";
+        } else {
+            // Add to db cart with qty of 1
+            $sql = "INSERT INTO cart(PDTID, USERID, CARTQTY) VALUES('$id', '$uid', '1')";
+        }
+
+        if (mysqli_query($conn, $sql)) {
+            $GLOBALS['message'] = 'Successfully added product to cart!';
+        } else {
+            echo 'Query Error: ' . mysqli_error($conn);
+        }
+    } else {
+        // Temporary stores cart items as cookie / session
+        // For now redirect to login page
+        header('Location: /authentication/login.php');
+    }
+}
+
 // Checks if link contains product id
 if (isset($_GET['id'])) {
     // To translate any possible user input before query the db
@@ -36,8 +64,8 @@ if (isset($_GET['id'])) {
 
 // Checks if delete button is clicked
 if (isset($_POST['delete'])) {
-    $id_to_delete = mysqli_real_escape_string($conn, $_POST['id_to_delete']);
-    $sql = "DELETE FROM product WHERE PDTID = '$id_to_delete'";
+    $product_id = mysqli_real_escape_string($conn, $_POST['product_id']);
+    $sql = "DELETE FROM product WHERE PDTID = '$product_id'";
 
     // Checks if query is successful
     if (mysqli_query($conn, $sql)) {
@@ -49,31 +77,12 @@ if (isset($_POST['delete'])) {
 
 // Checks if add to cart button is clicked
 if (isset($_POST['cart'])) {
-    if ($_SESSION['U_UID']) {
-        $uid = mysqli_real_escape_string($conn, $_SESSION['U_UID']);
-        $id = mysqli_real_escape_string($conn, $id);
+    addCart($conn, $_POST['product_id']);
+}
 
-        // Check that cart item exists 
-        $sql = "SELECT * FROM cart WHERE PDTID='$id' AND USERID='$uid'";
-        $result = mysqli_query($conn, $sql);
-        if (mysqli_num_rows($result) > 0) {
-            // Increment product qty by 1
-            $sql = "UPDATE cart SET CARTQTY=CARTQTY+1 WHERE PDTID='$id' AND USERID='$uid'";
-        } else {
-            // Add to db cart with qty of 1
-            $sql = "INSERT INTO cart(PDTID, USERID, CARTQTY) VALUES('$id', '$uid', '1')";
-        }
-
-        if (mysqli_query($conn, $sql)) {
-            $message = 'Successfully added product to cart!';
-        } else {
-            echo 'Query Error: ' . mysqli_error($conn);
-        }
-    } else {
-        // Temporary stores cart items as cookie / session
-        // For now redirect to login page
-        header('Location: /authentication/login.php');
-    }
+// Checks if recommended cart is clicked
+if (isset($_GET['cart'])) {
+    addCart($conn, $_GET['cart']);
 }
 
 // Checks if add to favourite button is clicked
@@ -152,11 +161,11 @@ mysqli_close($conn);
                         <br>
 
                         <form action="product_details.php?id=<?php echo $id; ?>" method="POST">
-                            <input type="hidden" name="id_to_delete" value="<?php echo $product['PDTID']; ?>" />
+                            <input type="hidden" name="product_id" value="<?php echo $product['PDTID']; ?>" />
                             <?php if ($uid) { ?>
                                 <?php if (substr($uid, 0, 3) == 'CUS') { ?>
-                                    <input type="submit" name="cart" value="+cart" class="btn orange z-depth-0" />
-                                    <input type="submit" name="favourite" value="+favourite" class="btn red z-depth-0" />
+                                    <input type="submit" name="cart" value="cart" class="btn orange z-depth-0" />
+                                    <input type="submit" name="favourite" value="favourite" class="btn red z-depth-0" />
                                 <?php } else if (substr($uid, 0, 3) == 'ADM') { ?>
                                     <input type="submit" name="delete" value="delete" class="btn brand z-depth-0" />
                                 <?php } ?>
@@ -175,32 +184,43 @@ mysqli_close($conn);
         <div class="row center">
             <h6>People Who Bought This Also Bought</h6>
             <?php foreach ($recommendation_list as $recommendation) { ?>
-                <div class="col s2 md1">
-                    <div class="card z-depth-0 small">
-                        <img src="img/product_icon.svg" class="product-icon">
-                        <div class="card-content center">
-                            <h6> <?php echo htmlspecialchars($recommendation['PDTNAME']); ?> <label> <?php echo htmlspecialchars($product['WEIGHT']); ?> </label></h6>
+                <div class="col s3 md2">
+                    <a href="product_details.php?id=<?php echo $recommendation['PDTID']; ?>">
+                        <div class="card z-depth-0 small">
 
-                            <?php if ($recommendation['PDTDISCNT'] > 0) { ?>
-                                <label> <?php echo htmlspecialchars('$' . $recommendation['PDTPRICE']); ?> </label>
-                                <label class="red-text">
-                                    <?php echo htmlspecialchars(' -' . $recommendation['PDTDISCNT'] . '% OFF'); ?>
-                                </label>
+                            <img src="img/product_icon.svg" class="product-icon">
+                            <div class="card-content center">
+                                <h6 class="black-text"> <?php echo htmlspecialchars($recommendation['PDTNAME']); ?> <label> <?php echo htmlspecialchars($recommendation['WEIGHT']); ?> </label></h6>
+                                <?php if ($recommendation['PDTDISCNT'] > 0) { ?>
 
-                            <?php } ?>
+                                    <label>
+                                        <strike> <?php echo htmlspecialchars('$' . $recommendation['PDTPRICE']); ?> </strike>
+                                    </label>
+                                    <label class="red-text">
+                                        <?php echo htmlspecialchars('-' . $recommendation['PDTDISCNT'] . '% OFF'); ?>
+                                    </label>
 
-                            <div class="black-text"><?php echo '$' . number_format(htmlspecialchars($recommendation['PDTPRICE']) / 100 * htmlspecialchars(100 - $product['PDTDISCNT']), 2, '.', ''); ?></div>
+                                <?php } ?>
 
-                            <div class="card-action right-align">
-                                <a href="product_details.php?id=<?php echo $recommendation['PDTID']; ?>" class="brand-text">more info</a>
-                            </div>
 
-                        </div>
+                                <div class="black-text flow-text">
+                                    <?php echo '$' . number_format(htmlspecialchars($recommendation['PDTPRICE']) / 100 * htmlspecialchars(100 - $recommendation['PDTDISCNT']), 2, '.', ''); ?>
+                                </div>
+
+                    </a>
+                    <div class="card-action right-align">
+                        <?php if (substr($uid, 0, 3) == 'CUS') { ?>
+                            <a href="product_details.php?id=<?php echo $product['PDTID'] . '&cart=' . $recommendation['PDTID']; ?>">
+                                <div class="red-text"><i class="fa fa-shopping-cart"></i> Cart</div>
+                            </a>
+                        <?php } ?>
                     </div>
                 </div>
-            <?php } ?>
         </div>
     </div>
+<?php } ?>
+</div>
+</div>
 <?php else : ?>
     <h4 class="center">Error 404: No such product exists!</h4>
 <?php endif; ?>

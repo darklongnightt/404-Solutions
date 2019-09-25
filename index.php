@@ -77,6 +77,35 @@ $query .= "\nLIMIT $startingLimit , $resultsPerPage";
 $result = mysqli_query($conn, $query);
 $productList = mysqli_fetch_all($result, MYSQLI_ASSOC);
 
+// Add to cart 
+if (isset($_GET['cart'])) {
+	if ($_SESSION['U_UID']) {
+		$uid = mysqli_real_escape_string($conn, $_SESSION['U_UID']);
+		$id = mysqli_real_escape_string($conn, $_GET['cart']);
+
+		// Check that cart item exists 
+		$sql = "SELECT * FROM cart WHERE PDTID='$id' AND USERID='$uid'";
+		$result = mysqli_query($conn, $sql);
+		if (mysqli_num_rows($result) > 0) {
+			// Increment product qty by 1
+			$sql = "UPDATE cart SET CARTQTY=CARTQTY+1 WHERE PDTID='$id' AND USERID='$uid'";
+		} else {
+			// Add to db cart with qty of 1
+			$sql = "INSERT INTO cart(PDTID, USERID, CARTQTY) VALUES('$id', '$uid', '1')";
+		}
+
+		if (mysqli_query($conn, $sql)) {
+			$message = 'Successfully added product to cart!';
+		} else {
+			echo 'Query Error: ' . mysqli_error($conn);
+		}
+	} else {
+		// Temporary stores cart items as cookie / session
+		// For now redirect to login page
+		header('Location: /authentication/login.php');
+	}
+}
+
 // Free memory of result and close connection
 mysqli_free_result($result);
 mysqli_close($conn);
@@ -148,38 +177,46 @@ mysqli_close($conn);
 	<div class="row">
 		<?php foreach ($productList as $product) { ?>
 			<div class="col s4 md2">
-				<div class="card z-depth-0 small">
-					<img src="img/product_icon.svg" class="product-icon">
-					<div class="card-content center">
-						<h6> <?php echo htmlspecialchars($product['PDTNAME']); ?> <label> <?php echo htmlspecialchars($product['WEIGHT']); ?> </label></h6>
+				<a href="product_details.php?id=<?php echo $product['PDTID']; ?>">
+					<div class="card z-depth-0 small">
 
-						<label> <?php echo htmlspecialchars($product['BRAND']); ?> </label>
-						<br>
+						<img src="img/product_icon.svg" class="product-icon">
+						<div class="card-content center">
+							<h6 class="black-text"> <?php echo htmlspecialchars($product['PDTNAME']); ?> <label> <?php echo htmlspecialchars($product['WEIGHT']); ?> </label></h6>
 
-						<?php if ($product['PDTDISCNT'] > 0) { ?>
-							<label> <?php echo htmlspecialchars('$' . $product['PDTPRICE']); ?> </label>
-							<label class="red-text">
-								<?php echo htmlspecialchars(' -' . $product['PDTDISCNT'] . '% OFF'); ?>
-							</label>
+							<label> <?php echo htmlspecialchars($product['BRAND']); ?> </label>
+							<br>
 
-						<?php } ?>
+							<?php if ($product['PDTDISCNT'] > 0) { ?>
+								<label>
+									<strike> <?php echo htmlspecialchars('$' . $product['PDTPRICE']); ?> </strike>
+								</label>
+								<label class="red-text">
+									<?php echo htmlspecialchars('-' . $product['PDTDISCNT'] . '% OFF'); ?>
+								</label>
 
-						<div class="black-text flow-text"><?php echo '$' . number_format(htmlspecialchars($product['PDTPRICE']) / 100 * htmlspecialchars(100 - $product['PDTDISCNT']), 2, '.', ''); ?></div>
+							<?php } ?>
 
-						<div class="card-action right-align">
-							<a href="product_details.php?id=<?php echo $product['PDTID']; ?>" class="brand-text">more info</a>
-						</div>
-
-					</div>
+							<div class="black-text flow-text"><?php echo '$' . number_format(htmlspecialchars($product['PDTPRICE']) / 100 * htmlspecialchars(100 - $product['PDTDISCNT']), 2, '.', ''); ?></div>
+				</a>
+				<div class="card-action right-align">
+					<?php if (substr($uid, 0, 3) == 'CUS') { ?>
+						<a href="index.php?cart=<?php echo $product['PDTID']; ?>">
+							<div class="red-text"><i class="fa fa-shopping-cart"></i> Add to Cart</div>
+						</a>
+					<?php } ?>
 				</div>
-			</div>
-		<?php } ?>
-	</div>
 
-	<?php
-	include("templates/pagination_output.php");
-	include("templates/footer.php");
-	?>
+			</div>
+	</div>
+</div>
+<?php } ?>
+</div>
+
+<?php
+include("templates/pagination_output.php");
+include("templates/footer.php");
+?>
 </div>
 
 </html>

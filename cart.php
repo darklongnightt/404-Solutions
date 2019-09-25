@@ -123,14 +123,16 @@ mysqli_close($conn);
                             <img src="img/product_icon.svg" class="product-icon"> </a>
                         <div class="card-content center">
                             <h6> <?php echo htmlspecialchars($product['PDTNAME'] . ' - ' . $product['WEIGHT']); ?> </h6>
-                            <div> <?php echo htmlspecialchars('Unit Price: $' . number_format($netUnit, 2, '.', '')); ?> </div>
+
+                            <h6> <?php echo htmlspecialchars('Unit Price: $' . number_format($netUnit, 2, '.', '')); ?> </h6>
 
                             <?php if ($product['PDTDISCNT'] > 0) { ?>
-                                <div class="grey-text">
+                                <span class="grey-text">
                                     <strike><?php echo htmlspecialchars('$' . number_format($unitPrice, 2, '.', '')); ?></strike>
-                                    <?php echo htmlspecialchars('-' . $product['PDTDISCNT'] . '%'); ?>
-                                </div>
+                                </span>
+                                <span class="red-text"> <?php echo htmlspecialchars(' -' . $product['PDTDISCNT'] . '%'); ?> </span>
                             <?php } ?>
+
 
                             <div> <?php echo htmlspecialchars('Quantity: ' . $product['CARTQTY']); ?> </div>
                             <div class="card-action right-align">
