@@ -200,7 +200,7 @@ mysqli_close($conn);
 							<div class="black-text flow-text"><?php echo '$' . number_format(htmlspecialchars($product['PDTPRICE']) / 100 * htmlspecialchars(100 - $product['PDTDISCNT']), 2, '.', ''); ?></div>
 				</a>
 				<div class="card-action right-align">
-					<?php if (substr($uid, 0, 3) == 'CUS') { ?>
+					<?php if (substr($uid, 0, 3) == 'CUS' || $uid == '') { ?>
 						<a href="index.php?cart=<?php echo $product['PDTID']; ?>">
 							<div class="red-text"><i class="fa fa-shopping-cart"></i> Add to Cart</div>
 						</a>

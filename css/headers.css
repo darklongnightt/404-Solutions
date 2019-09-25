@@ -36,3 +36,7 @@ h5,
 .flex {
   display: flex;
 }
+
+nav i, nav [class^="mdi-"], nav [class*="mdi-"], nav i.material-icons {
+    height: 0px;
+}
