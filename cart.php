@@ -142,7 +142,21 @@ mysqli_close($conn);
                     </div>
                 <?php }
                 } else { ?>
-                <h4 class="center">Shopping cart is empty!</h4>
+
+                <div class="center">
+                    <img src="img/empty_cart.png" class="empty-cart">
+                </div>
+
+                <br>
+                <br>
+                <br>
+                <h6 class="center">Your shopping cart is empty!</h6>
+                <a href="index.php">
+                    <div class="center">
+                        <button class="btn brand z-depth-0 empty-cart-btn">Continue Browsing</button>
+                    </div>
+                </a>
+
             <?php } ?>
         </div>
 
@@ -151,7 +165,7 @@ mysqli_close($conn);
                 <div class="card-content">
                     <h5>Order Summary</h5>
                     <div>Subtotal: $<?php echo htmlspecialchars(number_format($sumSubTotal, 2, '.', '')); ?> </div>
-                    
+
                     <div>Savings: -$<?php echo htmlspecialchars(number_format($sumSavings, 2, '.', '')); ?></div>
                     <div class="divider"></div>
                     <strong>

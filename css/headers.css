@@ -29,9 +29,8 @@ h5,
   top: -30px;
 }
 
-img.tag-icon {
+.tag-icon {
   width: 40px;
-  display: block;
   position: relative;
   top: 10px;
   display: inline;
@@ -45,6 +44,19 @@ img.tag-icon {
   display: flex;
 }
 
-nav i, nav [class^="mdi-"], nav [class*="mdi-"], nav i.material-icons {
-    height: 0px;
+nav i,
+nav [class^="mdi-"],
+nav [class*="mdi-"],
+nav i.material-icons {
+  height: 0px;
+}
+
+.empty-cart {
+  width: 200px;
+  position: relative;
+  top: 50px;
+}
+
+.empty-cart-btn {
+  width: 250px;
 }

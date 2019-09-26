@@ -16,11 +16,13 @@ if (isset($_SESSION['U_UID']))
 	<script src="https://code.jquery.com/jquery-1.10.2.js"></script>
 	<script src="https://code.jquery.com/ui/1.10.4/jquery-ui.js"></script>
 
-	<link href="../css/ui-slider.css" type="text/css" rel="stylesheet"/>
-	<link href="../css/headers.css" type="text/css" rel="stylesheet"/>
-	<link href="../css/form.css" type="text/css" rel="stylesheet"/>
-	<link href="../css/analytics.css" type="text/css" rel="stylesheet"/>
+	<link rel="stylesheet" href="../css/ui-slider.css" type="text/css" />
+	<link rel="stylesheet" href="../css/headers.css" type="text/css" />
+	<link rel="stylesheet" href="../css/form.css" type="text/css" />
+	<link rel="stylesheet" href="../css/analytics.css" type="text/css" />
 </head>
+
+
 
 <body class="grey lighten-4">
 	<nav class="white z-depth-0">
