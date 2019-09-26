@@ -1,5 +1,9 @@
 <li>
-    <a href="../cart.php" class="brand-text bold"><i class="fa fa-shopping-cart"></i> Cart</a>
+	<a href="../cart.php">
+		<div class="brand-text bold">
+			<i class="fa fa-shopping-cart"></i> Cart
+		</div>
+	</a>
 </li>
 
 <li>

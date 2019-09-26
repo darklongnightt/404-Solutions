@@ -50,6 +50,13 @@ if (isset($_SESSION['U_UID']))
 					
 
 				<?php } else { ?>
+					<!--<li>
+						<a href="../cart.php">
+							<div class="brand-text bold">
+								<i class="fa fa-shopping-cart"></i> Cart
+							</div>
+						</a>
+					</li> -->
 					<li>
 						<a href="../authentication/register.php" class="brand-text bold">Register</a>
 					</li>
