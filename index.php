@@ -22,6 +22,7 @@ $defaultRange = mysqli_fetch_assoc($result);
 $minRange = $catMin = (float) $defaultRange['MINPRICE'];
 $maxRange = $catMax = (float) $defaultRange['MAXPRICE'];
 
+
 if (isset($_POST['submit'])) {
 	// Get user's selection for sort, replace - with space for sql filter by category
 	$getFilter = $_POST['selectF'];
@@ -105,7 +106,18 @@ if (isset($_GET['cart'])) {
 		header('Location: /authentication/login.php');
 	}
 }
+//delete 
+if (isset($_GET['delete'])) {
+    $product_id = mysqli_real_escape_string($conn, $_GET['delete']);
+    $sql = "DELETE FROM product WHERE PDTID = '$product_id'";
 
+    // Checks if query is successful
+    if (mysqli_query($conn, $sql)) {
+        header('Location: index.php');
+    } else {
+        echo 'Query Error' . mysqli_error($conn);
+    }
+}
 // Free memory of result and close connection
 mysqli_free_result($result);
 mysqli_close($conn);
@@ -200,11 +212,17 @@ mysqli_close($conn);
 							<div class="black-text flow-text"><?php echo '$' . number_format(htmlspecialchars($product['PDTPRICE']) / 100 * htmlspecialchars(100 - $product['PDTDISCNT']), 2, '.', ''); ?></div>
 				</a>
 				<div class="card-action right-align">
+					
 					<?php if (substr($uid, 0, 3) == 'CUS' || $uid == '') { ?>
 						<a href="index.php?cart=<?php echo $product['PDTID']; ?>">
 							<div class="red-text"><i class="fa fa-shopping-cart"></i> Add to Cart</div>
 						</a>
-					<?php } ?>
+					<?php } else if (substr($uid, 0, 3) == 'ADM') { ?>
+						<a href="index.php?delete=<?php echo $product['PDTID']; ?>">
+							<div class="red-text"><i class="fa fa-trash-alt"></i> DELETE</div>
+						</a>
+                    <?php } ?>
+                        
 				</div>
 
 			</div>
