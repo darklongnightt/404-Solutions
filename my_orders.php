@@ -71,6 +71,13 @@ mysqli_close($conn);
                         <?php } ?>
 
                         <div class="card-action right-align">
+                            <?php if ($order['DELVRYSTS'] == "Delivered") { ?>
+                            <strong>
+                                <span class="green-text lighten-2">
+                                    <a href="rating_details.php?id=<?php echo $order['ORDERID']; ?>"class="brand-text">Rate & Review</a>
+                                </span>
+                            </strong>
+                            <?php }?>
                             <span class="brand-text left"><?php echo htmlspecialchars('Transaction ID: ' . $order['TRANSACTIONID']); ?></span>
                             <a href="my_orders.php?change_status=<?php echo $order['ORDERID']; ?>" class="brand-text">Confirm Delivery</a>
                         </div>
