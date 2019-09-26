@@ -3,8 +3,11 @@ include("config/db_connect.php");
 include('templates/header.php');
 
 $id = $product = $message = '';
+$count = 0;
+$more = FALSE;
 
-function addCart($conn, $id) {
+function addCart($conn, $id)
+{
     if ($_SESSION['U_UID']) {
         $uid = mysqli_real_escape_string($conn, $_SESSION['U_UID']);
         $id = mysqli_real_escape_string($conn, $id);
@@ -58,6 +61,16 @@ if (isset($_GET['id'])) {
                 array_push($recommendation_list, $recommended_product);
         } else {
             echo 'Query Error: ' . mysqli_error($conn);
+        }
+    }
+
+    // Checks if more recommendation is to be shown
+    if (isset($_GET['limit'])) {
+        $limit = $_GET['limit'];
+    } else {
+        $limit = 4;
+        if ($limit < count($recommendation_list)) {
+            $more = TRUE;
         }
     }
 }
@@ -181,9 +194,27 @@ mysqli_close($conn);
             <?php echo $message; ?>
         </div>
 
+        <?php if ($recommendation_list) { ?>
+            <div class="row">
+                <h6 class="left">&nbsp&nbsp People Who Bought This Also Bought</h6>
+                <?php if ($more) { ?>
+                    <a href="product_details.php?id=<?php echo $id . '&limit=' . count($recommendation_list); ?>">
+                        <li class="waves-effect right red-text">
+                            <i class="material-icons">chevron_right</i>
+                        </li>
+                        <li class="waves-effect right red-text">See All </li>
+                    </a>
+                <?php } ?>
+            </div>
+        <?php } ?>
+
         <div class="row center">
-            <h6>People Who Bought This Also Bought</h6>
-            <?php foreach ($recommendation_list as $recommendation) { ?>
+            <?php foreach ($recommendation_list as $recommendation) {
+                    $count += 1;
+                    if ($count > $limit) {
+                        break;
+                    }
+                    ?>
                 <div class="col s3 md2">
                     <a href="product_details.php?id=<?php echo $recommendation['PDTID']; ?>">
                         <div class="card z-depth-0 small">

@@ -1,7 +1,7 @@
 <?php
 // Get number of rows from a sepcified query to derive total pages
 $result = mysqli_query($conn, $query);
-$resultsPerPage = 50;
+$resultsPerPage = 39;
 $totalResults = mysqli_num_rows($result);
 $totalPages = ceil($totalResults / $resultsPerPage);
 
