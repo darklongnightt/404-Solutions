@@ -3,10 +3,10 @@ include("config/db_connect.php");
 include('templates/header.php');
 
 $id = $product = $message = '';
-$count = 0;
+$count = $cartQty = 0;
 $more = FALSE;
 
-function addCart($conn, $id)
+function addCart($conn, $id, $qty)
 {
     if ($_SESSION['U_UID']) {
         $uid = mysqli_real_escape_string($conn, $_SESSION['U_UID']);
@@ -17,10 +17,10 @@ function addCart($conn, $id)
         $result = mysqli_query($conn, $sql);
         if (mysqli_num_rows($result) > 0) {
             // Increment product qty by 1
-            $sql = "UPDATE cart SET CARTQTY=CARTQTY+1 WHERE PDTID='$id' AND USERID='$uid'";
+            $sql = "UPDATE cart SET CARTQTY=CARTQTY+'$qty' WHERE PDTID='$id' AND USERID='$uid'";
         } else {
-            // Add to db cart with qty of 1
-            $sql = "INSERT INTO cart(PDTID, USERID, CARTQTY) VALUES('$id', '$uid', '1')";
+            // Add to db cart
+            $sql = "INSERT INTO cart(PDTID, USERID, CARTQTY) VALUES('$id', '$uid', '$qty')";
         }
 
         if (mysqli_query($conn, $sql)) {
@@ -90,12 +90,18 @@ if (isset($_POST['delete'])) {
 
 // Checks if add to cart button is clicked
 if (isset($_POST['cart'])) {
-    addCart($conn, $_POST['product_id']);
+    if (empty($_POST['cartQty'])) {
+        $cartQty = 1;
+    } else {
+        $cartQty = $_POST['cartQty'];
+    }
+
+    addCart($conn, $_POST['product_id'], $cartQty);
 }
 
 // Checks if recommended cart is clicked
 if (isset($_GET['cart'])) {
-    addCart($conn, $_GET['cart']);
+    addCart($conn, $_GET['cart'], 1);
 }
 
 // Checks if add to favourite button is clicked
@@ -149,6 +155,7 @@ mysqli_close($conn);
                         <p><?php echo 'Weight: ' . htmlspecialchars($product['WEIGHT']); ?></p>
                         <p><?php echo 'Quantity Available: ' . htmlspecialchars($product['PDTQTY']); ?></p>
                         <p><?php echo 'Production Date: ' . date($product['CREATED_AT']); ?></p>
+                        <label><?php echo htmlspecialchars($product['PDTID']); ?></label>
                     </div>
                 </div>
 
@@ -157,7 +164,7 @@ mysqli_close($conn);
             <div class="col s6 m3">
                 <div class="card z-depth-0">
                     <div class="card-content">
-                        <h5>Price Tag</h5>
+                        <h5>Price Tag <img src="img/price_tag.svg" class="tag-icon"> </h5>
 
                         <?php if ($product['PDTDISCNT'] > 0) { ?>
                             <div> <?php echo htmlspecialchars('Price: $' . $product['PDTPRICE']); ?>
@@ -175,14 +182,24 @@ mysqli_close($conn);
 
                         <form action="product_details.php?id=<?php echo $id; ?>" method="POST">
                             <input type="hidden" name="product_id" value="<?php echo $product['PDTID']; ?>" />
-                            <?php if ($uid) { ?>
-                                <?php if (substr($uid, 0, 3) == 'CUS') { ?>
-                                    <input type="submit" name="cart" value="cart" class="btn orange z-depth-0" />
-                                    <input type="submit" name="favourite" value="favourite" class="btn red z-depth-0" />
-                                <?php } else if (substr($uid, 0, 3) == 'ADM') { ?>
-                                    <input type="submit" name="delete" value="delete" class="btn brand z-depth-0" />
+
+                            <label>Quantity: </label>
+                            <select class="browser-default" name="cartQty">
+                                <?php for ($i = 1; $i <= 10 && $i <= $product['PDTQTY']; $i++) { ?>
+                                    <option value="<?php echo $i; ?>"> <?php echo $i; ?> </option>
                                 <?php } ?>
+                            </select>
+
+                            <br>
+
+                            <?php if (substr($uid, 0, 3) == 'CUS' || $uid == '') { ?>
+                                <input type="submit" name="cart" value="cart" class="btn orange z-depth-0" />
+                                <span>&nbsp</span>
+                                <input type="submit" name="favourite" value="favourite" class="btn red z-depth-0" />
+                            <?php } else if (substr($uid, 0, 3) == 'ADM') { ?>
+                                <input type="submit" name="delete" value="delete" class="btn brand z-depth-0" />
                             <?php } ?>
+
                         </form>
 
                     </div>
@@ -240,7 +257,7 @@ mysqli_close($conn);
 
                     </a>
                     <div class="card-action right-align">
-                        <?php if (substr($uid, 0, 3) == 'CUS') { ?>
+                        <?php if (substr($uid, 0, 3) == 'CUS' || $uid == '') { ?>
                             <a href="product_details.php?id=<?php echo $product['PDTID'] . '&cart=' . $recommendation['PDTID']; ?>">
                                 <div class="red-text"><i class="fa fa-shopping-cart"></i> Cart</div>
                             </a>

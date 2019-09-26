@@ -7,5 +7,5 @@
 </li>
 
 <li>
-    <a href="../authorize_acc.php" class="brand-text bold">Authorize Account</a>
+    <a href="../create_account.php" class="brand-text bold">Create Account</a>
 </li>

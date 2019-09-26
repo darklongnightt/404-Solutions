@@ -29,6 +29,14 @@ h5,
   top: -30px;
 }
 
+img.tag-icon {
+  width: 40px;
+  display: block;
+  position: relative;
+  top: 10px;
+  display: inline;
+}
+
 .bold {
   font-weight: bold;
 }

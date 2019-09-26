@@ -36,7 +36,11 @@ if (isset($_POST['submit'])) {
             // Usage of secured sha256 to hash password concat with generated salt
             $password .= $customer['SALT'];
             $password = hash('sha256', $password);
-            $checkPassword = hash_equals($customer['PASSWORD'], $password) ? TRUE : FALSE;
+            if ($customer) {
+                $checkPassword = hash_equals($customer['PASSWORD'], $password) ? TRUE : FALSE;
+            } else {
+                $errors['password'] = 'Invalid email or password!';
+            }
 
             // Default deny policy
             if (!$checkPassword) {
@@ -77,6 +81,11 @@ if (isset($_POST['submit'])) {
         <label>Password: </label>
         <input type="password" name="password">
         <div class="red-text"><?php echo htmlspecialchars($errors['password']); ?></div>
+
+        <label class="right"> New member? 
+            <u><a href="register.php" class="cyan-text">Register</a></u> </label>
+
+        <br>
 
         <div class="center">
             <input type="submit" name="submit" value="Login" class="btn brand z-depth-0">

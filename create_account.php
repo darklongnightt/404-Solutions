@@ -1,9 +1,9 @@
 <?php
-include('../config/db_connect.php');
-include('../templates/header.php');
+include('config/db_connect.php');
+include('templates/header.php');
 
-$password = $retypedpassword = $hashedpassword = $firstname = $lastname = $dob = $email = $gender = $userid = $phoneno = '';
-$errors = array('password' => '', 'retypedpassword' => '', 'firstname' => '', 'lastname' => '', 'dob' => '', 'email' => '', 'gender' => '', 'phoneno' => '');
+$password = $retypedpassword = $hashedpassword = $firstname = $lastname = $dob = $email = $gender = $userid = $phoneno = $type = '';
+$errors = array('password' => '', 'retypedpassword' => '', 'firstname' => '', 'lastname' => '', 'dob' => '', 'email' => '', 'gender' => '', 'phoneno' => '', 'type' => '');
 $today = date('Y-m-d');
 
 //Checks if button of name="submit" is clicked
@@ -43,6 +43,12 @@ if (isset($_POST['submit'])) {
         $errors['gender'] = 'Gender is required!';
     } else {
         $gender = $_POST['gender'];
+    }
+
+    if (empty($_POST['type'])) {
+        $errors['type'] = 'Account type is required!';
+    } else {
+        $type = $_POST['type'];
     }
 
     if (empty($_POST['dob'])) {
@@ -94,7 +100,7 @@ if (isset($_POST['submit'])) {
         // Generate unique uid for the customer
         $unique = true;
         do {
-            $userid = uniqid('CUS');
+            $userid = uniqid($type);
             $sql = "SELECT * FROM customer WHERE USERID = '$userid'";
             $result = mysqli_query($conn, $sql);
             $checkResult = mysqli_num_rows($result);
@@ -110,19 +116,10 @@ if (isset($_POST['submit'])) {
         if (mysqli_query($conn, $sql)) {
             $sql = "INSERT INTO salt(SALT, EMAIL) VALUES('$salt', '$email')";
             if (mysqli_query($conn, $sql)) {
-                // Successfully registered user into db, set session variables
-                $_SESSION['U_UID'] = $userid;
-                $_SESSION['U_FIRSTNAME'] = $firstname;
-                $_SESSION['U_LASTNAME'] = $lastname;
-                $_SESSION['U_EMAIL'] = $email;
-                $_SESSION['U_GENDER'] = $gender;
-                $_SESSION['U_DOB'] = $dob;
-                $_SESSION['U_INITIALS'] = $firstname[0] . $lastname[0];
-    
+                // Successfully registered user into db, admin and analyst does not require shipping address
                 mysqli_free_result($result);
                 mysqli_close($conn);
-                header('Location: shipping_details.php');
-
+                header("Location: index.php");
             } else {
                 echo 'Query Error: ' . mysqli_error($conn);
             }
@@ -140,9 +137,9 @@ if (isset($_POST['submit'])) {
 <html>
 
 <section class="container grey-text">
-    <h4 class="center">Register Account</h4>
+    <h4 class="center">Register Staff Account</h4>
 
-    <form action="register.php" class="EditForm" method="POST">
+    <form action="create_account.php" class="EditForm" method="POST">
         <label>Email Address: </label>
         <input type="text" name="email" value="<?php echo htmlspecialchars($email); ?>">
         <div class="red-text"><?php echo htmlspecialchars($errors['email']); ?></div>
@@ -176,6 +173,21 @@ if (isset($_POST['submit'])) {
         </p>
         <div class="red-text"><?php echo htmlspecialchars($errors['gender']); ?></div>
 
+        <label>Account Type: </label>
+        <p>
+            <label>
+                <input name="type" type="radio" value="ADM" <?php if (isset($type) && $type == "ADM") echo "checked"; ?>>
+                <span>Administrator</span>
+            </label>
+        </p>
+        <p>
+            <label>
+                <input name="type" type="radio" value="ANL" <?php if (isset($type) && $type == "ANL") echo "checked"; ?>>
+                <span>Data Analyst</span>
+            </label>
+        </p>
+        <div class="red-text"><?php echo htmlspecialchars($errors['type']); ?></div>
+
         <label>Birthday: </label>
         <input type="date" name="dob" min="1900-01-01" max="<?php echo $today ?>" value="<?php echo $dob ?>">
         <div class="red-text"><?php echo htmlspecialchars($errors['dob']); ?></div>
@@ -198,6 +210,6 @@ if (isset($_POST['submit'])) {
     </form>
 </section>
 
-<?php include("../templates/footer.php"); ?>
+<?php include("templates/footer.php"); ?>
 
 </html>

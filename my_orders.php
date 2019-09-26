@@ -12,6 +12,7 @@ include('templates/pagination_query.php');
 // Retrieve orders from order and product table as assoc array
 $sql = "SELECT * FROM orders, product 
 WHERE orders.USERID = '$uid' AND product.PDTID = orders.PDTID
+ORDER BY PCHASEDATE DESC
 LIMIT $startingLimit, $resultsPerPage";
 
 $result = mysqli_query($conn, $sql);
