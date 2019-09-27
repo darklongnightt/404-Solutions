@@ -72,14 +72,17 @@ mysqli_close($conn);
                     <img src="img/product_icon.svg" class="product-icon"> </a>
                 <div class="card-content center">
                     <h6> <?php echo htmlspecialchars($product['PDTNAME'] . ' - ' . $product['WEIGHT']); ?> </h6>
-                    <div> <?php echo htmlspecialchars('Net Price: $' . number_format($netPrice, 2, '.', '')); ?> </div>
 
                     <?php if ($product['PDTDISCNT'] > 0) { ?>
                         <div class="grey-text">
                             <strike><?php echo htmlspecialchars('$' . number_format($totalPrice, 2, '.', '')); ?></strike>
-                            <?php echo htmlspecialchars('-' . $product['PDTDISCNT'] . '%'); ?>
+                            <span class="red-text">
+                                <?php echo htmlspecialchars('-' . $product['PDTDISCNT'] . '%'); ?>
+                            </span>
                         </div>
                     <?php } ?>
+
+                    <div class="flow-text"> <?php echo htmlspecialchars('$' . number_format($netPrice, 2, '.', '')); ?> </div>
 
                     <div class="card-action right-align">
                         <a href="my_favourites.php?remove=<?php echo $product['PDTID']; ?>" class="brand-text">Remove</a>

@@ -133,7 +133,6 @@ mysqli_close($conn);
                                 <span class="red-text"> <?php echo htmlspecialchars(' -' . $product['PDTDISCNT'] . '%'); ?> </span>
                             <?php } ?>
 
-
                             <div> <?php echo htmlspecialchars('Quantity: ' . $product['CARTQTY']); ?> </div>
                             <div class="card-action right-align">
                                 <a href="cart.php?remove=<?php echo $product['PDTID']; ?>" class="brand-text">Remove</a>
