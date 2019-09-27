@@ -165,11 +165,14 @@ mysqli_close($conn);
                     <h5>Order Summary</h5>
                     <div>Subtotal: $<?php echo htmlspecialchars(number_format($sumSubTotal, 2, '.', '')); ?> </div>
 
-                    <div>Savings: -$<?php echo htmlspecialchars(number_format($sumSavings, 2, '.', '')); ?></div>
+                    <?php if ($sumSavings > 0) { ?>
+                        <div class="red-text">Savings: -$
+                            <?php echo htmlspecialchars(number_format($sumSavings, 2, '.', '')); ?>
+                        </div>
+                    <?php } ?>
                     <div class="divider"></div>
-                    <strong>
-                        <div class="bold">Total: $<?php echo htmlspecialchars(number_format($sumTotal, 2, '.', '')); ?> </div>
-                    </strong>
+
+                    <h6 class="bold">Total: $<?php echo htmlspecialchars(number_format($sumTotal, 2, '.', '')); ?> </h6>
 
                     <div class="divider"></div>
                     <label>Payment: </label>

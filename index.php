@@ -4,10 +4,11 @@ include('templates/header.php');
 
 // Store previously selected variables
 $getSort = $getFilter = '';
+$limit = TRUE;
 
 // Pagination for all results
 $currDir = "index.php";
-$query = 'SELECT * FROM product';
+$query = "SELECT * FROM product";
 include('templates/pagination_query.php');
 
 // Get all product categories for filtering
@@ -37,8 +38,8 @@ if (isset($_POST['submit'])) {
 
 	// If user uses filter function
 	if ($getFilter != "all") {
-		$query .= ' WHERE CATEGORY = "' . $rFilter . '" AND';
-
+		$limit = FALSE;
+		$query = "SELECT * FROM product WHERE CATEGORY='$rFilter' AND";
 		// Price range by category
 		$getCatRange .= ' WHERE CATEGORY = "' . $rFilter . '"';
 	} else
@@ -66,11 +67,14 @@ if (isset($_POST['submit'])) {
 	else {
 		$query .= ' ORDER BY CREATED_AT DESC';
 	}
-
 	// Pagination for results
 	include('templates/pagination_query.php');
 } else {
 	$query .= ' ORDER BY CREATED_AT DESC';
+}
+
+if (!$limit) {
+	$startingLimit = 0;
 }
 $query .= "\nLIMIT $startingLimit , $resultsPerPage";
 
@@ -149,7 +153,7 @@ mysqli_close($conn);
 	});
 </script>
 <div class="sidebar sidebar-padding">
-	<form id="sfform" name="sfform" method="post">
+	<form id="sfform" name="sfform" method="post" action="index.php">
 		<h6 class="grey-text">Category</h6>
 		<p id="testrange"></p>
 		<select class="browser-default" name="selectF">

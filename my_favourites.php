@@ -86,7 +86,9 @@ mysqli_close($conn);
 
                     <div class="card-action right-align">
                         <a href="my_favourites.php?remove=<?php echo $product['PDTID']; ?>" class="brand-text">Remove</a>
-                        <a href="my_favourites.php?addcart=<?php echo $product['PDTID']; ?>" class="brand-text">+Cart</a>
+                        <a href="my_favourites.php?addcart=<?php echo $product['PDTID']; ?>" class="red-text">
+                            <i class="fa fa-shopping-cart"></i> Add to Cart
+                        </a>
                     </div>
                 </div>
             </div>
