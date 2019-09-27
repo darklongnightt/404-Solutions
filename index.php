@@ -106,7 +106,8 @@ if (isset($_GET['cart'])) {
 		header('Location: /authentication/login.php');
 	}
 }
-//delete 
+
+// Admin delete 
 if (isset($_GET['delete'])) {
     $product_id = mysqli_real_escape_string($conn, $_GET['delete']);
     $sql = "DELETE FROM product WHERE PDTID = '$product_id'";
@@ -117,7 +118,8 @@ if (isset($_GET['delete'])) {
     } else {
         echo 'Query Error' . mysqli_error($conn);
     }
-}
+} 
+
 // Free memory of result and close connection
 mysqli_free_result($result);
 mysqli_close($conn);
