@@ -100,7 +100,7 @@ mysqli_close($conn);
 <h4 class="center grey-text">My Shopping Cart</h4>
 <div class="container">
     <div class="row">
-        <div class="col s14 m8">
+        <div class="col s16 m8">
             <?php if ($cartList) {
                 foreach ($cartList as $product) {
                     $unitPrice = round($product['PDTPRICE'], 2);
