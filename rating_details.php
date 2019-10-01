@@ -4,7 +4,7 @@ include('templates/header.php');
 
 $uid = mysqli_real_escape_string($conn, $_SESSION['U_UID']);
 $id = $rtname = $rtdesc ='';
-$errors = array('rtname' => '', 'rtdesc' => '');
+$errors = array('rtname' => '', 'productrating' => '','delirating' => '','srating' => '' );
 
 //Checks if button of name="submit" is clicked
 if (isset($_POST['submit'])) {
@@ -15,11 +15,24 @@ if (isset($_POST['submit'])) {
 		$rtname = $_POST['rtname'];
 	}
 
-	if (empty($_POST['rtdesc'])) {
-		$errors['rtdesc'] = 'Product name is required!';
+	if (empty($_POST['productrating'])) {
+		$errors['productrating'] = 'Rating is required!';
 	} else {
-		$rtdesc = $_POST['rtdesc'];
+		$productrating=$_POST['productrating'];
 	}
+	
+	if (empty($_POST['delirating'])) {
+		$errors['delirating'] = 'Rating is required!';
+	} else {
+		$delirating=$_POST['delirating'];
+	}
+	
+	if (empty($_POST['srating'])) {
+		$errors['srating'] = 'Rating is required!';
+	} else {
+		$srating=$_POST['srating'];
+	}
+
 	if (!array_filter($errors)) {
 		// Formatting string for db security
 		$rtname = mysqli_real_escape_string($conn, $_POST['rtname']);
@@ -56,7 +69,29 @@ mysqli_close($conn);
 
 <!DOCTYPE HTML>
 <html>
+<head>
+	<link rel="stylesheet" type="text/css" href="css/rating_style.css">
+	<script type="text/javascript">
+  
+   function change(id)
+   {
+      var cname=document.getElementById(id).className;
+      var ab=document.getElementById(id+"_hidden").value;
+      document.getElementById(cname+"rating").value=ab;
 
+      for(var i=ab;i>=1;i--)
+      {
+         document.getElementById(cname+i).src="img/star2.png";
+      }
+      var id=parseInt(ab)+1;
+      for(var j=id;j<=5;j++)
+      {
+         document.getElementById(cname+j).src="img/star1.png";
+      }
+   }
+
+	</script>
+</head>
 <?php if ($product) : ?>
 	<div class="container EditPadding">
 		<div class="col s8 md4">
@@ -81,15 +116,61 @@ mysqli_close($conn);
 		</div>
 
 		<form action="rating_details.php?id=<?php echo $product['ORDERID']; ?>" class="EditForm" method="POST">
-			<label>Product Name: </label>
+			<!-- <label>Product Name: </label>
 			<input type="text" name="rtname" value="<?php echo htmlspecialchars($rtname); ?>">
-			<div class="red-text"><?php echo htmlspecialchars($errors['rtname']); ?></div>
+			<div class="red-text"><?php echo htmlspecialchars($errors['rtname']); ?></div> -->
 
-			<label>Comments: </label>
-			<textarea name="rtdesc" rows="10" cols="40" class="ColHeight"><?php echo htmlspecialchars($rtdesc); ?></textarea>
-			<div class="red-text"><?php echo htmlspecialchars($errors['rtdesc']); ?></div>
+			<div class ="div">
+				<p>Product</p>
+				<input type="hidden" id="product1_hidden" value="1">
+				<img src="img/star1.png" onmouseup="change(this.id);" id="product1" class="product">
+				<input type="hidden" id="product2_hidden" value="2">
+				<img src="img/star1.png" onmouseup="change(this.id);" id="product2" class="product">
+				<input type="hidden" id="product3_hidden" value="3">
+				<img src="img/star1.png" onmouseup="change(this.id);" id="product3" class="product">
+				<input type="hidden" id="product4_hidden" value="4">
+				<img src="img/star1.png" onmouseup="change(this.id);" id="product4" class="product">
+				<input type="hidden" id="product5_hidden" value="5">
+				<img src="img/star1.png" onmouseup="change(this.id);" id="product5" class="product">	
+			</div>
+			<div class="center red-text"><?php echo htmlspecialchars($errors['productrating']); ?></div> 
+			<div class ="div">
+				<p>Delivery</p>
+				<input type="hidden" id="deli1_hidden" value="1">
+				<img src="img/star1.png" onmouseup="change(this.id);" id="deli1" class="deli">
+				<input type="hidden" id="deli2_hidden" value="2">
+				<img src="img/star1.png" onmouseup="change(this.id);" id="deli2" class="deli">
+				<input type="hidden" id="deli3_hidden" value="3">
+				<img src="img/star1.png" onmouseup="change(this.id);" id="deli3" class="deli">
+				<input type="hidden" id="deli4_hidden" value="4">
+				<img src="img/star1.png" onmouseup="change(this.id);" id="deli4" class="deli">
+				<input type="hidden" id="deli5_hidden" value="5">
+				<img src="img/star1.png" onmouseup="change(this.id);" id="deli5" class="deli">	
+			</div>
+			<div class="center red-text"><?php echo htmlspecialchars($errors['delirating']); ?></div> 
+			<div class ="div">
+				<p>Service</p>
+				<input type="hidden" id="s1_hidden" value="1">
+				<img src="img/star1.png" onmouseup="change(this.id);" id="s1" class="s">
+				<input type="hidden" id="s2_hidden" value="2">
+				<img src="img/star1.png" onmouseup="change(this.id);" id="s2" class="s">
+				<input type="hidden" id="s3_hidden" value="3">
+				<img src="img/star1.png" onmouseup="change(this.id);" id="s3" class="s">
+				<input type="hidden" id="s4_hidden" value="4">
+				<img src="img/star1.png" onmouseup="change(this.id);" id="s4" class="s">
+				<input type="hidden" id="s5_hidden" value="5">
+				<img src="img/star1.png" onmouseup="change(this.id);" id="s5" class="s">
+			</div>
+			<div class="center red-text"><?php echo htmlspecialchars($errors['srating']); ?></div> 
+			<p>Comments: </p>
+			<textarea name="rtdesc" rows="10" cols="40" placeholder="How was the product? Comment on the good and bad sides now !" class="ColHeight">
+				<?php echo htmlspecialchars($rtdesc); ?></textarea>
+				
 				<div class="center">
 					<br>
+					<input type="hidden" name="productrating" id="productrating" value="0">
+					<input type="hidden" name="delirating" id="delirating" value="0">
+					<input type="hidden" name="srating" id="srating" value="0">
 					<input type="submit" name="submit" type="submit" class="btn brand z-depth-0">
 				</div>
 		</form>
