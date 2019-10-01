@@ -3,7 +3,7 @@ include("config/db_connect.php");
 include('templates/header.php');
 
 $uid = mysqli_real_escape_string($conn, $_SESSION['U_UID']);
-$id = $rtname = $rtdesc ='';
+$rtdesc ='';
 $errors = array('rtname' => '', 'productrating' => '','delirating' => '','srating' => '' );
 
 //Checks if button of name="submit" is clicked
@@ -32,21 +32,24 @@ if (isset($_POST['submit'])) {
 	} else {
 		$srating=$_POST['srating'];
 	}
+	// if (!array_filter($errors)) {
+	// 	// Formatting string for db security
+	// 	$rating_productid = mysqli_real_escape_string($conn, $_POST['rating_productid']);
+	// 	$rating_orderid = mysqli_real_escape_string($conn, $_POST['rating_orderid']);
+		
+	// 	$productrating = mysqli_real_escape_string($conn, $_POST['productrating']);
+	// 	$delirating = mysqli_real_escape_string($conn, $_POST['delirating']);
+	// 	$srating = mysqli_real_escape_string($conn, $_POST['srating']);
 
-	if (!array_filter($errors)) {
-		// Formatting string for db security
-		$rtname = mysqli_real_escape_string($conn, $_POST['rtname']);
-		$rtdesc = mysqli_real_escape_string($conn, $_POST['rtdesc']);
-
-		// Inserts data to db and redirects user to homepage
-		// $sql = "INSERT INTO rating(RTNAME,  RTDESC) 
-		// VALUES('$rtname', '$rtdesc')";
-		// if (mysqli_query($conn, $sql)) {
-		// 	header('Location: index.php');
-		// } else {
-		// 	echo 'Query Error: ' . mysqli_error($conn);
-		// }
-	}
+	// 	$rtdesc = mysqli_real_escape_string($conn, $_POST['rtdesc']);
+	// 	// Inserts data to db and redirects user to homepage
+	// 	$sql = "INSERT INTO rating(RPRO_ID,RO_ID,PRODUCTRATING,DELIRATING,SRATING,RTDESC) VALUES('$rating_productid','$rating_orderid','$productrating','$delirating','$srating','$rtdesc')";
+	// 	if (mysqli_query($conn, $sql)) {
+	// 	 	header('Location: index.php');
+	// 	} else {
+	// 	 	echo 'Query Error: ' . mysqli_error($conn);
+	// 	}
+	// }
 }
 // Checks if link contains product id
 if (isset($_GET['id'])) {
@@ -163,11 +166,12 @@ mysqli_close($conn);
 			</div>
 			<div class="center red-text"><?php echo htmlspecialchars($errors['srating']); ?></div> 
 			<p>Comments: </p>
-			<textarea name="rtdesc" rows="10" cols="40" placeholder="How was the product? Comment on the good and bad sides now !" class="ColHeight">
-				<?php echo htmlspecialchars($rtdesc); ?></textarea>
+			<textarea name="rtdesc" rows="10" cols="40" placeholder="How was the product? Comment on the good and bad sides now !" class="ColHeight"><?php echo htmlspecialchars($rtdesc); ?></textarea>
 				
 				<div class="center">
 					<br>
+					<input type="hidden" name="rating_productid" id="rating_productid" value= <?php echo$product['PDTID']; ?> >
+					<input type="hidden" name="rating_orderid" id="rating_orderid" value= <?php echo$product['ORDERID']; ?> >
 					<input type="hidden" name="productrating" id="productrating" value="0">
 					<input type="hidden" name="delirating" id="delirating" value="0">
 					<input type="hidden" name="srating" id="srating" value="0">
