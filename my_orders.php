@@ -88,12 +88,24 @@ mysqli_close($conn);
                     </div>
                 </div>
             <?php }
+                include("templates/pagination_output.php");
             } else { ?>
-            <h4 class="center">Order list is empty!</h4>
+            <div class="center">
+                <img src="img/empty_cart.png" class="empty-cart">
+            </div>
+
+            <br>
+            <br>
+            <br>
+            <h6 class="center">Your order history is empty!</h6>
+            <a href="index.php">
+                <div class="center">
+                    <button class="btn brand z-depth-0 empty-cart-btn">Continue Browsing</button>
+                </div>
+            </a>
         <?php } ?>
 
         <?php
-        include("templates/pagination_output.php");
         include("templates/footer.php");
         ?>
 

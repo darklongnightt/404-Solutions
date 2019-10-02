@@ -92,15 +92,27 @@ mysqli_close($conn);
                     </div>
                 </div>
             </div>
-        <?php }
+        <?php include("templates/pagination_output.php");
+            }
         } else { ?>
-        <h4 class="center">Favourite list is empty!</h4>
+        <div class="center">
+            <img src="img/empty_fave.png" class="center empty-cart">
+        </div>
+
+        <br>
+        <br>
+        <br>
+        <h6 class="center">Your favourite list is empty!</h6>
+        <a href="index.php">
+            <div class="center">
+                <button class="btn brand z-depth-0 empty-cart-btn">Continue Browsing</button>
+            </div>
+        </a>
     <?php } ?>
 </div>
 
 
 <?php
-include("templates/pagination_output.php");
 include("templates/footer.php");
 ?>
 
