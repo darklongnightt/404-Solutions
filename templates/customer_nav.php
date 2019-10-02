@@ -13,7 +13,7 @@
 <li>
 	<a href="../my_favourites.php">
 		<div class="brand-text bold">
-			<i class="fas fa-heart"></i>My Favourites
+			<i class="fa fa-heart"></i>My Favourites
 		</div>
 	</a>
 </li>

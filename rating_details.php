@@ -111,7 +111,7 @@ mysqli_close($conn);
 		<div class="col s8 m4">
 			<div class="card z-depth-0">
 				<div class="card-content center">
-					<img src="img/product_icon.svg" class="center" />
+					<img src="img/product_icon.svg" class="icon" />
 
 					<a href="product_details.php?id=<?php echo $product['PDTID']; ?>">
 						<h6 class="black-text"> <?php echo htmlspecialchars($product['PDTNAME'] . ' - ' . $product['WEIGHT']); ?> </h6>
