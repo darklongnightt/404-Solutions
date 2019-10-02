@@ -1,27 +1,28 @@
-.div
+.rating
 {
-	
 	clear:both;
 	height:100px;
 	width:400px;
 	padding:10px;
 	border-radius:3px;
 }
-.div p
+
+.word
 {
 	margin:0px;
 	font-size:20px;
 	text-align:left;
 	
 }
+
 img
 {
 	margin-top:10px;
 	width:50px;
 	height:50px;
 	float:left;
-	
 }
+
 input[type="submit"]
 {
 	border:none;

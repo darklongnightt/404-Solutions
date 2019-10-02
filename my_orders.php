@@ -64,22 +64,26 @@ mysqli_close($conn);
                             <strong>
                                 <span class="green-text lighten-2"><?php echo htmlspecialchars($order['DELVRYSTS']); ?></span>
                             </strong>
-                        <?php } else { ?>
+                        <?php } else if ($order['DELVRYSTS'] == "Not Delivered") { ?>
                             <strong>
                                 <span class="orange-text lighten"><?php echo htmlspecialchars($order['DELVRYSTS']); ?></span>
+                            </strong>
+                        <?php } else if ($order['DELVRYSTS'] == "Delivered & Reviewed") { ?>
+                            <strong>
+                                <span class="blue-text lighten"><?php echo htmlspecialchars($order['DELVRYSTS']); ?></span>
                             </strong>
                         <?php } ?>
 
                         <div class="card-action right-align">
                             <?php if ($order['DELVRYSTS'] == "Delivered") { ?>
-                            <strong>
-                                <span class="green-text lighten-2">
-                                    <a href="rating_details.php?id=<?php echo $order['ORDERID']; ?>"class="brand-text">Rate & Review</a>
-                                </span>
-                            </strong>
-                            <?php }?>
+                                <a href="rating_details.php?id=<?php echo $order['PDTID'] . "&order=" . $order['ORDERID']; ?>" class="brand-text">Rate & Review</a>
+                            <?php } else if ($order['DELVRYSTS'] == "Not Delivered") { ?>
+                                <a href="my_orders.php?change_status=<?php echo $order['ORDERID']; ?>" class="brand-text">Confirm Delivery</a>
+                            <?php } else if ($order['DELVRYSTS'] == "Delivered & Reviewed") { ?>
+                                <span class="brand-text">Thank You For Your Feedback!</span>
+                            <?php } ?>
+
                             <span class="brand-text left"><?php echo htmlspecialchars('Transaction ID: ' . $order['TRANSACTIONID']); ?></span>
-                            <a href="my_orders.php?change_status=<?php echo $order['ORDERID']; ?>" class="brand-text">Confirm Delivery</a>
                         </div>
                     </div>
                 </div>
@@ -88,9 +92,9 @@ mysqli_close($conn);
             <h4 class="center">Order list is empty!</h4>
         <?php } ?>
 
-        <?php 
+        <?php
         include("templates/pagination_output.php");
-        include("templates/footer.php"); 
+        include("templates/footer.php");
         ?>
 
 </html>

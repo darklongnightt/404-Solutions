@@ -233,13 +233,12 @@ if (isset($_POST['Reset'])) {
                 <?php } ?>
 
             </ul>
+            <?php
+            include("templates/pagination_output.php");
+            include("templates/footer.php");
+            ?>
         </div>
     </div>
 </div>
-
-<?php
-include("templates/pagination_output.php");
-include("templates/footer.php");
-?>
 
 </html>
