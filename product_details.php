@@ -213,7 +213,7 @@ mysqli_close($conn);
 
         <?php if ($recommendation_list) { ?>
             <div class="row">
-                <h6 class="left">&nbsp&nbsp People Who Bought This Also Bought</h6>
+                <h6 class="left">&nbsp&nbsp <u>People Who Bought This Also Bought</u></h6>
                 <?php if ($more) { ?>
                     <a href="product_details.php?id=<?php echo $id . '&limit=' . count($recommendation_list); ?>">
                         <li class="waves-effect right red-text">
