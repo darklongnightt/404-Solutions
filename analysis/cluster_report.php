@@ -106,7 +106,11 @@ function getAge($dob)
                     </h6>
                     <br>
 
-                    <img src="../img/k-means.png" class="product-icon">
+                    <?php if ($curr_cluster['METHOD'] == 'K-Means Clustering') {
+                        echo '<img src="../img/k-means.png" class="product-icon">';
+                    } else {
+                        echo '<img src="../img/hclust.png" class="product-icon">';
+                    }?>
                 </div>
             </div>
         </div>
@@ -233,7 +237,7 @@ function getAge($dob)
                         </select>
                         <noscript><input type="submit" value="submit"></noscript>
                     </form>
-                    
+
                     <table class="striped responsive-table">
                         <thead>
                             <tr>
@@ -263,8 +267,8 @@ function getAge($dob)
                     </table>
                 </div>
 
-                <div class="card-action">
-
+                <div class="card-action right-align">
+                    <button class=" btn brand z-depth-0">Send Discount Coupon</button>
                 </div>
 
             </div>
