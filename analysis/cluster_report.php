@@ -223,7 +223,7 @@ function getAge($dob)
                 <div class="card-content">
 
                     <form action="cluster_report.php" method="POST">
-                        <span class="bold">Select Profile Group</span>
+                        <h5 class="bold">Select Profile Group</h5>
                         <select class="browser-default" name="profile" onchange='this.form.submit()'>
 
                             <?php
