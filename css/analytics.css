@@ -14,3 +14,8 @@
   width: 1150px;
   height: 1250px;
 }
+
+.bullet {
+  list-style-type: initial !important; 
+  margin-left: 15px
+}

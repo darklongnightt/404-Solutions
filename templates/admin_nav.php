@@ -1,4 +1,8 @@
 <li>
+    <a href="../analysis/cluster_report.php" class="brand-text bold">Demographics Report</a>
+</li>
+
+<li>
     <a href="../inventory_management.php" class="brand-text bold">Inventory Management</a>
 </li>
 

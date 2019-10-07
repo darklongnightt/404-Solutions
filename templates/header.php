@@ -26,9 +26,16 @@ if (isset($_SESSION['U_UID']))
 	<nav class="white z-depth-0">
 		<div class="container">
 			<strong>
-				<a href="../index.php" class="brand-logo brand-text left ">
-					Super<span class="red-text">D</span>ata
-				</a>
+				<?php if (substr($uid, 0, 3) == 'ANL') {
+					echo '<a href="../analysis/cluster_report.php" class="brand-logo brand-text left ">
+							Super<span class="red-text">D</span>ata
+							</a>';
+				} else {
+					echo '<a href="../index.php" class="brand-logo brand-text left ">
+							Super<span class="red-text">D</span>ata
+							</a>';
+				} ?>
+
 			</strong>
 			<ul id="nav-mobile" class="right hide-on-small-and-down">
 

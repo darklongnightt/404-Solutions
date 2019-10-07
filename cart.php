@@ -140,8 +140,9 @@ mysqli_close($conn);
                         </div>
                     </div>
                 <?php
-                        include("templates/pagination_output.php");
+
                     }
+                    include("templates/pagination_output.php");
                 } else { ?>
 
                 <div class="center">

@@ -55,7 +55,11 @@ if (isset($_POST['submit'])) {
                 $_SESSION['U_DOB'] = $customer['DOB'];
                 $_SESSION['U_INITIALS'] = $customer['FIRSTNAME'][0] . $customer['LASTNAME'][0];
 
-                header('Location: ../index.php?login=success');
+                if (substr($_SESSION['U_UID'], 0, 3) == "CUS"){
+                    header('Location: ../index.php?login=success');
+                } else {
+                    header('Location: ../analysis/cluster_report.php?login=success');
+                }
             }
         } else {
             echo 'Query Error: ' . mysqli_error($conn);
