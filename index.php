@@ -113,16 +113,16 @@ if (isset($_GET['cart'])) {
 
 // Admin delete 
 if (isset($_GET['delete'])) {
-    $product_id = mysqli_real_escape_string($conn, $_GET['delete']);
-    $sql = "DELETE FROM product WHERE PDTID = '$product_id'";
+	$product_id = mysqli_real_escape_string($conn, $_GET['delete']);
+	$sql = "DELETE FROM product WHERE PDTID = '$product_id'";
 
-    // Checks if query is successful
-    if (mysqli_query($conn, $sql)) {
-        header('Location: index.php');
-    } else {
-        echo 'Query Error' . mysqli_error($conn);
-    }
-} 
+	// Checks if query is successful
+	if (mysqli_query($conn, $sql)) {
+		header('Location: index.php');
+	} else {
+		echo 'Query Error' . mysqli_error($conn);
+	}
+}
 
 // Free memory of result and close connection
 mysqli_free_result($result);
@@ -198,7 +198,11 @@ mysqli_close($conn);
 				<a href="product_details.php?id=<?php echo $product['PDTID']; ?>">
 					<div class="card z-depth-0 small">
 
-						<img src="img/product_icon.svg" class="product-icon">
+						<img src="<?php if ($product['IMAGE']) {
+											echo $product['IMAGE'];
+										} else {
+											echo 'img/product_icon.svg';
+										} ?>" class="product-icon">
 						<div class="card-content center">
 							<h6 class="black-text"> <?php echo htmlspecialchars($product['PDTNAME']); ?> <label> <?php echo htmlspecialchars($product['WEIGHT']); ?> </label></h6>
 
@@ -218,7 +222,7 @@ mysqli_close($conn);
 							<div class="black-text flow-text"><?php echo '$' . number_format(htmlspecialchars($product['PDTPRICE']) / 100 * htmlspecialchars(100 - $product['PDTDISCNT']), 2, '.', ''); ?></div>
 				</a>
 				<div class="card-action right-align">
-					
+
 					<?php if (substr($uid, 0, 3) == 'CUS' || $uid == '') { ?>
 						<a href="index.php?cart=<?php echo $product['PDTID']; ?>">
 							<div class="red-text"><i class="fa fa-shopping-cart"></i> Add to Cart</div>
@@ -227,8 +231,8 @@ mysqli_close($conn);
 						<a href="index.php?delete=<?php echo $product['PDTID']; ?>">
 							<div class="red-text"><i class="fa fa-trash-alt"></i> DELETE</div>
 						</a>
-                    <?php } ?>
-                        
+					<?php } ?>
+
 				</div>
 
 			</div>
