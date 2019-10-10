@@ -1,13 +1,30 @@
 <?php
 include('config/db_connect.php');
 include('templates/header.php');
+include("storage_connect.php");
 
-$pdtname = $desc = $brand = $category = $pdtqty = $pdtprice = $cstprice = $discount = $checkResult = $pdtid = $weight = '';
-$errors = array('pdtname' => '', 'weight' => '', 'desc' => '', 'brand' => '', 'category' => '', 'pdtqty' => '', 'pdtprice' => '', 'cstprice' => '', 'discount' => '');
+$pdtname = $desc = $brand = $category = $pdtqty = $pdtprice = $cstprice = $discount = $checkResult = $pdtid = $weight = $url = $fileName = $tmpFilePath = '';
+$errors = array('pdtname' => '', 'weight' => '', 'desc' => '', 'brand' => '', 'category' => '', 'pdtqty' => '', 'pdtprice' => '', 'cstprice' => '', 'discount' => '', 'image' => '');
 
 //Checks if button of name="submit" is clicked
 if (isset($_POST['submit'])) {
-	//Gets data from the POST request 
+
+	if ($_FILES["fileToUpload"]["size"] !== 0) {
+		// Checks if file is an image
+		$imageCheck = getimagesize($_FILES["fileToUpload"]["tmp_name"]);
+
+		if (!$imageCheck) {
+			$errors['image'] = "Invalid image file selected!";
+		} else {
+			// Get the file name and temp file path
+			$fileName = $_FILES['fileToUpload']['name'];
+			$tmpFilePath = $_FILES['fileToUpload']['tmp_name'];
+		}
+	} else {
+		$errors['image'] = "Product image is required!";
+	}
+
+	//Gets data from the POST request for error checking
 	if (empty($_POST['pdtname'])) {
 		$errors['pdtname'] = 'Product name is required!';
 	} else {
@@ -86,9 +103,24 @@ if (isset($_POST['submit'])) {
 			}
 		} while (!$unique);
 
+		// Resizing image to 300 x 300
+		$pic_type = strtolower(strrchr($fileName, "."));
+		$pic_name = "temp/temp$pic_type";
+		move_uploaded_file($tmpFilePath, $pic_name);
+		if (true !== ($pic_error = @image_resize($pic_name, $tmpFilePath, 300, 300))) {
+			$tmpFilePath = $pic_name;
+		}
+
+		// Upload to google cloud storage
+		upload_object($bucketName, $fileName, $tmpFilePath);
+
+		// Create url for the uploaded image
+		$url = "https://storage.cloud.google.com/" . $bucketName . "/" . $fileName . "?cloudshell=false";
+		$url = mysqli_real_escape_string($conn, $url);
+
 		// Inserts data to db and redirects user to homepage
-		$sql = "INSERT INTO product(PDTID, PDTNAME, WEIGHT, DESCRIPTION, BRAND, CATEGORY, PDTQTY, CSTPRICE, PDTPRICE, PDTDISCNT) 
-		VALUES('$pdtid', '$pdtname', '$weight', '$desc', '$brand', '$category', '$pdtqty', '$cstprice', '$pdtprice', '$discount')";
+		$sql = "INSERT INTO product(PDTID, PDTNAME, WEIGHT, DESCRIPTION, BRAND, CATEGORY, PDTQTY, CSTPRICE, PDTPRICE, PDTDISCNT, IMAGE) 
+		VALUES('$pdtid', '$pdtname', '$weight', '$desc', '$brand', '$category', '$pdtqty', '$cstprice', '$pdtprice', '$discount', '$url')";
 		if (mysqli_query($conn, $sql)) {
 			header('Location: index.php');
 		} else {
@@ -101,9 +133,33 @@ if (isset($_POST['submit'])) {
 <!DOCTYPE html>
 <html>
 
+<script>
+	function triggerClick(e) {
+		displayImage(e);
+	}
+
+	function displayImage(e) {
+		if (e.files[0]) {
+			var reader = new FileReader();
+			reader.onload = function(e) {
+				document.querySelector('#preview').setAttribute('src', e.target.result);
+			}
+			reader.readAsDataURL(e.files[0]);
+		}
+	}
+</script>
+
 <section class="container grey-text">
 	<h4 class="center">New Product</h4>
-	<form action="list_product.php" class="EditForm" method="POST">
+	<form action="list_product.php" enctype="multipart/form-data" class="EditForm" method="POST">
+
+		<div class="center">
+			<label for="imageUpload"> <img src="/img/upload_placeholder1.png" id="preview" onclick="triggerClick()" style="width: 200px; margin: 20px; border-style: dotted; border-radius: 5px;"> </label>
+			<input type="file" name="fileToUpload" id="imageUpload" onchange="displayImage(this)" style="display: none;">
+		</div>
+		<div class="red-text center"><?php echo htmlspecialchars($errors['image']); ?></div>
+		<br>
+
 		<label>Product Name: </label>
 		<input type="text" name="pdtname" value="<?php echo htmlspecialchars($pdtname); ?>">
 		<div class="red-text"><?php echo htmlspecialchars($errors['pdtname']); ?></div>

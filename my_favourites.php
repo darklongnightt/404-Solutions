@@ -69,7 +69,11 @@ mysqli_close($conn);
 
             <div class="card z-depth-0">
                 <a href="product_details.php?id=<?php echo $product['PDTID']; ?>">
-                    <img src="img/product_icon.svg" class="product-icon"> </a>
+                    <img src="<?php if ($product['IMAGE']) {
+                                            echo $product['IMAGE'];
+                                        } else {
+                                            echo 'img/product_icon.svg';
+                                        } ?>" class="product-icon"> </a>
                 <div class="card-content center">
                     <h6> <?php echo htmlspecialchars($product['PDTNAME'] . ' - ' . $product['WEIGHT']); ?> </h6>
 

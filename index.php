@@ -1,6 +1,7 @@
 <?php
 include('config/db_connect.php');
 include('templates/header.php');
+include('storage_connect.php');
 
 // Store previously selected variables
 $getSort = $getFilter = '';
@@ -116,6 +117,10 @@ if (isset($_GET['delete'])) {
 	$product_id = mysqli_real_escape_string($conn, $_GET['delete']);
 	$sql = "DELETE FROM product WHERE PDTID = '$product_id'";
 
+	// Also delete from cloud storage
+	$fileName = $_GET['file'];
+	delete_object($bucketName, $fileName);
+	
 	// Checks if query is successful
 	if (mysqli_query($conn, $sql)) {
 		header('Location: index.php');
@@ -202,7 +207,7 @@ mysqli_close($conn);
 											echo $product['IMAGE'];
 										} else {
 											echo 'img/product_icon.svg';
-										} ?>" class="product-icon">
+										} ?>" class="product-icon circle">
 						<div class="card-content center">
 							<h6 class="black-text"> <?php echo htmlspecialchars($product['PDTNAME']); ?> <label> <?php echo htmlspecialchars($product['WEIGHT']); ?> </label></h6>
 
@@ -227,8 +232,13 @@ mysqli_close($conn);
 						<a href="index.php?cart=<?php echo $product['PDTID']; ?>">
 							<div class="red-text"><i class="fa fa-shopping-cart"></i> Add to Cart</div>
 						</a>
-					<?php } else if (substr($uid, 0, 3) == 'ADM') { ?>
-						<a href="index.php?delete=<?php echo $product['PDTID']; ?>">
+					<?php } else if (substr($uid, 0, 3) == 'ADM') {
+							$fileName = explode("/", $product['IMAGE'])[4];
+							$fileName = explode("?", $fileName)[0];
+							?>
+
+						<input type="hidden" name="url" value="<?php echo $product['IMAGE']; ?>">
+						<a href="index.php?delete=<?php echo $product['PDTID'] . '&file=' . $fileName; ?>">
 							<div class="red-text"><i class="fa fa-trash-alt"></i> DELETE</div>
 						</a>
 					<?php } ?>

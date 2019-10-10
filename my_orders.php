@@ -46,6 +46,11 @@ mysqli_close($conn);
                 <div class="card z-depth-0">
                     <div class="card-content center">
                         <a href="product_details.php?id=<?php echo $order['PDTID']; ?>">
+                            <img src="<?php if ($order['IMAGE']) {
+                                                    echo $order['IMAGE'];
+                                                } else {
+                                                    echo 'img/product_icon.svg';
+                                                } ?>" class="product-icon">
                             <h6 class="black-text"> <?php echo htmlspecialchars($order['PDTNAME'] . ' - ' . $order['WEIGHT']); ?> </h6>
                         </a>
 

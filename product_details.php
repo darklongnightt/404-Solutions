@@ -1,6 +1,7 @@
 <?php
 include("config/db_connect.php");
 include('templates/header.php');
+include('storage_connect.php');
 
 $id = $product = $message = '';
 $count = $cartQty = 0;
@@ -80,6 +81,11 @@ if (isset($_POST['delete'])) {
     $product_id = mysqli_real_escape_string($conn, $_POST['product_id']);
     $sql = "DELETE FROM product WHERE PDTID = '$product_id'";
 
+    // Also delete from cloud storage
+    $fileName = explode("/", $product['IMAGE'])[4];
+    $fileName = explode("?", $fileName)[0];
+    delete_object($bucketName, $fileName);
+
     // Checks if query is successful
     if (mysqli_query($conn, $sql)) {
         header('Location: index.php');
@@ -141,7 +147,11 @@ mysqli_close($conn);
             <div class="col s6 m3">
                 <br>
                 <br>
-                <img src="img/product_icon.svg">
+                <img src="<?php if ($product['IMAGE']) {
+                                    echo $product['IMAGE'];
+                                } else {
+                                    echo 'img/product_icon.svg';
+                                } ?>">
             </div>
             <div class="col s8 m4 offset-m1">
                 <div class="card z-depth-0">
@@ -236,7 +246,11 @@ mysqli_close($conn);
                     <a href="product_details.php?id=<?php echo $recommendation['PDTID']; ?>">
                         <div class="card z-depth-0 small">
 
-                            <img src="img/product_icon.svg" class="product-icon">
+                            <img src="<?php if ($recommendation['IMAGE']) {
+                                                    echo $recommendation['IMAGE'];
+                                                } else {
+                                                    echo 'img/product_icon.svg';
+                                                } ?>" class="product-icon">
                             <div class="card-content center">
                                 <h6 class="black-text"> <?php echo htmlspecialchars($recommendation['PDTNAME']); ?> <label> <?php echo htmlspecialchars($recommendation['WEIGHT']); ?> </label></h6>
                                 <?php if ($recommendation['PDTDISCNT'] > 0) { ?>

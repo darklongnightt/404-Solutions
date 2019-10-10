@@ -8,8 +8,7 @@ $limit = TRUE;
 
 // Pagination for all results
 $currDir = "inventory_management.php";
-$query = 'SELECT PDTNAME, CATEGORY, BRAND, PDTID, PDTQTY, THRESHOLD, WEIGHT
-FROM product';
+$query = 'SELECT * FROM product';
 include('templates/pagination_query.php');
 
 // Get all product categories for filtering
@@ -25,8 +24,7 @@ $minRange = $catMin = (float) $defaultRange['MINPRICE'];
 $maxRange = $catMax = (float) $defaultRange['MAXPRICE'];
 
 // Getting data from table: product as associative array
-$query = "SELECT PDTNAME, CATEGORY, BRAND, PDTID, PDTQTY, THRESHOLD, WEIGHT
-FROM product";
+$query = "SELECT * FROM product";
 
 if (isset($_POST['search'])) {
     // Get user's selection for sort, replace - with space for sql filter by category
@@ -211,7 +209,12 @@ if (isset($_POST['Reset'])) {
                 <?php foreach ($productList as $product) { ?>
                     <li class="collection-item avatar">
                         <a href="product_details.php?id=<?php echo htmlspecialchars($product['PDTID']) ?>">
-                            <img src="img/product_icon1.svg" alt="" class="circle">
+
+                            <img src="<?php if ($product['IMAGE']) {
+                                                echo $product['IMAGE'];
+                                            } else {
+                                                echo 'img/product_icon1.svg';
+                                            } ?>" class="circle">
                         </a>
                         <form class="secondary-content flex no-pad" method="POST" action="inventory_management.php">
                             <label>Update Quantity: </label>
