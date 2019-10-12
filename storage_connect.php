@@ -11,7 +11,7 @@ $projectId = 'super-data-fyp';
 # Instantiates a client
 $storage = new StorageClient([
     'projectId' => $projectId,
-    'keyFilePath' => '../super-data-12f9a5e1853f.json'
+    'keyFilePath' => '../super-data-key.json'
 ]);
 
 # The name for bucket
