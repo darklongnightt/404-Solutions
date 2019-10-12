@@ -1,10 +1,3 @@
-<?php
-session_start();
-$uid = '';
-if (isset($_SESSION['U_UID']))
-	$uid = $_SESSION['U_UID'];
-?>
-
 <head>
 	<title>SUPERDATA</title>
 	<!-- Compiled and minified CSS -->
@@ -21,6 +14,13 @@ if (isset($_SESSION['U_UID']))
 	<script src="https://code.jquery.com/jquery-1.10.2.js"></script>
 	<script src="https://code.jquery.com/ui/1.10.4/jquery-ui.js"></script>
 </head>
+
+<?php
+session_start();
+$uid = '';
+if (isset($_SESSION['U_UID']))
+	$uid = $_SESSION['U_UID'];
+?>
 
 <body class="grey lighten-4">
 	<nav class="white z-depth-0">

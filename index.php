@@ -1,7 +1,9 @@
 <?php
 include('config/db_connect.php');
 include('templates/header.php');
-include('storage_connect.php');
+
+if (substr($uid, 0, 3) == 'ADM') 
+	include('storage_connect.php');
 
 // Store previously selected variables
 $getSort = $getFilter = '';
