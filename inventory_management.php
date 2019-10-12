@@ -26,20 +26,20 @@ $maxRange = $catMax = (float) $defaultRange['MAXPRICE'];
 // Getting data from table: product as associative array
 $query = "SELECT * FROM product";
 
-if (isset($_POST['search'])) {
-    // Get user's selection for sort, replace - with space for sql filter by category
-    $getFilter = $_POST['selectF'];
-    $rFilter = str_replace('-', ' ', $getFilter);
-    $getSort = $_POST['selectS'];
-
-    //Get search
-    $getSearchItem = $_POST['searchItem'];
-
+if (isset($_GET['search'])) {
+    $getFilter = $_GET['Filter'];
+    $getSort = $_GET['sort'];
     // Get price range
-    $getPriceR = str_replace('$', '', $_POST['priceR']);
+    $getPriceR = str_replace('$', '', $_GET['priceRange']);
     $price = explode('-', $getPriceR);
     $minRange = (float) $price[0];
     $maxRange = (float) $price[1];
+
+    //Get search
+    $getSearchItem = $_GET['searchItem'];
+
+    // Get user's selection for sort, replace - with space for sql filter by category
+    $rFilter = str_replace('-', ' ', $getFilter);
 
     //If user uses search function
     if ($getSearchItem != null) {
@@ -67,7 +67,6 @@ if (isset($_POST['search'])) {
         $query .= ' CATEGORY = "' . $rFilter . '" AND';
     }
 
-
     // Get price range for specific category
     $result = mysqli_query($conn, $getCatRange);
     $catPriceRange = mysqli_fetch_assoc($result);
@@ -91,8 +90,8 @@ if (isset($_POST['search'])) {
         $query .= ' ORDER BY CREATED_AT DESC';
     }
 
-    // Pagination for results
-    include('templates/pagination_query.php');
+    $ext = "&Filter=$rFilter&sort=$getSort&priceRange=$minRange-$maxRange&searchItem=$getSearchItem&search=Search";
+    $getFilter = str_replace(' ', '-', $rFilter);
 } else {
     $query .= ' ORDER BY CREATED_AT DESC';
 }
@@ -100,6 +99,8 @@ if (isset($_POST['search'])) {
 if (!$limit) {
     $startingLimit = 0;
 }
+// Pagination for results
+include('templates/pagination_query.php');
 $query .= "\nLIMIT $startingLimit , $resultsPerPage";
 
 // Getting data from table: product as associative array
@@ -125,13 +126,6 @@ if (isset($_POST['submit'])) {
 // Free memory of result and close connection
 mysqli_free_result($result);
 mysqli_close($conn);
-
-if (isset($_POST['Reset'])) {
-    var_dump(isset($getFilter));
-    var_dump(isset($getSort));
-    var_dump(isset($getSearchR));
-    var_dump(isset($getSearchItem));
-}
 ?>
 
 <!DOCTYPE HTML>
@@ -158,10 +152,10 @@ if (isset($_POST['Reset'])) {
     });
 </script>
 <div class="sidebar sidebar-padding">
-    <form id="sfform" name="sfform" method="post" action="inventory_management.php">
+    <form id="sfform" name="sfform" method="get" action="inventory_management.php">
 
         <h6 class="grey-text">Category</h6>
-        <select class="browser-default" name="selectF">
+        <select class="browser-default" name="Filter">
             <option value="all">All</option>
             <?php
             foreach ($filterCat as $filtered) {
@@ -176,7 +170,7 @@ if (isset($_POST['Reset'])) {
         <br>
 
         <h6 class="grey-text">Sort</h6>
-        <select class="browser-default" name="selectS">
+        <select class="browser-default" name="sort">
             <option value="default" <?php if ($getSort == '') echo 'selected' ?>>Default</option>
             <option value="PDTPRICE DESC" <?php if ($getSort == 'PDTPRICE DESC') echo 'selected' ?>>Price - High to Low </option>
             <option value="PDTPRICE ASC" <?php if ($getSort == 'PDTPRICE ASC') echo 'selected' ?>>Price - Low to High</option>
@@ -188,7 +182,7 @@ if (isset($_POST['Reset'])) {
         <br>
 
         <h6 class="grey-text">Price Range</h6>
-        <input type="text" name="priceR" id="range" readonly>
+        <input type="text" name="priceRange" id="range" readonly>
         <div id="pRange"></div>
         <br>
 
@@ -237,7 +231,7 @@ if (isset($_POST['Reset'])) {
 
             </ul>
             <?php
-            include("templates/pagination_output.php");
+            include("templates/pagination_output_search.php");
             include("templates/footer.php");
             ?>
         </div>
