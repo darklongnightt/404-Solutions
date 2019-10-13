@@ -54,6 +54,7 @@ if (isset($_POST['submit'])) {
                 $_SESSION['U_GENDER'] = $customer['GENDER'];
                 $_SESSION['U_DOB'] = $customer['DOB'];
                 $_SESSION['U_INITIALS'] = $customer['FIRSTNAME'][0] . $customer['LASTNAME'][0];
+                $_SESSION['U_CLUSTER'] = $customer['CLUSTER'];
 
                 if (substr($_SESSION['U_UID'], 0, 3) == "CUS"){
                     header('Location: ../index.php?login=success');

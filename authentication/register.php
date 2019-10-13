@@ -118,6 +118,7 @@ if (isset($_POST['submit'])) {
                 $_SESSION['U_GENDER'] = $gender;
                 $_SESSION['U_DOB'] = $dob;
                 $_SESSION['U_INITIALS'] = $firstname[0] . $lastname[0];
+                $_SESSION['U_CLUSTER'] = 0;
     
                 mysqli_free_result($result);
                 mysqli_close($conn);

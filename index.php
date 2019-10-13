@@ -2,7 +2,7 @@
 include('config/db_connect.php');
 include('templates/header.php');
 
-if (substr($uid, 0, 3) == 'ADM') 
+if (substr($uid, 0, 3) == 'ADM')
 	include('storage_connect.php');
 
 // Store previously selected variables
@@ -122,7 +122,7 @@ if (isset($_GET['delete'])) {
 	// Also delete from cloud storage
 	$fileName = $_GET['file'];
 	delete_object($bucketName, $fileName);
-	
+
 	// Checks if query is successful
 	if (mysqli_query($conn, $sql)) {
 		header('Location: index.php');

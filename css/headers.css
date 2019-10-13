@@ -21,19 +21,10 @@ h5,
   font-family: "Montserrat", sans-serif;
 }
 
-.product-icon {
-  width: 100px;
-  margin: 40px auto -30px;
-  display: block;
-  position: relative;
-  top: -30px;
-}
-
 .tag-icon {
   width: 40px;
   position: relative;
   top: 10px;
-  display: inline;
 }
 
 .bold {

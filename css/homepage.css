@@ -1,0 +1,33 @@
+.recent-icon {
+  max-width: 75px;
+  max-height: 75px;
+  width: auto;
+  height: auto;
+  margin: 15px;
+  position: relative;
+}
+
+.welcome-label {
+  border-radius: 25px;
+  background: black;
+  padding: 10px;
+}
+
+.product-icon {
+  max-width: 100px;
+  max-height: 100px;
+  width: auto;
+  height: auto;
+  margin: 40px auto -30px;
+  display: block;
+  position: relative;
+  top: -30px;
+}
+
+.img-container {
+  width: 100px;
+  min-height: 100px;
+  max-height: auto;
+  float: left;
+  text-align: center;
+}

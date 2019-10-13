@@ -8,6 +8,39 @@ $id = $product = $message = '';
 $count = $cartQty = 0;
 $more = FALSE;
 
+// Update recent views of specific customer
+function updateRecentView($uid, $pid, $conn)
+{
+    if (substr($uid, 0, 3) == 'CUS') {
+        $uid = mysqli_real_escape_string($conn, $uid);
+
+        // Check if product is already in recent views
+        $sql = "SELECT * FROM recent_views WHERE USERID='$uid' AND PDTID='$pid'";
+        $result = mysqli_query($conn, $sql);
+        $checkUnique = mysqli_num_rows($result);
+
+        if ($checkUnique < 1) {
+            $sql = "SELECT * FROM recent_views WHERE USERID='$uid'";
+            $result = mysqli_query($conn, $sql);
+            $num = mysqli_num_rows($result);
+
+            // Only keeps top 6 rows per customer by either insert or update
+            if ($num > 5) {
+                $sql = "UPDATE recent_views SET VIEWED_AT=CURRENT_TIMESTAMP, PDTID='$pid' 
+                WHERE USERID='$uid' AND VIEWED_AT=(SELECT MIN(VIEWED_AT) FROM recent_views WHERE USERID='$uid');";
+            } else {
+                $sql = "INSERT INTO recent_views(USERID, PDTID) VALUES('$uid', '$pid')";
+            }
+
+            // Execute the query
+            if (!mysqli_query($conn, $sql)) {
+                echo 'Query Error: ' . mysqli_error($conn);
+            }
+        }
+    }
+}
+
+// Add an item to cart
 function addCart($conn, $id, $qty)
 {
     if ($_SESSION['U_UID']) {
@@ -41,6 +74,10 @@ function addCart($conn, $id, $qty)
 if (isset($_GET['id'])) {
     // To translate any possible user input before query the db
     $id = mysqli_real_escape_string($conn, $_GET['id']);
+    
+    // Update recent views table
+    updateRecentView($uid, $id, $conn);
+
     $sql = "SELECT * FROM product WHERE PDTID = '$id'";
     $result = mysqli_query($conn, $sql);
 
