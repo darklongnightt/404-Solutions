@@ -87,8 +87,8 @@ $productList = mysqli_fetch_all($result, MYSQLI_ASSOC);
 
 // Add to cart 
 if (isset($_GET['cart'])) {
-	if ($_SESSION['U_UID']) {
-		$uid = mysqli_real_escape_string($conn, $_SESSION['U_UID']);
+	if ($uid) {
+		$uid = mysqli_real_escape_string($conn, $uid);
 		$id = mysqli_real_escape_string($conn, $_GET['cart']);
 
 		// Check that cart item exists 
@@ -107,10 +107,6 @@ if (isset($_GET['cart'])) {
 		} else {
 			echo 'Query Error: ' . mysqli_error($conn);
 		}
-	} else {
-		// Temporary stores cart items as cookie / session
-		// For now redirect to login page
-		header('Location: /authentication/login.php');
 	}
 }
 
@@ -230,7 +226,7 @@ mysqli_close($conn);
 				</a>
 				<div class="card-action right-align">
 
-					<?php if (substr($uid, 0, 3) == 'CUS' || $uid == '') { ?>
+					<?php if (substr($uid, 0, 3) == 'CUS' || substr($uid, 0, 3) == 'ANO') { ?>
 						<a href="index.php?cart=<?php echo $product['PDTID']; ?>">
 							<div class="red-text"><i class="fa fa-shopping-cart"></i> Add to Cart</div>
 						</a>

@@ -56,8 +56,44 @@ if (isset($_POST['submit'])) {
                 $_SESSION['U_INITIALS'] = $customer['FIRSTNAME'][0] . $customer['LASTNAME'][0];
                 $_SESSION['U_CLUSTER'] = $customer['CLUSTER'];
 
-                if (substr($_SESSION['U_UID'], 0, 3) == "CUS"){
-                    header('Location: ../index.php?login=success');
+                if (substr($_SESSION['U_UID'], 0, 3) == "CUS") {
+                    // Update cart from cookies
+                    $ano = $_COOKIE['UID'];
+                    $cus = $_SESSION['U_UID'];
+
+                    // Get cart items from guest user
+                    $sql = "SELECT * FROM cart WHERE USERID='$ano'";
+                    $result = mysqli_query($conn, $sql);
+                    $anoCart = mysqli_fetch_all($result, MYSQLI_ASSOC);
+
+                    // Transfer item quantity over to the identified customer
+                    foreach ($anoCart as $item) {
+                        // Check that cart item exists 
+                        $id = $item['PDTID'];
+                        $qty = $item['CARTQTY'];
+
+                        $sql = "SELECT * FROM cart WHERE PDTID='$id' AND USERID='$cus'";
+                        $result = mysqli_query($conn, $sql);
+                        if (mysqli_num_rows($result) > 0) {
+                            // Update product qty
+                            $sql = "UPDATE cart SET CARTQTY=CARTQTY+'$qty' WHERE PDTID='$id' AND USERID='$cus'";
+                        } else {
+                            // Add to db cart
+                            $sql = "INSERT INTO cart(PDTID, USERID, CARTQTY) VALUES('$id', '$cus', '$qty')";
+                        }
+
+                        if (!mysqli_query($conn, $sql)) {
+                            echo 'Query Error: ' . mysqli_error($conn);
+                        }
+                    }
+
+                    // Delete guest items from cart
+                    $sql = "DELETE FROM cart WHERE USERID='$ano'";
+                    if (mysqli_query($conn, $sql)) {
+                        header('Location: ../index.php?login=success');
+                    } else {
+                        echo 'Query Error: ' . mysqli_error($conn);
+                    }
                 } else {
                     header('Location: ../analysis/cluster_report.php?login=success');
                 }
@@ -87,7 +123,7 @@ if (isset($_POST['submit'])) {
         <input type="password" name="password">
         <div class="red-text"><?php echo htmlspecialchars($errors['password']); ?></div>
 
-        <label class="right"> New member? 
+        <label class="right"> New member?
             <u><a href="register.php" class="cyan-text">Register</a></u> </label>
 
         <br>

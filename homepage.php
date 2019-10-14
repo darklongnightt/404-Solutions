@@ -1,13 +1,16 @@
 <?php
-include("config/db_connect.php");
-include("templates/header.php");
+include('config/db_connect.php');
+include('templates/header.php');
 
 $name = 'Guest';
+$cluster = 0;
+
 // Add an item to cart
 function addCart($conn, $id, $qty)
 {
-    if ($_SESSION['U_UID']) {
-        $uid = mysqli_real_escape_string($conn, $_SESSION['U_UID']);
+    $uid = $GLOBALS['uid'];
+    if ($uid) {
+        $uid = mysqli_real_escape_string($conn, $uid);
         $id = mysqli_real_escape_string($conn, $id);
 
         // Check that cart item exists 
@@ -26,36 +29,34 @@ function addCart($conn, $id, $qty)
         } else {
             echo 'Query Error: ' . mysqli_error($conn);
         }
-    } else {
-        // Temporary stores cart items as cookie / session
-        // For now redirect to login page
-        header('Location: /authentication/login.php');
     }
-}
-
-// Checks if user is logged in
-if (isset($_SESSION['U_UID'])) {
-    $name = $_SESSION['U_FIRSTNAME'] . ' ' . $_SESSION['U_LASTNAME'];
-    $cluster = $_SESSION['U_CLUSTER'];
-
-    // Get all recent views for this user
-    $uid = mysqli_real_escape_string($conn, $uid);
-    $sql = "SELECT * FROM recent_views JOIN product ON recent_views.PDTID = product.PDTID
-    WHERE USERID='$uid' ORDER BY VIEWED_AT DESC";
-    $result = mysqli_query($conn, $sql);
-    $recent_views = mysqli_fetch_all($result, MYSQLI_ASSOC);
-
-    // Get all cluster recommendations for this user
-    $sql = "SELECT * FROM cluster_recommendation JOIN product ON cluster_recommendation.PDTID = product.PDTID 
-    WHERE CLUSTER='$cluster' ORDER BY FREQUENCY DESC";
-    $result = mysqli_query($conn, $sql);
-    $cluster_recommendations = mysqli_fetch_all($result, MYSQLI_ASSOC);
 }
 
 // Checks if recommended cart is clicked
 if (isset($_GET['cart'])) {
     addCart($conn, $_GET['cart'], 1);
 }
+
+// Checks if user is logged in
+if (isset($_SESSION['U_UID'])) {
+    $name = $_SESSION['U_FIRSTNAME'] . ' ' . $_SESSION['U_LASTNAME'];
+    $cluster = $_SESSION['U_CLUSTER'];
+} else {
+    $cluster = 1;
+}
+
+// Get all recent views for this user
+$uid = mysqli_real_escape_string($conn, $uid);
+$sql = "SELECT * FROM recent_views JOIN product ON recent_views.PDTID = product.PDTID
+WHERE USERID='$uid' ORDER BY VIEWED_AT DESC";
+$result = mysqli_query($conn, $sql);
+$recent_views = mysqli_fetch_all($result, MYSQLI_ASSOC);
+
+// Get all cluster recommendations for this user
+$sql = "SELECT * FROM cluster_recommendation JOIN product ON cluster_recommendation.PDTID = product.PDTID 
+WHERE CLUSTER='$cluster' ORDER BY FREQUENCY DESC";
+$result = mysqli_query($conn, $sql);
+$cluster_recommendations = mysqli_fetch_all($result, MYSQLI_ASSOC);
 
 // Get top 12 most popular products from database
 $sql = "SELECT COUNT(orders.PDTID) AS FREQ, orders.PDTID, product.PDTNAME, product.PDTPRICE, product.PDTDISCNT, product.IMAGE 
@@ -155,7 +156,7 @@ mysqli_close($conn);
         </div>
     </div>
 
-    <?php if ($uid && $_SESSION['U_CLUSTER'] > 0) { ?>
+    <?php if ($uid && $cluster > 0) { ?>
         <div class="row">
             <h5 class="brand-text bold">&nbsp&nbspRecommended For You</h5>
             <?php for ($i = 0; $i < 12; $i++) {
@@ -191,7 +192,7 @@ mysqli_close($conn);
                     </a>
 
                     <div class="card-action right-align">
-                        <?php if (substr($uid, 0, 3) == 'CUS' || $uid == '') { ?>
+                        <?php if (substr($uid, 0, 3) == 'CUS' || substr($uid, 0, 3) == 'ANO') { ?>
                             <a href="homepage.php?<?php echo 'cart=' . $recommendation['PDTID']; ?>">
                                 <div class="red-text"><i class="fa fa-shopping-cart"></i> Cart</div>
                             </a>

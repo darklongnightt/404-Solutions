@@ -1,7 +1,6 @@
 <?php
 include('config/db_connect.php');
 include('templates/header.php');
-$uid = mysqli_real_escape_string($conn, $_SESSION['U_UID']);
 
 // Pagination for all results
 $currDir = "cart.php";
@@ -35,57 +34,61 @@ if (isset($_GET['remove'])) {
 
 // To checkout all products from cart
 if (isset($_POST['checkout']) && $cartList) {
-    // Generate a transaction id for the series of orders
-    $unique = true;
-    do {
-        $transactionId = uniqid('ORD');
-        $sql = "SELECT * FROM orders WHERE TRANSACTIONID = '$transactionId'";
-        $result = mysqli_query($conn, $sql);
-        $checkResult = mysqli_num_rows($result);
-        if ($checkResult > 0) {
-            $unique = false;
-        }
-    } while (!$unique);
+    if (substr($uid, 0, 3) !== 'ANO') {
+        // Generate a transaction id for the series of orders
+        $unique = true;
+        do {
+            $transactionId = uniqid('ORD');
+            $sql = "SELECT * FROM orders WHERE TRANSACTIONID = '$transactionId'";
+            $result = mysqli_query($conn, $sql);
+            $checkResult = mysqli_num_rows($result);
+            if ($checkResult > 0) {
+                $unique = false;
+            }
+        } while (!$unique);
 
 
-    // Add an order entry for each product in cart
-    foreach ($cartList as $product) {
-        $totalPrice =  mysqli_real_escape_string($conn, $product['PDTPRICE'] * $product['CARTQTY']);
-        $totalDiscount = mysqli_real_escape_string($conn, round($totalPrice / 100 * $product['PDTDISCNT'], 2));
-        $netPrice = mysqli_real_escape_string($conn, round($totalPrice - $totalDiscount, 2));;
-        $pdtId = mysqli_real_escape_string($conn, $product['PDTID']);
-        $orderQty = mysqli_real_escape_string($conn, $product['CARTQTY']);
-        $deliveryStatus = mysqli_real_escape_string($conn, 'Not Delivered');
-        $deliveryDate = mysqli_real_escape_string($conn, date('Y-m-d h:i:sa', strtotime(date('Y-m-d h:i:sa') . ' + 5 days')));
-        $payType = mysqli_real_escape_string($conn, $_POST['payment']);
+        // Add an order entry for each product in cart
+        foreach ($cartList as $product) {
+            $totalPrice =  mysqli_real_escape_string($conn, $product['PDTPRICE'] * $product['CARTQTY']);
+            $totalDiscount = mysqli_real_escape_string($conn, round($totalPrice / 100 * $product['PDTDISCNT'], 2));
+            $netPrice = mysqli_real_escape_string($conn, round($totalPrice - $totalDiscount, 2));;
+            $pdtId = mysqli_real_escape_string($conn, $product['PDTID']);
+            $orderQty = mysqli_real_escape_string($conn, $product['CARTQTY']);
+            $deliveryStatus = mysqli_real_escape_string($conn, 'Not Delivered');
+            $deliveryDate = mysqli_real_escape_string($conn, date('Y-m-d h:i:sa', strtotime(date('Y-m-d h:i:sa') . ' + 5 days')));
+            $payType = mysqli_real_escape_string($conn, $_POST['payment']);
 
-        // Insert into orders table
-        $sql = "INSERT INTO orders(TRANSACTIONID, PDTID, USERID, ORDERQTY, 
+            // Insert into orders table
+            $sql = "INSERT INTO orders(TRANSACTIONID, PDTID, USERID, ORDERQTY, 
         DELVRYSTS, PMENTTYPE, TTLPRICE, TTLDISCNTPRICE, NETPRICE, DELVRYDATE)
         VALUES('$transactionId', '$pdtId', '$uid', '$orderQty', '$deliveryStatus', 
         '$payType', '$totalPrice', '$totalDiscount', '$netPrice', '$deliveryDate')";
 
-        // Check if insert statement returns an error
-        if (mysqli_query($conn, $sql)) {
-            // Empty cart
-            $sql = "DELETE FROM cart WHERE USERID='$uid'";
+            // Check if insert statement returns an error
             if (mysqli_query($conn, $sql)) {
-                // Update product qty in products table
-                $sql = "UPDATE product SET PDTQTY=PDTQTY-'$orderQty' WHERE PDTID = '$pdtId'";
+                // Empty cart
+                $sql = "DELETE FROM cart WHERE USERID='$uid'";
                 if (mysqli_query($conn, $sql)) {
-                    // Navigate to else payment page
+                    // Update product qty in products table
+                    $sql = "UPDATE product SET PDTQTY=PDTQTY-'$orderQty' WHERE PDTID = '$pdtId'";
+                    if (mysqli_query($conn, $sql)) {
+                        // Navigate to else payment page
+                        header('Location: cart.php');
+                    } else {
+                        echo 'Query Error: ' . mysqli_error($conn);
+                    }
+
                     header('Location: cart.php');
                 } else {
                     echo 'Query Error: ' . mysqli_error($conn);
                 }
-
-                header('Location: cart.php');
             } else {
                 echo 'Query Error: ' . mysqli_error($conn);
             }
-        } else {
-            echo 'Query Error: ' . mysqli_error($conn);
         }
+    } else {
+        header('Location: authentication/login.php');
     }
 }
 

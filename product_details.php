@@ -11,7 +11,7 @@ $more = FALSE;
 // Update recent views of specific customer
 function updateRecentView($uid, $pid, $conn)
 {
-    if (substr($uid, 0, 3) == 'CUS') {
+    if (substr($uid, 0, 3) == 'CUS' || substr($uid, 0, 3) == 'ANO') {
         $uid = mysqli_real_escape_string($conn, $uid);
 
         // Check if product is already in recent views
@@ -43,8 +43,9 @@ function updateRecentView($uid, $pid, $conn)
 // Add an item to cart
 function addCart($conn, $id, $qty)
 {
-    if ($_SESSION['U_UID']) {
-        $uid = mysqli_real_escape_string($conn, $_SESSION['U_UID']);
+    $uid = $GLOBALS['uid'];
+    if ($uid) {
+        $uid = mysqli_real_escape_string($conn, $uid);
         $id = mysqli_real_escape_string($conn, $id);
 
         // Check that cart item exists 
@@ -63,10 +64,6 @@ function addCart($conn, $id, $qty)
         } else {
             echo 'Query Error: ' . mysqli_error($conn);
         }
-    } else {
-        // Temporary stores cart items as cookie / session
-        // For now redirect to login page
-        header('Location: /authentication/login.php');
     }
 }
 
@@ -74,7 +71,7 @@ function addCart($conn, $id, $qty)
 if (isset($_GET['id'])) {
     // To translate any possible user input before query the db
     $id = mysqli_real_escape_string($conn, $_GET['id']);
-    
+
     // Update recent views table
     updateRecentView($uid, $id, $conn);
 
@@ -168,8 +165,7 @@ if (isset($_POST['favourite'])) {
             echo 'Query Error: ' . mysqli_error($conn);
         }
     } else {
-        // Temporary stores cart items as cookie / session
-        // For now redirect to login page
+        // Redirect to login page
         header('Location: /authentication/login.php');
     }
 }
@@ -240,7 +236,7 @@ mysqli_close($conn);
 
                             <br>
 
-                            <?php if (substr($uid, 0, 3) == 'CUS' || $uid == '') { ?>
+                            <?php if (substr($uid, 0, 3) == 'CUS' || substr($uid, 0, 3) == 'ANO') { ?>
                                 <input type="submit" name="cart" value="cart" class="btn orange z-depth-0" />
                                 <span>&nbsp</span>
                                 <input type="submit" name="favourite" value="favourite" class="btn red z-depth-0" />
@@ -309,7 +305,7 @@ mysqli_close($conn);
 
                     </a>
                     <div class="card-action right-align">
-                        <?php if (substr($uid, 0, 3) == 'CUS' || $uid == '') { ?>
+                        <?php if (substr($uid, 0, 3) == 'CUS' || substr($uid, 0, 3) == 'ANO') { ?>
                             <a href="product_details.php?id=<?php echo $product['PDTID'] . '&cart=' . $recommendation['PDTID']; ?>">
                                 <div class="red-text"><i class="fa fa-shopping-cart"></i> Cart</div>
                             </a>

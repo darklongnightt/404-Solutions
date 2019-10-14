@@ -19,8 +19,17 @@
 <?php
 session_start();
 $uid = '';
-if (isset($_SESSION['U_UID']))
+if (isset($_SESSION['U_UID'])) {
 	$uid = $_SESSION['U_UID'];
+} else {
+	// Set cookie for guest users
+	if (!isset($_COOKIE['UID'])) {
+		$cookie_uid = uniqid('ANO');
+		setcookie('UID', $cookie_uid, time() + (86400 * 7), "/"); // 86400 = 1 day
+	}
+
+	$uid = $_COOKIE['UID'];
+}
 ?>
 
 <body class="grey lighten-4">
@@ -40,7 +49,7 @@ if (isset($_SESSION['U_UID']))
 			</strong>
 			<ul id="nav-mobile" class="right hide-on-small-and-down">
 
-				<?php if ($uid) { ?>
+				<?php if (substr($uid, 0, 3) !== 'ANO') { ?>
 					<li class="right">
 						<a href="../index.php" class="btn btn-floating red"><?php echo $_SESSION['U_INITIALS'] ?></a>
 					</li>
@@ -59,8 +68,17 @@ if (isset($_SESSION['U_UID']))
 						?>
 				<?php } else { ?>
 					<li>
+						<a href="../cart.php">
+							<div class="brand-text bold">
+								<i class="fa fa-shopping-cart"></i> Cart
+							</div>
+						</a>
+					</li>
+
+					<li>
 						<a href="../authentication/register.php" class="brand-text bold">Register</a>
 					</li>
+					
 					<li>
 						<a href="../authentication/login.php" class="brand-text bold">Login</a>
 					</li>
