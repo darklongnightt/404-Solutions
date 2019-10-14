@@ -13,6 +13,12 @@
   padding: 10px;
 }
 
+.discount-label {
+  border-radius: 15px;
+  background: red;
+  padding: 10px;
+}
+
 .product-icon {
   max-width: 100px;
   max-height: 100px;
@@ -25,6 +31,14 @@
 }
 
 .img-container {
+  width: 100px;
+  min-height: 100px;
+  max-height: auto;
+  float: left;
+  text-align: center;
+}
+
+.popular {
   width: 100px;
   min-height: 100px;
   max-height: auto;

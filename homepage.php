@@ -123,12 +123,16 @@ mysqli_close($conn);
 
                 <?php foreach ($top_products as $product) { ?>
                     <a href="product_details.php?id=<?php echo $product['PDTID']; ?>">
-                        <span class="img-container">
+                        <span class="img-container" style="margin-left: 10px;">
                             <img src="<?php if ($product['IMAGE']) {
                                                 echo $product['IMAGE'];
                                             } else {
                                                 echo 'img/product_icon.svg';
                                             } ?>" class="recent-icon">
+
+                            <div class="black-text discount-label">
+                                <?php echo '$' . number_format(htmlspecialchars($product['PDTPRICE']) / 100 * htmlspecialchars(100 - $product['PDTDISCNT']), 2, '.', ''); ?>
+                            </div>
                         </span>
                     </a>
                 <?php } ?>
