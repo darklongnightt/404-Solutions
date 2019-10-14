@@ -216,7 +216,8 @@ mysqli_close($conn);
 								<label>
 									<strike> <?php echo htmlspecialchars('$' . $product['PDTPRICE']); ?> </strike>
 								</label>
-								<label class="red-text">
+								&nbsp
+								<label class="white-text discount-label">
 									<?php echo htmlspecialchars('-' . $product['PDTDISCNT'] . '% OFF'); ?>
 								</label>
 

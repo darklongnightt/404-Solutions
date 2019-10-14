@@ -65,6 +65,11 @@ GROUP BY orders.PDTID ORDER BY FREQ DESC LIMIT 0, 12";
 $result = mysqli_query($conn, $sql);
 $top_products = mysqli_fetch_all($result, MYSQLI_ASSOC);
 
+// Get all categories 
+$sql = "SELECT DISTINCT CATEGORY FROM product";
+$result = mysqli_query($conn, $sql);
+$categories = mysqli_fetch_all($result, MYSQLI_ASSOC);
+
 // Free memory of result and close connection
 mysqli_free_result($result);
 mysqli_close($conn);
@@ -130,7 +135,7 @@ mysqli_close($conn);
                                                 echo 'img/product_icon.svg';
                                             } ?>" class="recent-icon">
 
-                            <div class="black-text discount-label">
+                            <div class="white-text discount-label">
                                 <?php echo '$' . number_format(htmlspecialchars($product['PDTPRICE']) / 100 * htmlspecialchars(100 - $product['PDTDISCNT']), 2, '.', ''); ?>
                             </div>
                         </span>
@@ -160,6 +165,19 @@ mysqli_close($conn);
         </div>
     </div>
 
+    <div class="row">
+        <h5 class="brand-text bold">&nbsp&nbspShop By Category</h5>
+        <?php foreach ($categories as $category) { ?>
+            <div class="col s3 md2">
+                <div class="card z-depth-0" style="height: 100px;">
+                    <div class="card-content center">
+                        <div><?php echo $category['CATEGORY']; ?></div>
+                    </div>
+                </div>
+            </div>
+        <?php } ?>
+    </div>
+
     <?php if ($uid && $cluster > 0) { ?>
         <div class="row">
             <h5 class="brand-text bold">&nbsp&nbspRecommended For You</h5>
@@ -182,7 +200,8 @@ mysqli_close($conn);
                                     <label>
                                         <strike> <?php echo htmlspecialchars('$' . $recommendation['PDTPRICE']); ?> </strike>
                                     </label>
-                                    <label class="red-text">
+                                    &nbsp
+                                    <label class="white-text discount-label">
                                         <?php echo htmlspecialchars('-' . $recommendation['PDTDISCNT'] . '% OFF'); ?>
                                     </label>
 

@@ -14,9 +14,9 @@
 }
 
 .discount-label {
-  border-radius: 15px;
-  background: red;
-  padding: 10px;
+  border-radius: 10px;
+  background: #ff3333;
+  padding: 2px;
 }
 
 .product-icon {
