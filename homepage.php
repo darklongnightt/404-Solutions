@@ -65,7 +65,7 @@ GROUP BY orders.PDTID ORDER BY FREQ DESC LIMIT 0, 12";
 $result = mysqli_query($conn, $sql);
 $top_products = mysqli_fetch_all($result, MYSQLI_ASSOC);
 
-// Get all categories 
+// Select random items from each category
 $sql = "SELECT DISTINCT CATEGORY FROM product";
 $result = mysqli_query($conn, $sql);
 $categories = mysqli_fetch_all($result, MYSQLI_ASSOC);
@@ -96,21 +96,21 @@ mysqli_close($conn);
                     <li>
                         <img src="/img/banner1.jpg">
                         <div class="caption center-align">
-                            <h3>This is our big Tagline!</h3>
+                            <h3 class="black-text bold">Discount Banner 1</h3>
                             <h5 class="light grey-text text-lighten-3">Here's our small slogan.</h5>
                         </div>
                     </li>
                     <li>
                         <img src="/img/banner2.jpg">
                         <div class="caption left-align">
-                            <h3>Left Aligned Caption</h3>
+                            <h3 class="black-text bold">Discount Banner 2</h3>
                             <h5 class="light grey-text text-lighten-3">Here's our small slogan.</h5>
                         </div>
                     </li>
                     <li>
                         <img src="/img/banner3.jpg">
                         <div class="caption right-align">
-                            <h3>Right Aligned Caption</h3>
+                            <h3 class="black-text bold">Discount Banner 3</h3>
                             <h5 class="light grey-text text-lighten-3">Here's our small slogan.</h5>
                         </div>
                     </li>
@@ -168,15 +168,22 @@ mysqli_close($conn);
     <div class="row">
         <h5 class="brand-text bold">&nbsp&nbspShop By Category</h5>
         <?php foreach ($categories as $category) { ?>
-            <div class="col s3 md2">
-                <div class="card z-depth-0" style="height: 100px;">
-                    <div class="card-content center">
-                        <div><?php echo $category['CATEGORY']; ?></div>
+            <a href="index.php">
+                <div class="col s3 md2">
+                    <div class="card z-depth-0" style="height: 130px; margin-bottom: 20px;">
+                        <img src="img/category/<?php echo $category['CATEGORY'] . '.jpg'; ?>" class="responsive-img category-icon">
+
+                        <div class="middle">
+                            <h5 class="category-text bold"><?php echo $category['CATEGORY']; ?></h5>
+                        </div>
                     </div>
                 </div>
-            </div>
+            </a>
+
         <?php } ?>
     </div>
+
+    <div class="row"></div>
 
     <?php if ($uid && $cluster > 0) { ?>
         <div class="row">
