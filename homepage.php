@@ -170,8 +170,8 @@ mysqli_close($conn);
         <?php foreach ($categories as $category) { ?>
             <a href="index.php">
                 <div class="col s3 md2">
-                    <div class="card z-depth-0" style="height: 130px; margin-bottom: 20px;">
-                        <img src="img/category/<?php echo $category['CATEGORY'] . '.jpg'; ?>" class="responsive-img category-icon">
+                    <div class="card z-depth-0 category-card">
+                        <img src="img/category/<?php echo $category['CATEGORY'] . '.jpg'; ?>" class="category-icon">
 
                         <div class="middle">
                             <h5 class="category-text bold"><?php echo $category['CATEGORY']; ?></h5>
