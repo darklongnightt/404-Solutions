@@ -2,258 +2,243 @@
 include('config/db_connect.php');
 include('templates/header.php');
 
-if (substr($uid, 0, 3) == 'ADM')
-	include('storage_connect.php');
+$name = 'Guest';
+$cluster = 0;
 
-// Store previously selected variables
-$getSort = $getFilter = '';
-$limit = TRUE;
+// Add an item to cart
+function addCart($conn, $id, $qty)
+{
+    $uid = $GLOBALS['uid'];
+    if ($uid) {
+        $uid = mysqli_real_escape_string($conn, $uid);
+        $id = mysqli_real_escape_string($conn, $id);
 
-// Pagination for all results
-$currDir = "index.php";
-$query = "SELECT * FROM product";
-include('templates/pagination_query.php');
+        // Check that cart item exists 
+        $sql = "SELECT * FROM cart WHERE PDTID='$id' AND USERID='$uid'";
+        $result = mysqli_query($conn, $sql);
+        if (mysqli_num_rows($result) > 0) {
+            // Increment product qty by 1
+            $sql = "UPDATE cart SET CARTQTY=CARTQTY+'$qty' WHERE PDTID='$id' AND USERID='$uid'";
+        } else {
+            // Add to db cart
+            $sql = "INSERT INTO cart(PDTID, USERID, CARTQTY) VALUES('$id', '$uid', '$qty')";
+        }
 
-// Get all product categories for filtering
-$getCat = "SELECT DISTINCT CATEGORY FROM product";
-$catResult = mysqli_query($conn, $getCat);
-$filterCat = mysqli_fetch_all($catResult, MYSQLI_ASSOC);
-
-// Get min and max product price for range slider default
-$getCatRange = "SELECT MIN(PDTPRICE) AS MINPRICE, MAX(PDTPRICE) AS MAXPRICE FROM product";
-$result = mysqli_query($conn, $getCatRange);
-$defaultRange = mysqli_fetch_assoc($result);
-$minRange = $catMin = (float) $defaultRange['MINPRICE'];
-$maxRange = $catMax = (float) $defaultRange['MAXPRICE'];
-
-
-if (isset($_POST['submit'])) {
-	// Get user's selection for sort, replace - with space for sql filter by category
-	$getFilter = $_POST['selectF'];
-	$rFilter = str_replace('-', ' ', $getFilter);
-	$getSort = $_POST['selectS'];
-
-	// Get price range
-	$getPriceR = str_replace('$', '', $_POST['priceR']);
-	$price = explode('-', $getPriceR);
-	$minRange = (float) $price[0];
-	$maxRange = (float) $price[1];
-
-	// If user uses filter function
-	if ($getFilter != "all") {
-		$limit = FALSE;
-		$query = "SELECT * FROM product WHERE CATEGORY='$rFilter' AND";
-		// Price range by category
-		$getCatRange .= ' WHERE CATEGORY = "' . $rFilter . '"';
-	} else
-		$query .= ' WHERE';
-
-	// Get price range for specific category
-	$result = mysqli_query($conn, $getCatRange);
-	$catPriceRange = mysqli_fetch_assoc($result);
-	$catMin = (float) $catPriceRange['MINPRICE'];
-	$catMax = (float) $catPriceRange['MAXPRICE'];
-
-	// If user selection misfit min and max for specific category
-	if (($minRange == 0) || ($maxRange == 0) || ($minRange < $catMin) || ($maxRange > $catMax) || ($minRange > $catMax) || ($maxRange < $catMin)) {
-		$minRange = $catMin;
-		$maxRange = $catMax;
-	}
-	$query .= ' PDTPRICE >="' . $minRange . '" AND PDTPRICE <= "' . $maxRange . '"';
-
-	// If user use sort function
-	if ($getSort != "default") {
-		$query .= ' ORDER BY ' . $getSort;
-	}
-
-	// If user did not use sort function
-	else {
-		$query .= ' ORDER BY CREATED_AT DESC';
-	}
-	// Pagination for results
-	include('templates/pagination_query.php');
-} else {
-	$query .= ' ORDER BY CREATED_AT DESC';
+        if (mysqli_query($conn, $sql)) {
+            $GLOBALS['message'] = 'Successfully added product to cart!';
+        } else {
+            echo 'Query Error: ' . mysqli_error($conn);
+        }
+    }
 }
 
-if (!$limit) {
-	$startingLimit = 0;
-}
-$query .= "\nLIMIT $startingLimit , $resultsPerPage";
-
-// Getting data from table: product as associative array
-$result = mysqli_query($conn, $query);
-$productList = mysqli_fetch_all($result, MYSQLI_ASSOC);
-
-// Add to cart 
+// Checks if recommended cart is clicked
 if (isset($_GET['cart'])) {
-	if ($uid) {
-		$uid = mysqli_real_escape_string($conn, $uid);
-		$id = mysqli_real_escape_string($conn, $_GET['cart']);
-
-		// Check that cart item exists 
-		$sql = "SELECT * FROM cart WHERE PDTID='$id' AND USERID='$uid'";
-		$result = mysqli_query($conn, $sql);
-		if (mysqli_num_rows($result) > 0) {
-			// Increment product qty by 1
-			$sql = "UPDATE cart SET CARTQTY=CARTQTY+1 WHERE PDTID='$id' AND USERID='$uid'";
-		} else {
-			// Add to db cart with qty of 1
-			$sql = "INSERT INTO cart(PDTID, USERID, CARTQTY) VALUES('$id', '$uid', '1')";
-		}
-
-		if (mysqli_query($conn, $sql)) {
-			$message = 'Successfully added product to cart!';
-		} else {
-			echo 'Query Error: ' . mysqli_error($conn);
-		}
-	}
+    addCart($conn, $_GET['cart'], 1);
 }
 
-// Admin delete 
-if (isset($_GET['delete'])) {
-	$product_id = mysqli_real_escape_string($conn, $_GET['delete']);
-	$sql = "DELETE FROM product WHERE PDTID = '$product_id'";
-
-	// Also delete from cloud storage
-	$fileName = $_GET['file'];
-	delete_object($bucketName, $fileName);
-
-	// Checks if query is successful
-	if (mysqli_query($conn, $sql)) {
-		header('Location: index.php');
-	} else {
-		echo 'Query Error' . mysqli_error($conn);
-	}
+// Checks if user is logged in
+if (isset($_SESSION['U_UID'])) {
+    $name = $_SESSION['U_FIRSTNAME'] . ' ' . $_SESSION['U_LASTNAME'];
+    $cluster = $_SESSION['U_CLUSTER'];
+} else {
+    $cluster = 1;
 }
+
+// Get all recent views for this user
+$uid = mysqli_real_escape_string($conn, $uid);
+$sql = "SELECT * FROM recent_views JOIN product ON recent_views.PDTID = product.PDTID
+WHERE USERID='$uid' ORDER BY VIEWED_AT DESC";
+$result = mysqli_query($conn, $sql);
+$recent_views = mysqli_fetch_all($result, MYSQLI_ASSOC);
+
+// Get all cluster recommendations for this user
+$sql = "SELECT * FROM cluster_recommendation JOIN product ON cluster_recommendation.PDTID = product.PDTID 
+WHERE CLUSTER='$cluster' ORDER BY FREQUENCY DESC";
+$result = mysqli_query($conn, $sql);
+$cluster_recommendations = mysqli_fetch_all($result, MYSQLI_ASSOC);
+
+// Get top 12 most popular products from database
+$sql = "SELECT COUNT(orders.PDTID) AS FREQ, orders.PDTID, product.PDTNAME, product.PDTPRICE, product.PDTDISCNT, product.IMAGE 
+FROM orders JOIN product ON orders.PDTID = product.PDTID
+GROUP BY orders.PDTID ORDER BY FREQ DESC LIMIT 0, 12";
+$result = mysqli_query($conn, $sql);
+$top_products = mysqli_fetch_all($result, MYSQLI_ASSOC);
+
+// Select random items from each category
+$sql = "SELECT DISTINCT CATEGORY FROM product";
+$result = mysqli_query($conn, $sql);
+$categories = mysqli_fetch_all($result, MYSQLI_ASSOC);
 
 // Free memory of result and close connection
 mysqli_free_result($result);
 mysqli_close($conn);
 ?>
 
-<!DOCTYPE html>
+<head>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+</head>
+
+<!DOCTYPE HTML>
 <html>
-<h4 class="center grey-text">Products</h4>
 <script>
-	var priceMin = <?php echo json_encode($catMin); ?>;
-	var priceMax = <?php echo json_encode($catMax); ?>;
-	var postMin = <?php echo json_encode($minRange); ?>;
-	var postMax = <?php echo json_encode($maxRange); ?>;
-
-	$(function() {
-		$("#pRange").slider({
-			range: true,
-			min: priceMin,
-			max: priceMax,
-			values: [postMin, postMax],
-			slide: function(event, ui) {
-				$("#range").val("$" + ui.values[0] + " - $" + ui.values[1]);
-			}
-		});
-		$("#range").val("$" + $("#pRange").slider("values", 0) +
-			" - $" + $("#pRange").slider("values", 1));
-	});
+    $(document).ready(function() {
+        $('.slider').slider();
+    });
 </script>
-<div class="sidebar sidebar-padding">
-	<form id="sfform" name="sfform" method="post" action="index.php">
-		<h6 class="grey-text">Category</h6>
-		<p id="testrange"></p>
-		<select class="browser-default" name="selectF">
-			<option value="all">All</option>
-			<?php
-
-			foreach ($filterCat as $filtered) {
-				echo "<option value=" . str_replace(' ', '-', $filtered['CATEGORY']);
-				if ($getFilter == str_replace(' ', '-', $filtered['CATEGORY'])) {
-					echo " selected";
-				}
-				echo ">" . $filtered['CATEGORY'] . "</option>";
-			}
-			?>
-		</select>
-		<br>
-		<h6 class="grey-text">Sort</h6>
-		<select class="browser-default" name="selectS">
-			<option value="default" <?php if ($getSort == '') echo 'selected' ?>>Default</option>
-			<option value="PDTPRICE DESC" <?php if ($getSort == 'PDTPRICE DESC') echo 'selected' ?>>Price - High to Low </option>
-			<option value="PDTPRICE ASC" <?php if ($getSort == 'PDTPRICE ASC') echo 'selected' ?>>Price - Low to High</option>
-			<option value="PDTDISCNT ASC" <?php if ($getSort == 'PDTDISCNT ASC') echo 'selected' ?>>Discount - Low to High</option>
-			<option value="PDTDISCNT DESC" <?php if ($getSort == 'PDTDISCNT DESC') echo 'selected' ?>>Discount - High to Low</option>
-			<option value="PDTQTY DESC" <?php if ($getSort == 'PDTQTY DESC') echo 'selected' ?>>Quantity - High to Low </option>
-			<option value="PDTQTY ASC" <?php if ($getSort == 'PDTQTY ASC') echo 'selected' ?>>Quantity - Low to High</option>
-		</select>
-		<br>
-		<h6 class="grey-text">Price Range</h6>
-		<input type="text" name="priceR" id="range" readonly>
-		<div id="pRange"></div>
-		<br>
-		<div class="center">
-			<input type="submit" name="submit" value="Search" class="btn brand z-depth-0">
-		</div>
-	</form>
-</div>
 
 <div class="container">
-	<div class="row">
-		<?php foreach ($productList as $product) { ?>
-			<div class="col s4 md2">
-				<a href="product_details.php?id=<?php echo $product['PDTID']; ?>">
-					<div class="card z-depth-0 small">
+    <br>
+    <div class="row">
+        <div class="col s24 m12">
+            <div class="slider">
+                <ul class="slides">
+                    <li>
+                        <img src="/img/banner1.jpg">
+                        <div class="caption center-align">
+                            <h3 class="black-text bold">Discount Banner 1</h3>
+                            <h5 class="light grey-text text-lighten-3">Here's our small slogan.</h5>
+                        </div>
+                    </li>
+                    <li>
+                        <img src="/img/banner2.jpg">
+                        <div class="caption left-align">
+                            <h3 class="black-text bold">Discount Banner 2</h3>
+                            <h5 class="light grey-text text-lighten-3">Here's our small slogan.</h5>
+                        </div>
+                    </li>
+                    <li>
+                        <img src="/img/banner3.jpg">
+                        <div class="caption right-align">
+                            <h3 class="black-text bold">Discount Banner 3</h3>
+                            <h5 class="light grey-text text-lighten-3">Here's our small slogan.</h5>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
 
-						<img src="<?php if ($product['IMAGE']) {
-											echo $product['IMAGE'];
-										} else {
-											echo 'img/product_icon.svg';
-										} ?>" class="product-icon circle">
-						<div class="card-content center">
-							<h6 class="black-text"> <?php echo htmlspecialchars($product['PDTNAME']); ?> <label> <?php echo htmlspecialchars($product['WEIGHT']); ?> </label></h6>
+    <div class="row">
+        <div class="col s16 m8">
+            <div class="card z-depth-0 medium">
+                <div class="card-content center">
+                    <h6 class="brand-text bold">Most Popular Products</h6>
+                </div>
 
-							<label> <?php echo htmlspecialchars($product['BRAND']); ?> </label>
-							<br>
+                <?php foreach ($top_products as $product) { ?>
+                    <a href="product_details.php?id=<?php echo $product['PDTID']; ?>">
+                        <span class="img-container" style="margin-left: 10px;">
+                            <img src="<?php if ($product['IMAGE']) {
+                                                echo $product['IMAGE'];
+                                            } else {
+                                                echo 'img/product_icon.svg';
+                                            } ?>" class="recent-icon">
 
-							<?php if ($product['PDTDISCNT'] > 0) { ?>
-								<label>
-									<strike> <?php echo htmlspecialchars('$' . $product['PDTPRICE']); ?> </strike>
-								</label>
-								&nbsp
-								<label class="white-text discount-label">
-									<?php echo htmlspecialchars('-' . $product['PDTDISCNT'] . '% OFF'); ?>
-								</label>
+                            <div class="white-text discount-label">
+                                <?php echo '$' . number_format(htmlspecialchars($product['PDTPRICE']) / 100 * htmlspecialchars(100 - $product['PDTDISCNT']), 2, '.', ''); ?>
+                            </div>
+                        </span>
+                    </a>
+                <?php } ?>
+            </div>
+        </div>
 
-							<?php } ?>
+        <div class="col s8 m4">
+            <div class="card z-depth-0 medium">
+                <div class="card-content center">
+                    <h6 class="white-text bold welcome-label">Welcome, <?php echo $name . '!' ?> </h6>
+                </div>
+                <div class="bold center">Recently Viewed</div>
+                <?php foreach ($recent_views as $product) { ?>
+                    <a href="product_details.php?id=<?php echo $product['PDTID']; ?>">
+                        <span class="img-container">
+                            <img src="<?php if ($product['IMAGE']) {
+                                                echo $product['IMAGE'];
+                                            } else {
+                                                echo 'img/product_icon.svg';
+                                            } ?>" class="recent-icon">
+                        </span>
+                    </a>
+                <?php } ?>
+            </div>
+        </div>
+    </div>
 
-							<div class="black-text flow-text"><?php echo '$' . number_format(htmlspecialchars($product['PDTPRICE']) / 100 * htmlspecialchars(100 - $product['PDTDISCNT']), 2, '.', ''); ?></div>
-				</a>
-				<div class="card-action right-align">
+    <div class="row">
+        <h5 class="brand-text bold">&nbsp&nbspShop By Category</h5>
+        <?php foreach ($categories as $category) { ?>
+            <a href="search.php?Filter=<?php echo str_replace(' ', '-', $category['CATEGORY']); ?>&sort=default&priceRange=%240+-+%2410000&searchItem=&submit=Search">
+                <div class="col s3 md2">
+                    <div class="card z-depth-0 category-card">
+                        <img src="img/category/<?php echo $category['CATEGORY'] . '.jpg'; ?>" class="category-icon">
 
-					<?php if (substr($uid, 0, 3) == 'CUS' || substr($uid, 0, 3) == 'ANO') { ?>
-						<a href="index.php?cart=<?php echo $product['PDTID']; ?>">
-							<div class="red-text"><i class="fa fa-shopping-cart"></i> Add to Cart</div>
-						</a>
-					<?php } else if (substr($uid, 0, 3) == 'ADM') {
-							$fileName = explode("/", $product['IMAGE'])[4];
-							$fileName = explode("?", $fileName)[0];
-							?>
+                        <div class="middle">
+                            <h5 class="category-text bold"><?php echo $category['CATEGORY']; ?></h5>
+                        </div>
+                    </div>
+                </div>
+            </a>
 
-						<input type="hidden" name="url" value="<?php echo $product['IMAGE']; ?>">
-						<a href="index.php?delete=<?php echo $product['PDTID'] . '&file=' . $fileName; ?>">
-							<div class="red-text"><i class="fa fa-trash-alt"></i> DELETE</div>
-						</a>
-					<?php } ?>
+        <?php } ?>
+    </div>
 
-				</div>
+    <div class="row"></div>
 
-			</div>
-	</div>
+    <?php if ($uid && $cluster > 0) { ?>
+        <div class="row">
+            <h5 class="brand-text bold">&nbsp&nbspRecommended For You</h5>
+            <?php for ($i = 0; $i < 12; $i++) {
+                    $recommendation = $cluster_recommendations[$i];
+                    ?>
+                <div class="col s3 md2">
+                    <a href="product_details.php?id=<?php echo $recommendation['PDTID']; ?>">
+                        <div class="card z-depth-0 small">
+
+                            <img src="<?php if ($recommendation['IMAGE']) {
+                                                    echo $recommendation['IMAGE'];
+                                                } else {
+                                                    echo 'img/product_icon.svg';
+                                                } ?>" class="product-icon circle">
+                            <div class="card-content center">
+                                <h6 class="black-text"> <?php echo htmlspecialchars($recommendation['PDTNAME']); ?> <label> <?php echo htmlspecialchars($recommendation['WEIGHT']); ?> </label></h6>
+                                <?php if ($recommendation['PDTDISCNT'] > 0) { ?>
+
+                                    <label>
+                                        <strike> <?php echo htmlspecialchars('$' . $recommendation['PDTPRICE']); ?> </strike>
+                                    </label>
+                                    &nbsp
+                                    <label class="white-text discount-label">
+                                        <?php echo htmlspecialchars('-' . $recommendation['PDTDISCNT'] . '% OFF'); ?>
+                                    </label>
+
+                                <?php } ?>
+
+
+                                <div class="black-text flow-text">
+                                    <?php echo '$' . number_format(htmlspecialchars($recommendation['PDTPRICE']) / 100 * htmlspecialchars(100 - $recommendation['PDTDISCNT']), 2, '.', ''); ?>
+                                </div>
+
+                    </a>
+
+                    <div class="card-action right-align">
+                        <?php if (substr($uid, 0, 3) == 'CUS' || substr($uid, 0, 3) == 'ANO') { ?>
+                            <a href="index.php?<?php echo 'cart=' . $recommendation['PDTID']; ?>">
+                                <div class="red-text"><i class="fa fa-shopping-cart"></i> Cart</div>
+                            </a>
+                        <?php } ?>
+                    </div>
+                </div>
+        </div>
+</div>
+<?php } ?>
+
+
 </div>
 <?php } ?>
 </div>
 
-<?php
-include("templates/pagination_output.php");
-include("templates/footer.php");
-?>
 </div>
+<?php include("templates/footer.php"); ?>
 
 </html>
