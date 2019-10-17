@@ -1,9 +1,13 @@
 <li>
-    <a href="../analysis/cluster_report.php" class="brand-text bold">Demographics Report</a>
+    <a href="../analysis/cluster_report.php" class="brand-text bold">Demographics</a>
 </li>
 
 <li>
-    <a href="../inventory_management.php" class="brand-text bold">Inventory Management</a>
+    <a href="../new_discount.php" class="brand-text bold">Discounts</a>
+</li>
+
+<li>
+    <a href="../inventory_management.php" class="brand-text bold">Inventory</a>
 </li>
 
 <li>

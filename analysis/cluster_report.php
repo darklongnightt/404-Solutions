@@ -38,14 +38,32 @@ if ($curr_cluster["TRANSACTIONS"] != "") {
     $size = count($transactions);
 }
 
+
 if (isset($_POST['profile'])) {
     $cluster = $_POST['profile'];
+}
+
+if (isset($_POST['submit'])) {
+    if (isset($_POST['cluster'])) {
+        echo $_POST['cluster'];
+    }
+
+    echo '<br>';
+
+    if (isset($_POST['coupon'])) {
+        echo $_POST['coupon'];
+    }
 }
 
 // Getting data from table: customers
 $sql = "SELECT * FROM customer WHERE CLUSTER='$cluster'";
 $result = mysqli_query($conn, $sql);
 $cus_list = mysqli_fetch_all($result, MYSQLI_ASSOC);
+
+// Get distinct coupon types
+$sql = "SELECT * FROM coupon WHERE DESCRIPTION IN (SELECT DISTINCT DESCRIPTION FROM coupon);";
+$result = mysqli_query($conn, $sql);
+$coupons = mysqli_fetch_all($result, MYSQLI_ASSOC);
 
 // Free memory of result and close connection
 mysqli_free_result($result);
@@ -268,7 +286,23 @@ function getAge($dob)
                 </div>
 
                 <div class="card-action right-align">
-                    <button class=" btn brand z-depth-0">Send Discount Coupon</button>
+
+                <form action="cluster_report.php" method="POST">
+                        <h6 class="bold left">Select Coupon</h6>
+                        <select class="browser-default" name="coupon">
+
+                            <?php
+                            foreach ($coupons as $coupon) {
+                                echo '<option value="' . htmlspecialchars($coupon['DESCRIPTION']);
+                                echo '">' . htmlspecialchars($coupon['DESCRIPTION']) . ' - ' . $coupon['DISCOUNT'] . '%' . '</option>';
+                            }
+                            ?>
+
+                        </select>
+                        <input type="hidden" name="cluster" value="<?php echo $cluster; ?>">
+                        <br>
+                        <button type="submit" name="submit" class=" btn brand z-depth-0">Send Coupon</button>
+                    </form>
                 </div>
 
             </div>

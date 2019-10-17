@@ -83,48 +83,50 @@ mysqli_close($conn);
 <html>
 <script>
     $(document).ready(function() {
-        $('.slider').slider();
+        $('.slider').slider({
+            height: 230
+        });
     });
 </script>
 
 <div class="container">
-    <br>
-    <div class="row">
-        <div class="col s24 m12">
-            <div class="slider">
-                <ul class="slides">
-                    <li>
-                        <img src="/img/banner1.jpg">
-                        <div class="caption center-align">
-                            <h3 class="black-text bold">Discount Banner 1</h3>
-                            <h5 class="light grey-text text-lighten-3">Here's our small slogan.</h5>
-                        </div>
-                    </li>
-                    <li>
-                        <img src="/img/banner2.jpg">
-                        <div class="caption left-align">
-                            <h3 class="black-text bold">Discount Banner 2</h3>
-                            <h5 class="light grey-text text-lighten-3">Here's our small slogan.</h5>
-                        </div>
-                    </li>
-                    <li>
-                        <img src="/img/banner3.jpg">
-                        <div class="caption right-align">
-                            <h3 class="black-text bold">Discount Banner 3</h3>
-                            <h5 class="light grey-text text-lighten-3">Here's our small slogan.</h5>
-                        </div>
-                    </li>
-                </ul>
+    <div class="section">
+        <div class="row">
+            <div class="col s24 m12">
+                <div class="slider">
+                    <ul class="slides">
+                        <li>
+                            <img src="/img/banner1.jpg">
+                            <div class="caption center-align">
+                                <h3 class="black-text bold">Discount Banner 1</h3>
+                                <h5 class="light grey-text text-lighten-3">Here's our small slogan.</h5>
+                            </div>
+                        </li>
+                        <li>
+                            <img src="/img/banner2.jpg">
+                            <div class="caption left-align">
+                                <h3 class="black-text bold">Discount Banner 2</h3>
+                                <h5 class="light grey-text text-lighten-3">Here's our small slogan.</h5>
+                            </div>
+                        </li>
+                        <li>
+                            <img src="/img/banner3.jpg">
+                            <div class="caption right-align">
+                                <h3 class="black-text bold">Discount Banner 3</h3>
+                                <h5 class="light grey-text text-lighten-3">Here's our small slogan.</h5>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
             </div>
         </div>
     </div>
 
     <div class="row">
         <div class="col s16 m8">
-            <div class="card z-depth-0 medium">
-                <div class="card-content center">
-                    <h6 class="brand-text bold">Most Popular Products</h6>
-                </div>
+            <div class="card z-depth-0" style="height: 350px;">
+                <br>
+                <h6 class="brand-text bold center">Most Popular Products</h6>
 
                 <?php foreach ($top_products as $product) { ?>
                     <a href="product_details.php?id=<?php echo $product['PDTID']; ?>">
@@ -145,7 +147,7 @@ mysqli_close($conn);
         </div>
 
         <div class="col s8 m4">
-            <div class="card z-depth-0 medium">
+            <div class="card z-depth-0" style="height: 350px;">
                 <div class="card-content center">
                     <h6 class="white-text bold welcome-label">Welcome, <?php echo $name . '!' ?> </h6>
                 </div>
