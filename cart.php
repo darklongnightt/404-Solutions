@@ -12,6 +12,10 @@ $totalPrice = $totalDiscount = $netPrice = 0;
 $sumSubTotal = $sumSavings = $sumTotal = $totalQty = 0;
 $transactionId = '';
 
+// Init variables for paypal
+$payName = '';
+$payPrice = $payQty = 0;
+
 // Getting data from table: all elements from product, cartqty from cart associated with the same product
 $sql = "SELECT * FROM product, cart
 WHERE product.PDTID = cart.PDTID AND cart.USERID = '$uid'
@@ -59,6 +63,11 @@ if (isset($_POST['checkout']) && $cartList) {
             $deliveryDate = mysqli_real_escape_string($conn, date('Y-m-d h:i:sa', strtotime(date('Y-m-d h:i:sa') . ' + 5 days')));
             $payType = mysqli_real_escape_string($conn, $_POST['payment']);
 
+            // Compute variables needed in paypal page
+            $payName .= $product['PDTNAME'] . ', ';
+            $payQty += $orderQty;
+            $payPrice += $netPrice;
+
             // Insert into orders table
             $sql = "INSERT INTO orders(TRANSACTIONID, PDTID, USERID, ORDERQTY, 
         DELVRYSTS, PMENTTYPE, TTLPRICE, TTLDISCNTPRICE, NETPRICE, DELVRYDATE)
@@ -72,14 +81,9 @@ if (isset($_POST['checkout']) && $cartList) {
                 if (mysqli_query($conn, $sql)) {
                     // Update product qty in products table
                     $sql = "UPDATE product SET PDTQTY=PDTQTY-'$orderQty' WHERE PDTID = '$pdtId'";
-                    if (mysqli_query($conn, $sql)) {
-                        // Navigate to else payment page
-                        header('Location: cart.php');
-                    } else {
+                    if (mysqli_query($conn, $sql)) { } else {
                         echo 'Query Error: ' . mysqli_error($conn);
                     }
-
-                    header('Location: cart.php');
                 } else {
                     echo 'Query Error: ' . mysqli_error($conn);
                 }
@@ -87,6 +91,12 @@ if (isset($_POST['checkout']) && $cartList) {
                 echo 'Query Error: ' . mysqli_error($conn);
             }
         }
+
+        // Navigate to payment page
+        // Product name, quantity, sum price
+        $payName = substr_replace($payName, "", -2);
+        $payPrice = number_format($payPrice, 2, '.', '');
+        header("Location: template_pay.php?price='$payPrice'&qty='$payQty'&name='$payName'");
     } else {
         header('Location: authentication/login.php');
     }
