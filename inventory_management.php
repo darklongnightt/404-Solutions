@@ -3,7 +3,7 @@ include("config/db_connect.php");
 include('templates/header.php');
 
 // Store previously selected variables
-$getSearchItem = $getSearchR = $getSort = $getFilter = '';
+$rangeCheck = $getSearchItem = $getSearchR = $getSort = $getFilter = '';
 $limit = TRUE;
 
 // Pagination for all results
@@ -37,6 +37,8 @@ if (isset($_GET['search'])) {
 
     //Get search
     $getSearchItem = $_GET['searchItem'];
+	//Get range use check
+	$rangeCheck = $_GET['check'];
 
     // Get user's selection for sort, replace - with space for sql filter by category
     $rFilter = str_replace('-', ' ', $getFilter);
@@ -73,11 +75,21 @@ if (isset($_GET['search'])) {
     $catMin = (float) $catPriceRange['MINPRICE'];
     $catMax = (float) $catPriceRange['MAXPRICE'];
 
-    // If user selection misfit min and max for specific category
-    if (($minRange == 0) || ($maxRange == 0) || ($minRange < $catMin) || ($maxRange > $catMax) || ($minRange > $catMax) || ($maxRange < $catMin)) {
-        $minRange = $catMin;
-        $maxRange = $catMax;
-    }
+   // If user uses range
+	if ($rangeCheck == 1){
+		//if minprice less than min category or more than max category
+		if (($minRange < $catMin) || ($minRange > $catMax) || ($minRange == 0)) {
+			$minRange = $catMin;
+		}
+		//if maxprice more than max category or less than min category
+		if (($maxRange > $catMax) || ($maxRange < $catMin) || ($maxRange == 0)){
+			$maxRange = $catMax;	
+		}
+	}
+	else {
+		$minRange = $catMin;
+		$maxRange = $catMax;
+	}
     $query .= ' PDTPRICE >="' . $minRange . '" AND PDTPRICE <= "' . $maxRange . '"';
 
     // If user use sort function
@@ -90,7 +102,7 @@ if (isset($_GET['search'])) {
         $query .= ' ORDER BY CREATED_AT DESC';
     }
 
-    $ext = "&Filter=$rFilter&sort=$getSort&priceRange=$minRange-$maxRange&searchItem=$getSearchItem&search=Search";
+	$ext = "&Filter=$rFilter&sort=$getSort&priceRange=$minRange-$maxRange&check=$rangeCheck&searchItem=$getSearchItem&submit=Search";
     $getFilter = str_replace(' ', '-', $rFilter);
 } else {
     $query .= ' ORDER BY CREATED_AT DESC';
@@ -131,26 +143,6 @@ mysqli_close($conn);
 <!DOCTYPE HTML>
 <html>
 <h4 class="center grey-text">Inventory Management</h4>
-<script>
-    var priceMin = <?php echo json_encode($catMin); ?>;
-    var priceMax = <?php echo json_encode($catMax); ?>;
-    var postMin = <?php echo json_encode($minRange); ?>;
-    var postMax = <?php echo json_encode($maxRange); ?>;
-
-    $(function() {
-        $("#pRange").slider({
-            range: true,
-            min: priceMin,
-            max: priceMax,
-            values: [postMin, postMax],
-            slide: function(event, ui) {
-                $("#range").val("$" + ui.values[0] + " - $" + ui.values[1]);
-            }
-        });
-        $("#range").val("$" + $("#pRange").slider("values", 0) +
-            " - $" + $("#pRange").slider("values", 1));
-    });
-</script>
 <div class="sidebar sidebar-padding">
     <form id="sfform" name="sfform" method="get" action="inventory_management.php">
 
@@ -184,6 +176,36 @@ mysqli_close($conn);
         <h6 class="grey-text">Price Range</h6>
         <input type="text" name="priceRange" id="range" readonly>
         <div id="pRange"></div>
+		<script>
+			var priceMin = <?php echo json_encode($catMin); ?>;
+			var priceMax = <?php echo json_encode($catMax); ?>;
+			var postMin = <?php echo json_encode($minRange); ?>;
+			var postMax = <?php echo json_encode($maxRange); ?>;
+			var rangeCheck = <?php echo json_encode($rangeCheck); ?>;
+			
+			//if user click on range slider
+			function clicked(){
+				document.getElementById('testrange').value = 1;
+			}
+			document.getElementById('pRange').addEventListener("mousedown", clicked);
+
+			$(function() {
+				$("#pRange").slider({
+					range: true,
+					min: priceMin,
+					max: priceMax,
+					values: [postMin, postMax],
+					slide: function(event, ui) {
+						$("#range").val("$" + ui.values[0] + " - $" + ui.values[1]);
+					}
+				});
+	
+				$("#range").val("$" + $("#pRange").slider("values", 0) +
+					" - $" + $("#pRange").slider("values", 1));	
+			});
+
+		</script>
+		<input type="text" name="check" id="testrange" <?php if ($rangeCheck != '') echo " value = '" . $rangeCheck . "'"; ?> hidden>
         <br>
 
         <h6 class="grey-text"> Search </h6>

@@ -65,7 +65,7 @@ if (isset($_POST['submit'])) {
 
 <section class="container grey-text">
     <h4 class="center">New Coupon</h4>
-    <form action="new_discount.php" class="EditForm" method="POST">
+    <form action="new_coupon.php" class="EditForm" method="POST">
 
         <label>Coupon Description: </label>
         <input type="text" name="desc" value="<?php echo htmlspecialchars($desc); ?>">

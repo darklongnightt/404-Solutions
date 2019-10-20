@@ -9,8 +9,10 @@ $cluster_list = mysqli_fetch_all($result, MYSQLI_ASSOC);
 
 // Get the latest clustering result
 $curr_cluster = $cluster_list[0];
-$age = $gender = $transactions = $total_spendings = $last_purchase = array();
+$age = $gender = $transactions = $total_spendings = $last_purchase = $coupon_use = array();
 $size = $cluster = 1;
+$coupon_desc = $cluster_emails = $couponcode = '';
+
 
 // Checking and formattings for input factors
 if ($curr_cluster["AGE"] != "") {
@@ -38,21 +40,9 @@ if ($curr_cluster["TRANSACTIONS"] != "") {
     $size = count($transactions);
 }
 
-
+// Get cluster filtered
 if (isset($_POST['profile'])) {
     $cluster = $_POST['profile'];
-}
-
-if (isset($_POST['submit'])) {
-    if (isset($_POST['cluster'])) {
-        echo $_POST['cluster'];
-    }
-
-    echo '<br>';
-
-    if (isset($_POST['coupon'])) {
-        echo $_POST['coupon'];
-    }
 }
 
 // Getting data from table: customers
@@ -61,9 +51,54 @@ $result = mysqli_query($conn, $sql);
 $cus_list = mysqli_fetch_all($result, MYSQLI_ASSOC);
 
 // Get distinct coupon types
-$sql = "SELECT * FROM coupon WHERE DESCRIPTION IN (SELECT DISTINCT DESCRIPTION FROM coupon);";
+$sql = "SELECT DISTINCT DESCRIPTION, EXPIRY, DISCOUNT, COUPONCODE FROM coupon;";
 $result = mysqli_query($conn, $sql);
 $coupons = mysqli_fetch_all($result, MYSQLI_ASSOC);
+
+// When send coupon button is pressed
+if (isset($_POST['submit'])) {
+
+    if (isset($_POST['coupon'])) {
+        $coupon_use = $_POST['coupon'];
+    }
+
+    // Get email addresses to send to
+    $cluster = $_POST['cluster'];
+    $sql = "SELECT * FROM customer WHERE CLUSTER='$cluster'";
+    $result = mysqli_query($conn, $sql);
+    $cus_list = mysqli_fetch_all($result, MYSQLI_ASSOC);
+
+    foreach ($cus_list as $customer) {
+        $cluster_emails .= $customer['EMAIL'] . ', ';
+    }
+    $cluster_emails = substr_replace($cluster_emails, "", -2);
+
+    // Get coupon to use
+    foreach ($coupons as $coupon) {
+        if ($coupon['DESCRIPTION'] == $coupon_use) {
+            $coupon_use = $coupon;
+            $couponcode = $coupon['COUPONCODE'];
+        }
+    }
+
+    // Inserts new coupon into db for each customer selected
+    foreach ($cus_list as $customer) {
+        $userid = $customer['USERID'];
+        $desc = $coupon_use['DESCRIPTION'];
+        $discount = $coupon_use['DISCOUNT'];
+        $expiry = $coupon_use['EXPIRY'];
+
+        // Insert new coupon
+        $sql = "INSERT INTO coupon(COUPONCODE, DESCRIPTION, DISCOUNT, USERID, EXPIRY) 
+                VALUES('$couponcode', '$desc', '$discount', '$userid', '$expiry')";
+        if (!mysqli_query($conn, $sql)) {
+            echo 'Query Error: ' . mysqli_error($conn);
+        }
+    }
+
+    // Sends email to customers in the cluster
+    sendEmail($cluster_emails, $coupon_use['DISCOUNT'], $coupon_use['EXPIRY'], $coupon_use['DESCRIPTION'], $coupon_use['COUPONCODE']);
+}
 
 // Free memory of result and close connection
 mysqli_free_result($result);
@@ -81,6 +116,40 @@ function getAge($dob)
     return $age;
 }
 
+function sendEmail($to, $discount, $expiry, $title, $code)
+{
+    $subject = "SuperData Discount Coupon";
+    $message = '
+<html>
+<head>
+    <title>SuperData Coupon</title>
+</head>
+
+<body>';
+    $message .= '<h4>Dear Valued Customer, </h4>';
+    $message .= '<div>Congratulations! You have received a ' . htmlspecialchars($title) . ' coupon.</div>
+    <br>';
+    $message .= '<div class="container" style="border-radius: 15px; border: 5px dotted; max-width: 850px; text-align: center;">';
+    $message .= '<h4 style="font-size: 26px; color: red;">GET ' . $discount . ' % OFF</h4>';
+    $message .= '<h5 style="font-size: 20px;">YOUR NEXT PURCHASE</h5>';
+    $message .= '<img src="https://previews.123rf.com/images/svetlam87/svetlam871711/svetlam87171100076/90060540-grocery-in-a-shopping-basket-vector-illustration-flat-design-.jpg" alt="img" width="140" height="auto"/>';
+    $message .= '<h4 style="padding: 15px; background: grey; color: white;">CODE: ' . $code . '</h4>';
+    $message .= '<div style="font-size: 12px; color: grey;">T&C: Coupon code must be entered at the cart checkout page to redeem.</div>
+<div style="font-size: 12px; color: grey;">This coupon can only be redeemed once before ' . $expiry . '</div>
+<div style="font-size: 12px; color: grey;">This coupon cannot be used in conjunction with any other discounts.</div>    
+</div>';
+    $message .= '<h4>Sincerely, </h4>';
+    $message .= '<h4>SuperData Marketing Team </h4>
+</body>
+</html>';
+
+    // Always set content-type when sending HTML email
+    $headers = "MIME-Version: 1.0" . "\r\n";
+    $headers .= "Content-type:text/html;charset=UTF-8" . "\r\n";
+    $headers .= 'From: <super.data.fyp@gmail.com>' . "\r\n";
+
+    mail($to, $subject, $message, $headers);
+}
 ?>
 
 <!DOCTYPE HTML>
@@ -128,7 +197,7 @@ function getAge($dob)
                         echo '<img src="../img/k-means.png" class="product-icon">';
                     } else {
                         echo '<img src="../img/hclust.png" class="product-icon">';
-                    }?>
+                    } ?>
                 </div>
             </div>
         </div>
@@ -287,7 +356,7 @@ function getAge($dob)
 
                 <div class="card-action right-align">
 
-                <form action="cluster_report.php" method="POST">
+                    <form action="cluster_report.php" method="POST">
                         <h6 class="bold left">Select Coupon</h6>
                         <select class="browser-default" name="coupon">
 

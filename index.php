@@ -170,7 +170,7 @@ mysqli_close($conn);
     <div class="row">
         <h5 class="brand-text bold">&nbsp&nbspShop By Category</h5>
         <?php foreach ($categories as $category) { ?>
-            <a href="search.php?Filter=<?php echo str_replace(' ', '-', $category['CATEGORY']); ?>&sort=default&priceRange=%240+-+%2410000&searchItem=&submit=Search">
+            <a href="search.php?Filter=<?php echo str_replace(' ', '-', $category['CATEGORY']); ?>&sort=default&priceRange=%240+-+%2410000&check=&searchItem=&submit=Search">
                 <div class="col s3 md2">
                     <div class="card z-depth-0 category-card">
                         <img src="img/category/<?php echo $category['CATEGORY'] . '.jpg'; ?>" class="category-icon">
