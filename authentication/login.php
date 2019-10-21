@@ -90,7 +90,12 @@ if (isset($_POST['submit'])) {
                     // Delete guest items from cart
                     $sql = "DELETE FROM cart WHERE USERID='$ano'";
                     if (mysqli_query($conn, $sql)) {
-                        header('Location: ../index.php?login=success');
+
+                        if ($customer['CHANGEPW'] == 'FALSE') {
+                            header('Location: ../index.php?login=success');
+                        } else {
+                            header('Location: change_password.php?login=success');
+                        }
                     } else {
                         echo 'Query Error: ' . mysqli_error($conn);
                     }
@@ -125,6 +130,11 @@ if (isset($_POST['submit'])) {
 
         <label class="right"> New member?
             <u><a href="register.php" class="cyan-text">Register</a></u> </label>
+
+        <?php if (array_filter($errors)) : ?>
+            <label class="left"> Forget password?
+                <u><a href="reset_password.php" class="cyan-text">Reset Password</a></u> </label>
+        <?php endif ?>
 
         <br>
 

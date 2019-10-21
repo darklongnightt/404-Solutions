@@ -14,13 +14,13 @@ if (isset($_POST['submit'])) {
     } else {
         $email = $_POST['email'];
         if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
-            $errors['email'] = 'Email is not valid!';
+            $errors['email'] = 'Email is not of valid format!';
         } else {
             // Check db for existing email
             $email = mysqli_real_escape_string($conn, $email);
             $sql = "SELECT * FROM customer WHERE EMAIL = '$email'";
             $result = mysqli_query($conn, $sql);
-            //$checkResult = mysqli_num_rows($result);
+
             if (mysqli_num_rows($result) > 0) {
                 $errors['email'] = 'Entered email is already in use!';
             }
@@ -119,11 +119,8 @@ if (isset($_POST['submit'])) {
                 $_SESSION['U_DOB'] = $dob;
                 $_SESSION['U_INITIALS'] = $firstname[0] . $lastname[0];
                 $_SESSION['U_CLUSTER'] = 0;
-    
-                mysqli_free_result($result);
-                mysqli_close($conn);
-                header('Location: shipping_details.php');
 
+                header('Location: shipping_details.php');
             } else {
                 echo 'Query Error: ' . mysqli_error($conn);
             }

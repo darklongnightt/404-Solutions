@@ -26,9 +26,10 @@ if (isset($_SESSION['U_UID'])) {
 	if (!isset($_COOKIE['UID'])) {
 		$cookie_uid = uniqid('ANO');
 		setcookie('UID', $cookie_uid, time() + (86400 * 7), "/"); // 86400 = 1 day
+		$uid = $cookie_uid;
+	} else {
+		$uid = $_COOKIE['UID'];
 	}
-
-	$uid = $_COOKIE['UID'];
 }
 ?>
 
@@ -78,7 +79,7 @@ if (isset($_SESSION['U_UID'])) {
 					<li>
 						<a href="../authentication/register.php" class="brand-text bold">Register</a>
 					</li>
-					
+
 					<li>
 						<a href="../authentication/login.php" class="brand-text bold">Login</a>
 					</li>
