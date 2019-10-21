@@ -1,6 +1,6 @@
 <?php
-include('config/db_connect.php');
-include('templates/header.php');
+include('../config/db_connect.php');
+include('../templates/header.php');
 
 $couponcode = $desc = $expiry = '';
 $discount = 0;
@@ -49,10 +49,10 @@ if (isset($_POST['submit'])) {
 
         // Inserts data to db and redirects user to homepage
         $sql = "INSERT INTO coupon(COUPONCODE, DESCRIPTION, DISCOUNT, EXPIRY) 
-        VALUES('$couponcode', '$desc', '$discount', '$expiry')"; 
-		
+        VALUES('$couponcode', '$desc', '$discount', '$expiry')";
+
         if (mysqli_query($conn, $sql)) {
-            header('Location: index.php');
+            header('Location: coupons_index.php');
         } else {
             echo 'Query Error: ' . mysqli_error($conn);
         }
@@ -85,6 +85,6 @@ if (isset($_POST['submit'])) {
     </form>
 </section>
 
-<?php include("templates/footer.php"); ?>
+<?php include("../templates/footer.php"); ?>
 
 </html>

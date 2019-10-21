@@ -3,7 +3,7 @@
 </li>
 
 <li>
-    <a href="../new_coupon.php" class="brand-text bold">Coupons</a>
+    <a href="../coupons/coupons_index.php" class="brand-text bold">Coupons</a>
 </li>
 
 <li>
