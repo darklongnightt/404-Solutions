@@ -1,7 +1,7 @@
 <?php
-include("config/db_connect.php");
-include("storage_connect.php");
-include("templates/header.php");
+include("../config/db_connect.php");
+include("../storage_connect.php");
+include("../templates/header.php");
 
 // If upload button is clicked
 if ($_FILES) {
@@ -21,7 +21,7 @@ if ($_FILES) {
 
             // Resizing image to 300 x 300
             $pic_type = strtolower(strrchr($fileName, "."));
-            $pic_name = "temp/temp$pic_type";
+            $pic_name = "../temp/temp$pic_type";
             move_uploaded_file($tmpFilePath, $pic_name);
             if (true !== ($pic_error = @image_resize($pic_name, $tmpFilePath, 300, 300))) {
                 $tmpFilePath = $pic_name;
@@ -58,6 +58,6 @@ if ($_FILES) {
             </form>
         </div>
 
-        <?php include("templates/footer.php"); ?>
+        <?php include("../templates/footer.php"); ?>
 
         </html>

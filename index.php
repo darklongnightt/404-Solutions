@@ -129,7 +129,7 @@ mysqli_close($conn);
                 <h6 class="brand-text bold center">Most Popular Products</h6>
 
                 <?php foreach ($top_products as $product) { ?>
-                    <a href="product_details.php?id=<?php echo $product['PDTID']; ?>">
+                    <a href="/products/product_details.php?id=<?php echo $product['PDTID']; ?>">
                         <span class="img-container" style="margin-left: 10px;">
                             <img src="<?php if ($product['IMAGE']) {
                                                 echo $product['IMAGE'];
@@ -153,7 +153,7 @@ mysqli_close($conn);
                 </div>
                 <div class="bold center">Recently Viewed</div>
                 <?php foreach ($recent_views as $product) { ?>
-                    <a href="product_details.php?id=<?php echo $product['PDTID']; ?>">
+                    <a href="/products/product_details.php?id=<?php echo $product['PDTID']; ?>">
                         <span class="img-container">
                             <img src="<?php if ($product['IMAGE']) {
                                                 echo $product['IMAGE'];
@@ -170,7 +170,7 @@ mysqli_close($conn);
     <div class="row">
         <h5 class="brand-text bold">&nbsp&nbspShop By Category</h5>
         <?php foreach ($categories as $category) { ?>
-            <a href="search.php?Filter=<?php echo str_replace(' ', '-', $category['CATEGORY']); ?>&sort=default&priceRange=%240+-+%2410000&check=&searchItem=&submit=Search">
+            <a href="products/search.php?Filter=<?php echo str_replace(' ', '-', $category['CATEGORY']); ?>&sort=default&priceRange=%240+-+%2410000&check=&searchItem=&submit=Search">
                 <div class="col s3 md2">
                     <div class="card z-depth-0 category-card">
                         <img src="img/category/<?php echo $category['CATEGORY'] . '.jpg'; ?>" class="category-icon">
@@ -194,7 +194,7 @@ mysqli_close($conn);
                     $recommendation = $cluster_recommendations[$i];
                     ?>
                 <div class="col s3 md2">
-                    <a href="product_details.php?id=<?php echo $recommendation['PDTID']; ?>">
+                    <a href="/products/product_details.php?id=<?php echo $recommendation['PDTID']; ?>">
                         <div class="card z-depth-0 small">
 
                             <img src="<?php if ($recommendation['IMAGE']) {

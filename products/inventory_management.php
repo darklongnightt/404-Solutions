@@ -1,6 +1,6 @@
 <?php
-include("config/db_connect.php");
-include('templates/header.php');
+include("../config/db_connect.php");
+include('../templates/header.php');
 
 // Store previously selected variables
 $rangeCheck = $getSearchItem = $getSearchR = $getSort = $getFilter = '';
@@ -9,7 +9,7 @@ $limit = TRUE;
 // Pagination for all results
 $currDir = "inventory_management.php";
 $query = 'SELECT * FROM product';
-include('templates/pagination_query.php');
+include('../templates/pagination_query.php');
 
 // Get all product categories for filtering
 $getCat = "SELECT DISTINCT CATEGORY FROM product";
@@ -112,7 +112,7 @@ if (!$limit) {
     $startingLimit = 0;
 }
 // Pagination for results
-include('templates/pagination_query.php');
+include('../templates/pagination_query.php');
 $query .= "\nLIMIT $startingLimit , $resultsPerPage";
 
 // Getting data from table: product as associative array
@@ -253,8 +253,8 @@ mysqli_close($conn);
 
             </ul>
             <?php
-            include("templates/pagination_output_search.php");
-            include("templates/footer.php");
+            include("../templates/pagination_output_search.php");
+            include("../templates/footer.php");
             ?>
         </div>
     </div>

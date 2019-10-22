@@ -1,6 +1,6 @@
 <?php
-include("config/db_connect.php");
-include('templates/header.php');
+include("../config/db_connect.php");
+include('../templates/header.php');
 
 $review = $reviewid = $orderid = '';
 $productrating = $delirating = $srating = 0;
@@ -70,7 +70,7 @@ if (isset($_POST['submit'])) {
 			$sql = "UPDATE orders SET DELVRYSTS='$status' WHERE ORDERID='$orderid'";
 
 			if (mysqli_query($conn, $sql)) {
-				header("Location: my_orders.php");
+				header("Location: /my_orders.php");
 			} else {
 				echo 'Query Error: ' . mysqli_error($conn);
 			}
@@ -88,7 +88,7 @@ mysqli_close($conn);
 <html>
 
 <head>
-	<link rel="stylesheet" type="text/css" href="css/rating_style.css">
+	<link rel="stylesheet" type="text/css" href="/css/rating_style.css">
 	<script type="text/javascript">
 		function change(id) {
 			var cname = document.getElementById(id).className;
@@ -96,11 +96,11 @@ mysqli_close($conn);
 			document.getElementById(cname + "rating").value = ab;
 
 			for (var i = ab; i >= 1; i--) {
-				document.getElementById(cname + i).src = "img/star2.png";
+				document.getElementById(cname + i).src = "/img/star2.png";
 			}
 			var id = parseInt(ab) + 1;
 			for (var j = id; j <= 5; j++) {
-				document.getElementById(cname + j).src = "img/star1.png";
+				document.getElementById(cname + j).src = "/img/star1.png";
 			}
 		}
 	</script>
@@ -111,7 +111,11 @@ mysqli_close($conn);
 		<div class="col s8 m4">
 			<div class="card z-depth-0">
 				<div class="card-content center">
-					<img src="img/product_icon.svg" class="icon" />
+					<img src="<?php if ($product['IMAGE']) {
+										echo $product['IMAGE'];
+									} else {
+										echo '/img/product_icon.svg';
+									} ?>" class="icon">
 
 					<a href="product_details.php?id=<?php echo $product['PDTID']; ?>">
 						<h6 class="black-text"> <?php echo htmlspecialchars($product['PDTNAME'] . ' - ' . $product['WEIGHT']); ?> </h6>
@@ -127,43 +131,43 @@ mysqli_close($conn);
 			<div class="rating">
 				<p class="word">Product</p>
 				<input type="hidden" id="product1_hidden" value="1">
-				<img src="img/star1.png" onmouseup="change(this.id);" id="product1" class="product">
+				<img src="/img/star1.png" onmouseup="change(this.id);" id="product1" class="product">
 				<input type="hidden" id="product2_hidden" value="2">
-				<img src="img/star1.png" onmouseup="change(this.id);" id="product2" class="product">
+				<img src="/img/star1.png" onmouseup="change(this.id);" id="product2" class="product">
 				<input type="hidden" id="product3_hidden" value="3">
-				<img src="img/star1.png" onmouseup="change(this.id);" id="product3" class="product">
+				<img src="/img/star1.png" onmouseup="change(this.id);" id="product3" class="product">
 				<input type="hidden" id="product4_hidden" value="4">
-				<img src="img/star1.png" onmouseup="change(this.id);" id="product4" class="product">
+				<img src="/img/star1.png" onmouseup="change(this.id);" id="product4" class="product">
 				<input type="hidden" id="product5_hidden" value="5">
-				<img src="img/star1.png" onmouseup="change(this.id);" id="product5" class="product">
+				<img src="/img/star1.png" onmouseup="change(this.id);" id="product5" class="product">
 			</div>
 
 			<div class="rating">
 				<p class="word">Delivery</p>
 				<input type="hidden" id="deli1_hidden" value="1">
-				<img src="img/star1.png" onmouseup="change(this.id);" id="deli1" class="deli">
+				<img src="/img/star1.png" onmouseup="change(this.id);" id="deli1" class="deli">
 				<input type="hidden" id="deli2_hidden" value="2">
-				<img src="img/star1.png" onmouseup="change(this.id);" id="deli2" class="deli">
+				<img src="/img/star1.png" onmouseup="change(this.id);" id="deli2" class="deli">
 				<input type="hidden" id="deli3_hidden" value="3">
-				<img src="img/star1.png" onmouseup="change(this.id);" id="deli3" class="deli">
+				<img src="/img/star1.png" onmouseup="change(this.id);" id="deli3" class="deli">
 				<input type="hidden" id="deli4_hidden" value="4">
-				<img src="img/star1.png" onmouseup="change(this.id);" id="deli4" class="deli">
+				<img src="/img/star1.png" onmouseup="change(this.id);" id="deli4" class="deli">
 				<input type="hidden" id="deli5_hidden" value="5">
-				<img src="img/star1.png" onmouseup="change(this.id);" id="deli5" class="deli">
+				<img src="/img/star1.png" onmouseup="change(this.id);" id="deli5" class="deli">
 			</div>
 
 			<div class="rating">
 				<p class="word">Service</p>
 				<input type="hidden" id="s1_hidden" value="1">
-				<img src="img/star1.png" onmouseup="change(this.id);" id="s1" class="s">
+				<img src="/img/star1.png" onmouseup="change(this.id);" id="s1" class="s">
 				<input type="hidden" id="s2_hidden" value="2">
-				<img src="img/star1.png" onmouseup="change(this.id);" id="s2" class="s">
+				<img src="/img/star1.png" onmouseup="change(this.id);" id="s2" class="s">
 				<input type="hidden" id="s3_hidden" value="3">
-				<img src="img/star1.png" onmouseup="change(this.id);" id="s3" class="s">
+				<img src="/img/star1.png" onmouseup="change(this.id);" id="s3" class="s">
 				<input type="hidden" id="s4_hidden" value="4">
-				<img src="img/star1.png" onmouseup="change(this.id);" id="s4" class="s">
+				<img src="/img/star1.png" onmouseup="change(this.id);" id="s4" class="s">
 				<input type="hidden" id="s5_hidden" value="5">
-				<img src="img/star1.png" onmouseup="change(this.id);" id="s5" class="s">
+				<img src="/img/star1.png" onmouseup="change(this.id);" id="s5" class="s">
 			</div>
 
 			<br>
@@ -189,6 +193,6 @@ mysqli_close($conn);
 	<h4 class="center">Error 404: No such product!</h4>
 <?php endif; ?>
 
-<?php include("templates/footer.php"); ?>
+<?php include("../templates/footer.php"); ?>
 
 </html>

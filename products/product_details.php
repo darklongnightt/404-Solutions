@@ -1,8 +1,8 @@
 <?php
-include("config/db_connect.php");
-include('templates/header.php');
+include("../config/db_connect.php");
+include('../templates/header.php');
 if (substr($uid, 0, 3) == 'ADM')
-    include('storage_connect.php');
+    include('../storage_connect.php');
 
 $id = $product = $message = '';
 $count = $cartQty = 0;
@@ -123,7 +123,7 @@ if (isset($_POST['delete'])) {
 
     // Checks if query is successful
     if (mysqli_query($conn, $sql)) {
-        header('Location: index.php');
+        header('Location: ../index.php');
     } else {
         echo 'Query Error' . mysqli_error($conn);
     }
@@ -166,7 +166,7 @@ if (isset($_POST['favourite'])) {
         }
     } else {
         // Redirect to login page
-        header('Location: /authentication/login.php');
+        header('Location: ../authentication/login.php');
     }
 }
 
@@ -184,7 +184,7 @@ mysqli_close($conn);
                 <img src="<?php if ($product['IMAGE']) {
                                     echo $product['IMAGE'];
                                 } else {
-                                    echo 'img/product_icon.svg';
+                                    echo '/img/product_icon.svg';
                                 } ?>">
             </div>
             <div class="col s8 m4 offset-m1">
@@ -208,7 +208,7 @@ mysqli_close($conn);
             <div class="col s6 m3">
                 <div class="card z-depth-0">
                     <div class="card-content">
-                        <h5>Price Tag <img src="img/price_tag.svg" class="tag-icon"> </h5>
+                        <h5>Price Tag <img src="/img/price_tag.svg" class="tag-icon"> </h5>
 
                         <?php if ($product['PDTDISCNT'] > 0) { ?>
                             <div> <?php echo htmlspecialchars('Price: $' . $product['PDTPRICE']); ?>
@@ -321,6 +321,6 @@ mysqli_close($conn);
     <h4 class="center">Error 404: No such product exists!</h4>
 <?php endif; ?>
 
-<?php include("templates/footer.php"); ?>
+<?php include("../templates/footer.php"); ?>
 
 </html>

@@ -6,11 +6,11 @@
 	<link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
 	<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Montserrat">
 
-	<link rel="stylesheet" href="../css/ui-slider.css" type="text/css">
-	<link rel="stylesheet" href="../css/headers.css" type="text/css">
-	<link rel="stylesheet" href="../css/form_update.css" type="text/css">
-	<link rel="stylesheet" href="../css/analytics.css" type="text/css">
-	<link rel="stylesheet" href="../css/homepage.css" type="text/css">
+	<link rel="stylesheet" href="/css/ui-slider.css" type="text/css">
+	<link rel="stylesheet" href="/css/headers.css" type="text/css">
+	<link rel="stylesheet" href="/css/form_update.css" type="text/css">
+	<link rel="stylesheet" href="/css/analytics.css" type="text/css">
+	<link rel="stylesheet" href="/css/homepage.css" type="text/css">
 
 	<script src="https://code.jquery.com/jquery-1.10.2.js"></script>
 	<script src="https://code.jquery.com/ui/1.10.4/jquery-ui.js"></script>

@@ -81,7 +81,7 @@ mysqli_close($conn);
 
                         <div class="card-action right-align">
                             <?php if ($order['DELVRYSTS'] == "Delivered") { ?>
-                                <a href="rating_details.php?id=<?php echo $order['PDTID'] . "&order=" . $order['ORDERID']; ?>" class="brand-text">Rate & Review</a>
+                                <a href="/products/rating_details.php?id=<?php echo $order['PDTID'] . "&order=" . $order['ORDERID']; ?>" class="brand-text">Rate & Review</a>
                             <?php } else if ($order['DELVRYSTS'] == "Not Delivered") { ?>
                                 <a href="my_orders.php?change_status=<?php echo $order['ORDERID']; ?>" class="brand-text">Confirm Delivery</a>
                             <?php } else if ($order['DELVRYSTS'] == "Delivered & Reviewed") { ?>

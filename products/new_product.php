@@ -1,7 +1,7 @@
 <?php
-include('config/db_connect.php');
-include('templates/header.php');
-include("storage_connect.php");
+include('../config/db_connect.php');
+include('../templates/header.php');
+include("../storage_connect.php");
 
 $pdtname = $desc = $brand = $category = $pdtqty = $pdtprice = $cstprice = $discount = $checkResult = $pdtid = $weight = $url = $fileName = $tmpFilePath = '';
 $errors = array('pdtname' => '', 'weight' => '', 'desc' => '', 'brand' => '', 'category' => '', 'pdtqty' => '', 'pdtprice' => '', 'cstprice' => '', 'discount' => '', 'image' => '');
@@ -105,7 +105,7 @@ if (isset($_POST['submit'])) {
 
 		// Resizing image to 300 x 300
 		$pic_type = strtolower(strrchr($fileName, "."));
-		$pic_name = "temp/temp$pic_type";
+		$pic_name = "../temp/temp$pic_type";
 		move_uploaded_file($tmpFilePath, $pic_name);
 		if (true !== ($pic_error = @image_resize($pic_name, $tmpFilePath, 300, 300))) {
 			$tmpFilePath = $pic_name;
@@ -122,7 +122,7 @@ if (isset($_POST['submit'])) {
 		$sql = "INSERT INTO product(PDTID, PDTNAME, WEIGHT, DESCRIPTION, BRAND, CATEGORY, PDTQTY, CSTPRICE, PDTPRICE, PDTDISCNT, IMAGE) 
 		VALUES('$pdtid', '$pdtname', '$weight', '$desc', '$brand', '$category', '$pdtqty', '$cstprice', '$pdtprice', '$discount', '$url')";
 		if (mysqli_query($conn, $sql)) {
-			header('Location: index.php');
+			header('Location: ../index.php');
 		} else {
 			echo 'Query Error: ' . mysqli_error($conn);
 		}
@@ -151,7 +151,7 @@ if (isset($_POST['submit'])) {
 
 <section class="container grey-text">
 	<h4 class="center">New Product</h4>
-	<form action="list_product.php" enctype="multipart/form-data" class="EditForm" method="POST">
+	<form action="new_product.php" enctype="multipart/form-data" class="EditForm" method="POST">
 
 		<div class="center">
 			<label for="imageUpload"> <img src="/img/upload_placeholder1.png" id="preview" onclick="triggerClick()" style="width: 200px; margin: 20px; border-style: dotted; border-radius: 5px;"> </label>
@@ -202,6 +202,6 @@ if (isset($_POST['submit'])) {
 	</form>
 </section>
 
-<?php include("templates/footer.php"); ?>
+<?php include("../templates/footer.php"); ?>
 
 </html>

@@ -1,6 +1,6 @@
 <?php
-include('config/db_connect.php');
-include('templates/header.php');
+include('../config/db_connect.php');
+include('../templates/header.php');
 
 $password = $retypedpassword = $hashedpassword = $firstname = $lastname = $dob = $email = $gender = $userid = $phoneno = $type = '';
 $errors = array('password' => '', 'retypedpassword' => '', 'firstname' => '', 'lastname' => '', 'dob' => '', 'email' => '', 'gender' => '', 'phoneno' => '', 'type' => '');
@@ -210,6 +210,6 @@ if (isset($_POST['submit'])) {
     </form>
 </section>
 
-<?php include("templates/footer.php"); ?>
+<?php include("../templates/footer.php"); ?>
 
 </html>

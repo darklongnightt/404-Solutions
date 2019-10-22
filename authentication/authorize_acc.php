@@ -1,6 +1,6 @@
 <?php
-include("config/db_connect.php");
-include('templates/header.php');
+include("../config/db_connect.php");
+include('../templates/header.php');
 
 $password = $checkPassword = $email_to_auth = $acc_type = '';
 $email = $_SESSION['U_EMAIL'];
@@ -130,6 +130,6 @@ if (isset($_POST['submit'])) {
 </section>
 
 
-<?php include("templates/footer.php"); ?>
+<?php include("../templates/footer.php"); ?>
 
 </html>

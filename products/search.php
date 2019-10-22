@@ -1,9 +1,9 @@
 <?php
-include('config/db_connect.php');
-include('templates/header.php');
+include('../config/db_connect.php');
+include('../templates/header.php');
 
 if (substr($uid, 0, 3) == 'ADM')
-	include('storage_connect.php');
+	include('../storage_connect.php');
 
 // Store previously selected variables
 $rangeCheck = $getSearchItem = $getSort = $getFilter = '';
@@ -116,7 +116,7 @@ if (!$limit) {
 }
 
 // Pagination for results
-include('templates/pagination_query.php');
+include('../templates/pagination_query.php');
 $query .= "\nLIMIT $startingLimit , $resultsPerPage";
 // Getting data from table: product as associative array
 $result = mysqli_query($conn, $query);
@@ -308,8 +308,8 @@ mysqli_close($conn);
 </div>
 
 <?php
-include("templates/pagination_output_search.php");
-include("templates/footer.php");
+include("../templates/pagination_output_search.php");
+include("../templates/footer.php");
 ?>
 </div>
 
