@@ -1,6 +1,7 @@
 <?php
 include("../config/db_connect.php");
 include("../templates/header.php");
+include('../storage_connect.php');
 
 // Check if delete button is clicked
 if (isset($_GET['delete'])) {
@@ -15,11 +16,11 @@ if (isset($_GET['delete'])) {
 
 // Pagination for all results
 $currDir = "view_promotions.php";
-$query = "SELECT DISTINCT PROMOCODE, DISCOUNT, DESCRIPTION FROM promotion";
+$query = "SELECT * FROM promotion";
 include('../templates/pagination_query.php');
 
 // Get all distinct promotions
-$sql = "SELECT DISTINCT PROMOCODE, DISCOUNT, DESCRIPTION FROM promotion 
+$sql = "SELECT * FROM promotion 
 LIMIT $startingLimit, $resultsPerPage";
 $result = mysqli_query($conn, $sql);
 $promotionlist = mysqli_fetch_all($result, MYSQLI_ASSOC);
@@ -30,6 +31,10 @@ mysqli_close($conn);
 
 ?>
 
+<head>
+    <link rel="stylesheet" href="../css/promotion.css" type="text/css">
+</head>
+
 <!DOCTYPE HTML>
 <html>
 <div class="container">
@@ -39,11 +44,14 @@ mysqli_close($conn);
         <ul class="collection">
             <?php foreach ($promotionlist as $promotion) { ?>
                 <li class="collection-item avatar">
-                    <img src="../img/promotion.png" class="circle">
+                    <img src="<?php echo $promotion['IMAGE']; ?>" class="grey-text promo-icon">
 
-                    <div class="title"><?php echo htmlspecialchars($promotion['DESCRIPTION']); ?></div>
-                    <div>Code: <?php echo htmlspecialchars($promotion['PROMOCODE']); ?></div>
-                    <div> <?php echo htmlspecialchars($promotion['DISCOUNT']); ?>% OFF</div>
+                    <div class="promo-text">
+                        <div class="bold"><?php echo htmlspecialchars($promotion['DESCRIPTION']); ?></div>
+                        <div>Code: <?php echo htmlspecialchars($promotion['PROMOCODE']); ?></div>
+                        <div>Category: <?php echo htmlspecialchars($promotion['CATEGORY']); ?> <span class="white-text discount-label"><?php echo ' -' . $promotion['DISCOUNT'] . '% OFF'; ?></span> </div>
+                        <div>Expiry: <?php echo htmlspecialchars($promotion['DATETO']); ?></div>
+                    </div>
 
                     <div class="secondary-content flex">
                         <a href="view_promotions.php?delete=<?php echo htmlspecialchars($promotion['PROMOCODE']); ?>">
@@ -59,7 +67,7 @@ mysqli_close($conn);
     else :
         ?>
         <div class="center">
-            <img src="../img/promotion.png" class="empty-cart">
+            <img src="../img/coupon.png" class="empty-cart">
         </div>
         <br>
         <br>

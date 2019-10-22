@@ -7,6 +7,10 @@
 </li>
 
 <li>
+    <a href="../promotions/promotions_index.php" class="brand-text bold">Promotions</a>
+</li>
+
+<li>
     <a href="../products/products_index.php" class="brand-text bold">Inventory</a>
 </li>
 

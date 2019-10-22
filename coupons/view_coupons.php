@@ -41,7 +41,7 @@ mysqli_close($conn);
                 <li class="collection-item avatar">
                     <img src="../img/coupon.png" class="circle">
 
-                    <div class="title"><?php echo htmlspecialchars($coupon['DESCRIPTION']); ?></div>
+                    <div class="title bold"><?php echo htmlspecialchars($coupon['DESCRIPTION']); ?></div>
                     <div>Code: <?php echo htmlspecialchars($coupon['COUPONCODE']); ?></div>
                     <div> <?php echo htmlspecialchars($coupon['DISCOUNT']); ?>% OFF</div>
 

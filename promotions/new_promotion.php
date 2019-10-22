@@ -1,11 +1,12 @@
 <?php
 include('../config/db_connect.php');
 include('../templates/header.php');
+include('../storage_connect.php');
 
 $promotioncode = $desc = $expiry = $category = '';
 $discount = 0;
 $today = date('Y-m-d');
-$errors = array('desc' => '', 'expiry' => '', 'discount' => '');
+$errors = array('desc' => '', 'expiry' => '', 'discount' => '', 'image' => '');
 
 // Get all distinct categories
 $sql = "SELECT DISTINCT CATEGORY FROM product";
@@ -34,6 +35,22 @@ if (isset($_POST['submit'])) {
         $discount = $_POST['discount'];
     }
 
+    // Check for image selected
+    if ($_FILES["fileToUpload"]["size"] !== 0) {
+		// Checks if file is an image
+		$imageCheck = getimagesize($_FILES["fileToUpload"]["tmp_name"]);
+
+		if (!$imageCheck) {
+			$errors['image'] = "Invalid image file selected!";
+		} else {
+			// Get the file name and temp file path
+			$fileName = $_FILES['fileToUpload']['name'];
+			$tmpFilePath = $_FILES['fileToUpload']['tmp_name'];
+		}
+	} else {
+		$errors['image'] = "Product image is required!";
+	}
+
     // Checks if form is error free
     if (!array_filter($errors)) {
         // Formatting string for db security
@@ -53,9 +70,24 @@ if (isset($_POST['submit'])) {
             }
         } while (!$unique);
 
+        // Resizing image to 300 x 300
+		$pic_type = strtolower(strrchr($fileName, "."));
+		$pic_name = "../temp/temp$pic_type";
+		move_uploaded_file($tmpFilePath, $pic_name);
+		if (true !== ($pic_error = @image_resize($pic_name, $tmpFilePath, 800, 300))) {
+			$tmpFilePath = $pic_name;
+        }
+
+		// Upload to google cloud storage
+		upload_object($bucketName, $fileName, $tmpFilePath);
+
+		// Create url for the uploaded image
+		$url = "https://storage.cloud.google.com/" . $bucketName . "/" . $fileName . "?cloudshell=false";
+		$url = mysqli_real_escape_string($conn, $url);
+
         // Inserts data to db and redirects user to homepage
-        $sql = "INSERT INTO promotion(PROMOCODE, CATEGORY, DESCRIPTION, DISCOUNT, DATEFROM, DATETO) 
-        VALUES('$promotioncode', '$category', '$desc', '$discount', '$today', '$expiry')";
+        $sql = "INSERT INTO promotion(PROMOCODE, CATEGORY, DESCRIPTION, DISCOUNT, DATEFROM, DATETO, IMAGE) 
+        VALUES('$promotioncode', '$category', '$desc', '$discount', '$today', '$expiry', '$url')";
 
         if (mysqli_query($conn, $sql)) {
             header('Location: promotions_index.php');
@@ -69,9 +101,32 @@ if (isset($_POST['submit'])) {
 <!DOCTYPE html>
 <html>
 
+<script>
+    function triggerClick(e) {
+        displayImage(e);
+    }
+
+    function displayImage(e) {
+        if (e.files[0]) {
+            var reader = new FileReader();
+            reader.onload = function(e) {
+                document.querySelector('#preview').setAttribute('src', e.target.result);
+            }
+            reader.readAsDataURL(e.files[0]);
+        }
+    }
+</script>
+
 <section class="container grey-text">
     <h4 class="center">New Promotion</h4>
-    <form action="new_promotion.php" class="EditForm" method="POST">
+    <form action="new_promotion.php" enctype="multipart/form-data" class="EditForm" method="POST">
+
+        <div class="center">
+            <label for="imageUpload"> <img src="/img/upload_placeholder1.png" id="preview" onclick="triggerClick()" style="width: 200px; margin: 20px; border-style: dotted; border-radius: 5px;"> </label>
+            <input type="file" name="fileToUpload" id="imageUpload" onchange="displayImage(this)" style="display: none;">
+        </div>
+        <div class="red-text center"><?php echo htmlspecialchars($errors['image']); ?></div>
+        <br>
 
         <label>Promotion Description: </label>
         <input type="text" name="desc" value="<?php echo htmlspecialchars($desc); ?>">
