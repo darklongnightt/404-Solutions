@@ -11,31 +11,29 @@ $more = FALSE;
 // Update recent views of specific customer
 function updateRecentView($uid, $pid, $conn)
 {
-    if (substr($uid, 0, 3) == 'CUS' || substr($uid, 0, 3) == 'ANO') {
-        $uid = mysqli_real_escape_string($conn, $uid);
+    $uid = mysqli_real_escape_string($conn, $uid);
 
-        // Check if product is already in recent views
-        $sql = "SELECT * FROM recent_views WHERE USERID='$uid' AND PDTID='$pid'";
+    // Check if product is already in recent views
+    $sql = "SELECT * FROM recent_views WHERE USERID='$uid' AND PDTID='$pid'";
+    $result = mysqli_query($conn, $sql);
+    $checkUnique = mysqli_num_rows($result);
+
+    if ($checkUnique < 1) {
+        $sql = "SELECT * FROM recent_views WHERE USERID='$uid'";
         $result = mysqli_query($conn, $sql);
-        $checkUnique = mysqli_num_rows($result);
+        $num = mysqli_num_rows($result);
 
-        if ($checkUnique < 1) {
-            $sql = "SELECT * FROM recent_views WHERE USERID='$uid'";
-            $result = mysqli_query($conn, $sql);
-            $num = mysqli_num_rows($result);
-
-            // Only keeps top 6 rows per customer by either insert or update
-            if ($num > 5) {
-                $sql = "UPDATE recent_views SET VIEWED_AT=CURRENT_TIMESTAMP, PDTID='$pid' 
+        // Only keeps top 6 rows per customer by either insert or update
+        if ($num > 5) {
+            $sql = "UPDATE recent_views SET VIEWED_AT=CURRENT_TIMESTAMP, PDTID='$pid' 
                 WHERE USERID='$uid' AND VIEWED_AT=(SELECT MIN(VIEWED_AT) FROM recent_views WHERE USERID='$uid');";
-            } else {
-                $sql = "INSERT INTO recent_views(USERID, PDTID) VALUES('$uid', '$pid')";
-            }
+        } else {
+            $sql = "INSERT INTO recent_views(USERID, PDTID) VALUES('$uid', '$pid')";
+        }
 
-            // Execute the query
-            if (!mysqli_query($conn, $sql)) {
-                echo 'Query Error: ' . mysqli_error($conn);
-            }
+        // Execute the query
+        if (!mysqli_query($conn, $sql)) {
+            echo 'Query Error: ' . mysqli_error($conn);
         }
     }
 }
