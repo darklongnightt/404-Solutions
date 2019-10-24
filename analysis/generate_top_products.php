@@ -107,7 +107,7 @@ mysqli_close($conn);
     <?php endif ?>
 
     <a href="generate_top_products.php?generate=true">
-        <button name="submit" class=" btn brand z-depth-0">Generate</button>
+        <button name="submit" class=" btn brand z-depth-0">Refresh Top Products</button>
     </a>
 
 </div>
