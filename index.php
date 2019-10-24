@@ -59,9 +59,7 @@ $result = mysqli_query($conn, $sql);
 $cluster_recommendations = mysqli_fetch_all($result, MYSQLI_ASSOC);
 
 // Get top 12 most popular products from database
-$sql = "SELECT COUNT(orders.PDTID) AS FREQ, orders.PDTID, product.PDTNAME, product.PDTPRICE, product.PDTDISCNT, product.IMAGE 
-FROM orders JOIN product ON orders.PDTID = product.PDTID
-GROUP BY orders.PDTID ORDER BY FREQ DESC LIMIT 0, 12";
+$sql = "SELECT * FROM top_products ORDER BY FREQUENCY DESC";
 $result = mysqli_query($conn, $sql);
 $top_products = mysqli_fetch_all($result, MYSQLI_ASSOC);
 
@@ -138,7 +136,7 @@ mysqli_close($conn);
                                             } ?>" class="recent-icon">
 
                             <div class="white-text discount-label">
-                                <?php echo '$' . number_format(htmlspecialchars($product['PDTPRICE']) / 100 * htmlspecialchars(100 - $product['PDTDISCNT']), 2, '.', ''); ?>
+                                <?php echo '$' . number_format(htmlspecialchars($product['PDTPRICE']) / 100 * htmlspecialchars(100 - $product['PDTDISCOUNT']), 2, '.', ''); ?>
                             </div>
                         </span>
                     </a>
