@@ -1,17 +1,27 @@
 <li class="dd">
     <a href="#" class="brand-text bold dropbtn" onclick="toggleDrop(this)">Data Analysis</a>
     <div class="dd-content">
-        <a href="/analysis/cluster_report.php">
+
+        <a href="/analysis_report/generate_top_products.php">
+            <i class="material-icons black-text">vertical_align_top</i>
+            &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp
+            Top Products
+        </a>
+        <div class="divider"></div>
+
+        <a href="/analysis_report/cluster_report.php">
             <i class="material-icons black-text">pie_chart</i>
             &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp
             Customer Demographic Profiling
         </a>
         <div class="divider"></div>
-        <a href="/analysis/generate_top_products.php">
-            <i class="material-icons black-text">vertical_align_top</i>
+
+        <a href="/analysis_report/market_basket_report.php">
+            <i class="material-icons black-text">bubble_chart</i>
             &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp
-            Top Products
+            Market Basket Analysis
         </a>
+        <div class="divider"></div>
     </div>
 </li>
 
