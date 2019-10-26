@@ -193,7 +193,7 @@ if (isset($_POST['submit'])) {
 		<div class="red-text"><?php echo htmlspecialchars($errors['cstprice']); ?></div>
 
 		<label>Discount: </label>
-		<input type="number" name="discount" min="0" value="<?php echo htmlspecialchars($discount); ?>" step=".01">
+		<input type="number" name="discount" min="0" max="99" value="<?php echo htmlspecialchars($discount); ?>" step="1">
 		<div class="red-text"><?php echo htmlspecialchars($errors['discount']); ?></div>
 
 		<div class="center">

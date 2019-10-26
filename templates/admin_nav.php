@@ -80,10 +80,16 @@
         </a>
         <div class="divider"></div>
 
+        <i class="material-icons black-text">format_list_bulleted</i>
+        <a href="/products/inventory_management.php">
+            &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp
+            View Products
+        </a>
+
         <i class="material-icons black-text">edit</i>
         <a href="/products/product_management.php">
             &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp
-            Manage Products
+            Edit Products
         </a>
     </div>
 </li>
