@@ -3,7 +3,7 @@ include("../config/db_connect.php");
 include("../templates/header.php");
 
 $country1 = $country2 = $addr1 = $addr2 = $postal1 = $postal2 = '';
-$errors = array('addr1'=>'', 'postal1'=>'', 'postal2'=>'');
+$errors = array('addr1' => '', 'postal1' => '', 'postal2' => '');
 
 // If redirect to register page if user is not logged in
 $userId = mysqli_real_escape_string($conn, $_SESSION['U_UID']);
@@ -21,8 +21,8 @@ if (isset($_POST['submit'])) {
     } else {
         $postal1 = $_POST['postal1'];
         if (!preg_match('/^[0-9]+$/', $postal1)) {
-			$errors['postal1'] = 'Postal code must be in numbers only!';
-		}
+            $errors['postal1'] = 'Postal code must be in numbers only!';
+        }
     }
 
     if (empty($_POST['country1'])) {
@@ -38,8 +38,8 @@ if (isset($_POST['submit'])) {
         $country2 = $_POST['country2'];
 
         if (!preg_match('/^[0-9]+$/', $postal2)) {
-			$errors['postal2'] = 'Postal code must be in numbers only!';
-		}
+            $errors['postal2'] = 'Postal code must be in numbers only!';
+        }
     }
 
 
@@ -57,9 +57,9 @@ if (isset($_POST['submit'])) {
         VALUES('$userId', '$addr1', '$addr2', '$postal1', '$postal2', '$country1', '$country2')";
 
         if (mysqli_query($conn, $sql)) {
-            header("Location: ../index.php");
+            echo "<script type='text/javascript'>window.top.location='/index.php';</script>";
         } else {
-            echo 'Query Error: ' . mysqli_error($conn); 
+            echo 'Query Error: ' . mysqli_error($conn);
         }
     }
 }

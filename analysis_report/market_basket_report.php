@@ -19,8 +19,6 @@ $product_count = mysqli_fetch_assoc($result)['COUNT(*)'];
 $sql = "SELECT COUNT(*) FROM orders";
 $result = mysqli_query($conn, $sql);
 $orders_count = mysqli_fetch_assoc($result)['COUNT(*)'];
-
-
 ?>
 
 <style>
@@ -42,6 +40,10 @@ $orders_count = mysqli_fetch_assoc($result)['COUNT(*)'];
     .method-icon {
         width: 200px;
         height: auto;
+    }
+
+    .longer {
+        width: 200px;
     }
 </style>
 
@@ -102,7 +104,7 @@ $orders_count = mysqli_fetch_assoc($result)['COUNT(*)'];
                 <thead>
                     <tr>
                         <?php
-                            echo '<th>Product</th>';
+                            echo '<th>Products Popular With</th>';
 
                             for ($i = 1; $i <= 12; $i++) {
                                 echo '<th>' . $i . '</th>';
@@ -122,7 +124,7 @@ $orders_count = mysqli_fetch_assoc($result)['COUNT(*)'];
 
 
                             echo '<tr>';
-                            echo '<td class="center"><a href="/products/product_details.php?id=' . $product['PDTID'] . '"><img src="' . $product['IMAGE'] . '"></a>';
+                            echo '<td class="center longer"><a href="/products/product_details.php?id=' . $product['PDTID'] . '"><img src="' . $product['IMAGE'] . '"></a>';
                             echo '<div class="bold">' . $product['PDTNAME'] . '</div>
                             </td>';
 

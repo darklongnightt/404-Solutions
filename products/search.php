@@ -158,7 +158,7 @@ if (isset($_GET['delete'])) {
 
 	// Checks if query is successful
 	if (mysqli_query($conn, $sql)) {
-		header('Location: search.php');
+		echo "<script type='text/javascript'>window.top.location='search.php';</script>";
 	} else {
 		echo 'Query Error' . mysqli_error($conn);
 	}

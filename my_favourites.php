@@ -44,7 +44,7 @@ if (isset($_GET['remove'])) {
     $removePdt = mysqli_real_escape_string($conn, $_GET['remove']);
     $sql = "DELETE FROM favourite WHERE PDTID = '$removePdt' AND USERID = '$uid'";
     if (mysqli_query($conn, $sql)) {
-        header('Location: my_favourites.php');
+        echo "<script type='text/javascript'>window.top.location='my_favourites.php';</script>";
     } else {
         echo 'Query Error: ' . mysqli_error($conn);
     }
@@ -68,7 +68,7 @@ mysqli_close($conn);
             ?>
 
             <div class="card z-depth-0">
-                <a href="product_details.php?id=<?php echo $product['PDTID']; ?>">
+                <a href="/products/product_details.php?id=<?php echo $product['PDTID']; ?>">
                     <img src="<?php if ($product['IMAGE']) {
                                             echo $product['IMAGE'];
                                         } else {

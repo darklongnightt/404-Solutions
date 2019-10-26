@@ -24,7 +24,7 @@ if (isset($_GET['change_status'])) {
     $orderId = mysqli_real_escape_string($conn, $_GET['change_status']);
     $sql = "UPDATE orders SET DELVRYSTS = '$status' WHERE ORDERID = '$orderId'";
     if (mysqli_query($conn, $sql)) {
-        header("Location: my_orders.php");
+        echo "<script type='text/javascript'>window.top.location='/my_orders.php';</script>";
     } else {
         echo 'Query Error: ' . mysqli_error($conn);
     }
@@ -45,7 +45,7 @@ mysqli_close($conn);
             <div class="col s8 md4">
                 <div class="card z-depth-0">
                     <div class="card-content center">
-                        <a href="product_details.php?id=<?php echo $order['PDTID']; ?>">
+                        <a href="/products/product_details.php?id=<?php echo $order['PDTID']; ?>">
                             <img src="<?php if ($order['IMAGE']) {
                                                     echo $order['IMAGE'];
                                                 } else {

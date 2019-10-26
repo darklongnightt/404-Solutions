@@ -30,6 +30,16 @@ include("../templates/header.php");
                 </div>
             </a>
         </div>
+		<div class="col m4 s8 offset-m2">
+            <a href="product_management.php">
+                <div class="card small">
+                    <div class="card-content">
+                        <h4 class="brand-text bold">Manage Products</h4>
+                        <i class="material-icons black-text">pageview</i>
+                    </div>
+                </div>
+            </a>
+        </div>
     </div>
 
 </section>

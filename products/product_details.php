@@ -121,7 +121,7 @@ if (isset($_POST['delete'])) {
 
     // Checks if query is successful
     if (mysqli_query($conn, $sql)) {
-        header('Location: ../index.php');
+        echo "<script type='text/javascript'>window.top.location='/index.php';</script>";
     } else {
         echo 'Query Error' . mysqli_error($conn);
     }
@@ -164,7 +164,7 @@ if (isset($_POST['favourite'])) {
         }
     } else {
         // Redirect to login page
-        header('Location: ../authentication/login.php');
+        echo "<script type='text/javascript'>window.top.location='/authentication/login.php';</script>";
     }
 }
 

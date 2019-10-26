@@ -92,8 +92,7 @@ if (isset($_SESSION['U_UID'])) {
 						} else if (substr($uid, 0, 3) == 'ANL') {
 							include('analyst_nav.php');
 						}
-						?>
-				<?php } else { ?>
+					} else { ?>
 					<li>
 						<a href="../cart.php">
 							<div class="brand-text bold">

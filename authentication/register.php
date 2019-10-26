@@ -120,7 +120,43 @@ if (isset($_POST['submit'])) {
                 $_SESSION['U_INITIALS'] = $firstname[0] . $lastname[0];
                 $_SESSION['U_CLUSTER'] = 0;
 
-                header('Location: shipping_details.php');
+                // Update cart from cookies
+                $ano = $_COOKIE['UID'];
+                $cus = $_SESSION['U_UID'];
+
+                // Get cart items from guest user
+                $sql = "SELECT * FROM cart WHERE USERID='$ano'";
+                $result = mysqli_query($conn, $sql);
+                $anoCart = mysqli_fetch_all($result, MYSQLI_ASSOC);
+
+                // Transfer item quantity over to the identified customer
+                foreach ($anoCart as $item) {
+                    // Check that cart item exists 
+                    $id = $item['PDTID'];
+                    $qty = $item['CARTQTY'];
+
+                    $sql = "SELECT * FROM cart WHERE PDTID='$id' AND USERID='$cus'";
+                    $result = mysqli_query($conn, $sql);
+                    if (mysqli_num_rows($result) > 0) {
+                        // Update product qty
+                        $sql = "UPDATE cart SET CARTQTY=CARTQTY+'$qty' WHERE PDTID='$id' AND USERID='$cus'";
+                    } else {
+                        // Add to db cart
+                        $sql = "INSERT INTO cart(PDTID, USERID, CARTQTY) VALUES('$id', '$cus', '$qty')";
+                    }
+
+                    if (!mysqli_query($conn, $sql)) {
+                        echo 'Query Error: ' . mysqli_error($conn);
+                    }
+                }
+
+                // Delete guest items from cart
+                $sql = "DELETE FROM cart WHERE USERID='$ano'";
+                if (mysqli_query($conn, $sql)) {
+                    echo "<script type='text/javascript'>window.top.location='shipping_details.php';</script>";
+                } else {
+                    echo 'Query Error: ' . mysqli_error($conn);
+                }
             } else {
                 echo 'Query Error: ' . mysqli_error($conn);
             }

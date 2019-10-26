@@ -43,7 +43,7 @@ if (isset($_POST['submit'])) {
                     $date = date('m/d/Y, h:i:s a', time());
 
                     sendEmail($email, $new_password, $date);
-                    header('Location: login.php');
+                    echo "<script type='text/javascript'>window.top.location='login.php';</script>";
                 }
             } else {
                 echo 'Query Error: ' . mysqli_error($conn);

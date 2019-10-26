@@ -32,7 +32,7 @@ if (isset($_GET['remove'])) {
     $removePdt = mysqli_real_escape_string($conn, $_GET['remove']);
     $sql = "DELETE FROM cart WHERE PDTID = '$removePdt' AND USERID = '$uid'";
     if (mysqli_query($conn, $sql)) {
-        header('Location: cart.php');
+        echo "<script type='text/javascript'>window.top.location='cart.php';</script>";
     } else {
         echo 'Query Error: ' . mysqli_error($conn);
     }
@@ -40,7 +40,8 @@ if (isset($_GET['remove'])) {
 
 if (isset($_POST['applydiscount'])) {
     $couponcode = $_POST['discountcode'];
-    header("Location: cart.php?discount=$couponcode");
+    $location = "cart.php?discount=$couponcode";
+    echo "<script type='text/javascript'>window.top.location='$location';</script>";
 }
 
 if (isset($_GET['discount'])) {
@@ -144,9 +145,11 @@ if (isset($_POST['checkout']) && $cartList) {
         // Product name, quantity, sum price
         $payName = substr_replace($payName, "", -2);
         $payPrice = number_format($payPrice, 2, '.', '');
-        header("Location: template_pay.php?price='$payPrice'&qty='$payQty'&name='$payName'");
+
+        $location = "template_pay.php?price='$payPrice'&qty='$payQty'&name='$payName'";
+        header("Location: $location");
     } else {
-        header('Location: authentication/login.php');
+        echo "<script type='text/javascript'>window.top.location='/authentication/login.php';</script>";
     }
 }
 
@@ -186,7 +189,7 @@ mysqli_close($conn);
                     ?>
 
                     <div class="card z-depth-0">
-                        <a href="product_details.php?id=<?php echo $product['PDTID']; ?>">
+                        <a href="/products/product_details.php?id=<?php echo $product['PDTID']; ?>">
                             <img src="<?php if ($product['IMAGE']) {
                                                     echo $product['IMAGE'];
                                                 } else {
@@ -275,7 +278,7 @@ mysqli_close($conn);
 
                     <form action="cart.php" method="POST" id="applydiscount">
                         <label>Enter Discount Code: </label>
-                        <input type="text" name="discountcode" value="<?php echo htmlspecialchars($couponcode); ?>" />
+                        <input type="text" name="discountcode" />
                         <div class="red-text"><?php echo htmlspecialchars($errors['discountcode']); ?></div>
 
                         <div class="center">

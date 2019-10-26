@@ -122,7 +122,7 @@ if (isset($_POST['submit'])) {
 		$sql = "INSERT INTO product(PDTID, PDTNAME, WEIGHT, DESCRIPTION, BRAND, CATEGORY, PDTQTY, CSTPRICE, PDTPRICE, PDTDISCNT, IMAGE) 
 		VALUES('$pdtid', '$pdtname', '$weight', '$desc', '$brand', '$category', '$pdtqty', '$cstprice', '$pdtprice', '$discount', '$url')";
 		if (mysqli_query($conn, $sql)) {
-			header('Location: ../index.php');
+			echo "<script type='text/javascript'>window.top.location='/index.php';</script>";
 		} else {
 			echo 'Query Error: ' . mysqli_error($conn);
 		}

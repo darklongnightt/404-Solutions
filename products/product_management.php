@@ -37,8 +37,8 @@ if (isset($_GET['search'])) {
 
     //Get search
     $getSearchItem = $_GET['searchItem'];
-	//Get range use check
-	$rangeCheck = $_GET['check'];
+    //Get range use check
+    $rangeCheck = $_GET['check'];
 
     // Get user's selection for sort, replace - with space for sql filter by category
     $rFilter = str_replace('-', ' ', $getFilter);
@@ -75,21 +75,20 @@ if (isset($_GET['search'])) {
     $catMin = (float) $catPriceRange['MINPRICE'];
     $catMax = (float) $catPriceRange['MAXPRICE'];
 
-   // If user uses range
-	if ($rangeCheck == 1){
-		//if minprice less than min category or more than max category
-		if (($minRange < $catMin) || ($minRange > $catMax) || ($minRange == 0)) {
-			$minRange = $catMin;
-		}
-		//if maxprice more than max category or less than min category
-		if (($maxRange > $catMax) || ($maxRange < $catMin) || ($maxRange == 0)){
-			$maxRange = $catMax;	
-		}
-	}
-	else {
-		$minRange = $catMin;
-		$maxRange = $catMax;
-	}
+    // If user uses range
+    if ($rangeCheck == 1) {
+        //if minprice less than min category or more than max category
+        if (($minRange < $catMin) || ($minRange > $catMax) || ($minRange == 0)) {
+            $minRange = $catMin;
+        }
+        //if maxprice more than max category or less than min category
+        if (($maxRange > $catMax) || ($maxRange < $catMin) || ($maxRange == 0)) {
+            $maxRange = $catMax;
+        }
+    } else {
+        $minRange = $catMin;
+        $maxRange = $catMax;
+    }
     $query .= ' PDTPRICE >="' . $minRange . '" AND PDTPRICE <= "' . $maxRange . '"';
 
     // If user use sort function
@@ -102,7 +101,7 @@ if (isset($_GET['search'])) {
         $query .= ' ORDER BY CREATED_AT DESC';
     }
 
-	$ext = "&Filter=$rFilter&sort=$getSort&priceRange=$minRange-$maxRange&check=$rangeCheck&searchItem=$getSearchItem&submit=Search";
+    $ext = "&Filter=$rFilter&sort=$getSort&priceRange=$minRange-$maxRange&check=$rangeCheck&searchItem=$getSearchItem&submit=Search";
     $getFilter = str_replace(' ', '-', $rFilter);
 } else {
     $query .= ' ORDER BY CREATED_AT DESC';
@@ -119,34 +118,29 @@ $query .= "\nLIMIT $startingLimit , $resultsPerPage";
 $result = mysqli_query($conn, $query);
 $productList = mysqli_fetch_all($result, MYSQLI_ASSOC);
 
-// Update product quantity
+// Update product details
 $updateqty = $pdtid = '';
 if (isset($_POST['submit'])) {
-    if (!empty($_POST['updateqty'])) {
-		$updateqty = mysqli_real_escape_string($conn, $_POST['updateqty']);
-        $pdtid = mysqli_real_escape_string($conn, $_POST['updateid']);
-		$nameNweight = $_POST['nameNweight'];
-		$brandNcat = $_POST['brandNcat'];
-		$pdtDesc = $_POST['pdtDescription'];
-		$pdtCstPrice = $_POST['pdtCostPrice'];
-		$pdtPrice = $_POST['pdtPrice'];
-		$pdtDiscount = $_POST['pdtDiscount'];
+    $updateqty = mysqli_real_escape_string($conn, $_POST['updateqty']);
+    $pdtid = mysqli_real_escape_string($conn, $_POST['updateid']);
+    $pdtBrand = mysqli_real_escape_string($conn, $_POST['pdtBrand']);
+    $pdtCat = mysqli_real_escape_string($conn, $_POST['pdtCategory']);
+    $pdtDesc = mysqli_real_escape_string($conn, $_POST['pdtDescription']);
+    $pdtCstPrice = mysqli_real_escape_string($conn, $_POST['pdtCostPrice']);
+    $pdtPrice = mysqli_real_escape_string($conn, $_POST['pdtPrice']);
+    $pdtDiscount = mysqli_real_escape_string($conn, $_POST['pdtDiscount']);
+    $pdtThreshold = mysqli_real_escape_string($conn, $_POST['pdtThreshold']);
+    $pdtName = mysqli_real_escape_string($conn, $_POST['pdtName']);
+    $pdtWeight = mysqli_real_escape_string($conn, $_POST['pdtWeight']);
 
-		$nameNweight = explode('-',$nameNweight);
-		$pdtName = $nameNweight[0];
-		$pdtWeight = $nameNweight[1];
-		$brandNcat = explode('|',$brandNcat);
-		$pdtBrand = $brandNcat[0];
-		$pdtCat = $brandNcat[1];	
-
-        $sql = "UPDATE product SET PDTNAME = '$pdtName', WEIGHT = '$pdtWeight', BRAND = '$pdtBrand', 
+    $sql = "UPDATE product SET PDTNAME = '$pdtName', WEIGHT = '$pdtWeight', BRAND = '$pdtBrand', 
 				CATEGORY = '$pdtCat', DESCRIPTION = '$pdtDesc', CSTPRICE = ROUND($pdtCstPrice,2), PDTPRICE = ROUND($pdtPrice,2),
-				PDTDISCNT = ROUND($pdtDiscount,2), PDTQTY = '$updateqty' WHERE PDTID = '$pdtid'";
-        if (mysqli_query($conn, $sql)) {
-            header("Location: product_management.php");
-        } else {
-            echo 'Query Error: ' . mysqli_error($conn);
-        }
+				PDTDISCNT = ROUND($pdtDiscount,2), THRESHOLD = '$pdtThreshold', PDTQTY = '$updateqty' WHERE PDTID = '$pdtid'";
+
+    if (mysqli_query($conn, $sql)) {
+        echo "<script type='text/javascript'>window.top.location='product_management.php';</script>";
+    } else {
+        echo 'Query Error: ' . mysqli_error($conn);
     }
 }
 
@@ -155,11 +149,18 @@ mysqli_free_result($result);
 mysqli_close($conn);
 ?>
 
+<style>
+    label {
+        width: 100px;
+        display: inline-block;
+    }
+</style>
+
 <!DOCTYPE HTML>
 <html>
 <h4 class="center grey-text">Product Management</h4>
 <div class="sidebar sidebar-padding">
-    <form id="sfform" name="sfform" method="get" action="inventory_management.php">
+    <form id="sfform" name="sfform" method="get" action="product_management.php">
 
         <h6 class="grey-text">Category</h6>
         <select class="browser-default" name="Filter">
@@ -191,36 +192,35 @@ mysqli_close($conn);
         <h6 class="grey-text">Price Range</h6>
         <input type="text" name="priceRange" id="range" readonly>
         <div id="pRange"></div>
-		<script>
-			var priceMin = <?php echo json_encode($catMin); ?>;
-			var priceMax = <?php echo json_encode($catMax); ?>;
-			var postMin = <?php echo json_encode($minRange); ?>;
-			var postMax = <?php echo json_encode($maxRange); ?>;
-			var rangeCheck = <?php echo json_encode($rangeCheck); ?>;
-			
-			//if user click on range slider
-			function clicked(){
-				document.getElementById('testrange').value = 1;
-			}
-			document.getElementById('pRange').addEventListener("mousedown", clicked);
+        <script>
+            var priceMin = <?php echo json_encode($catMin); ?>;
+            var priceMax = <?php echo json_encode($catMax); ?>;
+            var postMin = <?php echo json_encode($minRange); ?>;
+            var postMax = <?php echo json_encode($maxRange); ?>;
+            var rangeCheck = <?php echo json_encode($rangeCheck); ?>;
 
-			$(function() {
-				$("#pRange").slider({
-					range: true,
-					min: priceMin,
-					max: priceMax,
-					values: [postMin, postMax],
-					slide: function(event, ui) {
-						$("#range").val("$" + ui.values[0] + " - $" + ui.values[1]);
-					}
-				});
-	
-				$("#range").val("$" + $("#pRange").slider("values", 0) +
-					" - $" + $("#pRange").slider("values", 1));	
-			});
+            //if user click on range slider
+            function clicked() {
+                document.getElementById('testrange').value = 1;
+            }
+            document.getElementById('pRange').addEventListener("mousedown", clicked);
 
-		</script>
-		<input type="text" name="check" id="testrange" <?php if ($rangeCheck != '') echo " value = '" . $rangeCheck . "'"; ?> hidden>
+            $(function() {
+                $("#pRange").slider({
+                    range: true,
+                    min: priceMin,
+                    max: priceMax,
+                    values: [postMin, postMax],
+                    slide: function(event, ui) {
+                        $("#range").val("$" + ui.values[0] + " - $" + ui.values[1]);
+                    }
+                });
+
+                $("#range").val("$" + $("#pRange").slider("values", 0) +
+                    " - $" + $("#pRange").slider("values", 1));
+            });
+        </script>
+        <input type="text" name="check" id="testrange" <?php if ($rangeCheck != '') echo " value = '" . $rangeCheck . "'"; ?> hidden>
         <br>
 
         <h6 class="grey-text"> Search </h6>
@@ -248,41 +248,60 @@ mysqli_close($conn);
                                             } ?>" class="circle">
                         </a>
                         <form method="POST">
-							<span class="title black-text">
-								<input type="text" name="nameNweight" <?php echo "value='" . htmlspecialchars($product['PDTNAME'] . ' - ' . $product['WEIGHT']) . "'"; ?> style="width:250px;height:30px">
-							</span>
-							<div class="black-text" >	
-								<label> Brand | Category </label>
-								<input type="text" name="brandNcat" <?php echo "value='" .  htmlspecialchars($product['BRAND']) . ' | ' . htmlspecialchars($product['CATEGORY']) . "'"; ?> style="width:180px;height:30px">
-							</div>
-							<label> Description: </label>
-							<input type="text" name="pdtDescription" value="<?php echo htmlspecialchars($product['DESCRIPTION']); ?>"style="width:190px;height:30px">
-							<?php if ($product['PDTQTY'] <= $product['THRESHOLD']) { ?>
-								<div class="red-text bold"><?php echo htmlspecialchars('Quantity: ' . htmlspecialchars($product['PDTQTY'])); ?></div>
-							<?php } else { ?>
-								<div class="black-text"><?php echo htmlspecialchars('Quantity: ' . htmlspecialchars($product['PDTQTY'])); ?></div>
-							<?php } ?>
-							<span class="black-text"><?php echo htmlspecialchars(htmlspecialchars($product['PDTID'])); ?></span>
-							<div class="secondary-content flex no-pad">
-								<label>Update Quantity: </label>
-								<input type="number" name="updateqty" value="<?php echo htmlspecialchars($product['PDTQTY']); ?>">
-								<input type="hidden" name="updateid" value="<?php echo $product['PDTID']; ?>" />
-							</div>	
-							<div class="secondary-content flex no-pad" style="padding:60px">
-								<label>Cost Price: </label> 
-								<input type="number" name="pdtCostPrice" value="<?php echo htmlspecialchars($product['CSTPRICE']); ?>" style="width:180px;height:30px">
-							</div>
-							<div class="secondary-content flex no-pad" style="padding:100px">
-								<label>Product Price: </label>
-								<input type="number" name="pdtPrice" value="<?php echo htmlspecialchars($product['PDTPRICE']); ?>" style="width:180px;height:30px">
-							</div>
-							<div class="secondary-content flex no-pad" style="padding:140px">
-								<label>Discount: </label> 
-								<input type="number" name="pdtDiscount" value="<?php echo htmlspecialchars($product['PDTDISCNT']); ?>" style="width:180px;height:30px">
-							</div>
-							<br>
-							<input type="submit" name="submit" value="update" class="btn-small brand z-depth-0">
-						</form>
+                            <div>
+                                <label>Product Name: </label>
+                                <input type="text" name="pdtName" <?php echo "value='" . htmlspecialchars($product['PDTNAME']) . "'"; ?> style="width:290px;height:30px">
+                            </div>
+
+
+                            <div>
+                                <label>Weight: </label>
+                                <input type="text" name="pdtWeight" <?php echo "value='" . htmlspecialchars($product['WEIGHT']) . "'"; ?> style="width:110px;height:30px">
+                            </div>
+
+                            <div>
+                                <label> Brand: </label>
+                                <input type="text" name="pdtBrand" <?php echo "value='" .  htmlspecialchars($product['BRAND']) . "'"; ?> style="width:100px;height:30px">
+                            </div>
+
+                            <div>
+                                <label>Category: </label>
+                                <input type="text" name="pdtCategory" <?php echo "value='" . htmlspecialchars($product['CATEGORY']) . "'"; ?> style="width:230px;height:30px">
+                            </div>
+
+                            <label> Description: </label>
+                            <input type="text" name="pdtDescription" value="<?php echo htmlspecialchars($product['DESCRIPTION']); ?>" style="width:370px;height:30px">
+
+                            <?php if ($product['PDTQTY'] <= $product['THRESHOLD']) { ?>
+                                <div class="red-text bold"><?php echo htmlspecialchars('Quantity: ' . htmlspecialchars($product['PDTQTY'])); ?></div>
+                            <?php } else { ?>
+                                <div class="black-text"><?php echo htmlspecialchars('Quantity: ' . htmlspecialchars($product['PDTQTY'])); ?></div>
+                            <?php } ?>
+                            <span class="black-text"><?php echo htmlspecialchars(htmlspecialchars($product['PDTID'])); ?></span>
+                            <div align="center">
+                                <input type="submit" name="submit" value="update" class="btn-small brand z-depth-0">
+                            </div>
+                            <div class="secondary-content flex no-pad">
+                                <div>
+                                    <label>Quantity: </label>
+                                    <input type="number" name="updateqty" value="<?php echo htmlspecialchars($product['PDTQTY']); ?>" style="width:180px;height:30px">
+                                    <input type="hidden" name="updateid" value="<?php echo $product['PDTID']; ?>" />
+                                    <br>
+                                    <label>Threshold: </label>
+                                    <input type="number" name="pdtThreshold" value="<?php echo htmlspecialchars($product['THRESHOLD']); ?>" style="width:220px;height:30px">
+                                    <br>
+                                    <label>Cost Price: </label>
+                                    <input type="number" name="pdtCostPrice" value="<?php echo htmlspecialchars($product['CSTPRICE']); ?>" step="any" style="width:220px;height:30px">
+                                    <br>
+                                    <label>Product Price: </label>
+                                    <input type="number" name="pdtPrice" value="<?php echo htmlspecialchars($product['PDTPRICE']); ?>" step="any" style="width:200px;height:30px">
+                                    <br>
+                                    <label>Discount: </label>
+                                    <input type="number" name="pdtDiscount" value="<?php echo htmlspecialchars($product['PDTDISCNT']); ?>" step="any" style="width:230px;height:30px">
+                                </div>
+                            </div>
+
+                        </form>
                     </li>
                 <?php } ?>
 

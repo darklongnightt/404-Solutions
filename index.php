@@ -188,9 +188,7 @@ mysqli_close($conn);
     <?php if ($uid && $cluster > 0) { ?>
         <div class="row">
             <h5 class="brand-text bold">&nbsp&nbspRecommended For You</h5>
-            <?php for ($i = 0; $i < 12; $i++) {
-                    $recommendation = $cluster_recommendations[$i];
-                    ?>
+            <?php foreach ($cluster_recommendations as $recommendation) { ?>
                 <div class="col s3 md2">
                     <a href="/products/product_details.php?id=<?php echo $recommendation['PDTID']; ?>">
                         <div class="card z-depth-0 small">

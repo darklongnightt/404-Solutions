@@ -37,7 +37,7 @@ if ($_FILES) {
             // Update product image url in database
             $sql = "UPDATE product SET IMAGE='$url' WHERE PDTID='$pdtid';";
             if (mysqli_query($conn, $sql)) {
-                header('Location: upload_gc.php');
+                echo "<script type='text/javascript'>window.top.location='upload_gc.php';</script>";
             } else {
                 echo 'Query Error: ' . mysqli_error($conn);
             }
