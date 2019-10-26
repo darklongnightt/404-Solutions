@@ -260,29 +260,25 @@ mysqli_close($conn);
                     <div class="divider"></div>
                     <label>Payment: </label>
                     <select class="browser-default" name="payment" form="checkout">
-                        <option value="MasterCard">MasterCard</option>
                         <option value="PayPal">PayPal</option>
-                        <option value="Bank Transfer">Bank Transfer</option>
                     </select>
 
                     <br>
                     <form action="cart.php<?php if ($appliedDiscount > 0) echo '?discount=' . $couponcode; ?>" method="POST" class="center" id="checkout">
-                        <input type="submit" name="checkout" value="Checkout(<?php echo $totalQty; ?>)" class="btn red z-depth-0" />
+                        <input type="submit" name="checkout" value="Checkout(<?php echo $totalQty; ?>)" class="btn red z-depth-0" style="width: 200px;" />
                     </form>
                 </div>
             </div>
 
             <div class="card z-depth-0">
                 <div class="card-content">
-                    <h5>Discount Code</h5>
-
                     <form action="cart.php" method="POST" id="applydiscount">
-                        <label>Enter Discount Code: </label>
+                        <h6><i class="fa fa-tag" aria-hidden="true"></i>&nbspDiscount Code:</h6>
                         <input type="text" name="discountcode" />
                         <div class="red-text"><?php echo htmlspecialchars($errors['discountcode']); ?></div>
 
                         <div class="center">
-                            <input type="submit" name="applydiscount" value="APPLY" class="btn brand z-depth-0" />
+                            <input type="submit" name="applydiscount" value="APPLY" class="btn brand z-depth-0" style="width: 200px;" />
                         </div>
                     </form>
 
