@@ -235,9 +235,13 @@ mysqli_close($conn);
                             <br>
 
                             <?php if (substr($uid, 0, 3) == 'CUS' || substr($uid, 0, 3) == 'ANO') { ?>
-                                <input type="submit" name="cart" value="cart" class="btn orange z-depth-0" />
+                                <button type="submit" name="cart" class="btn orange z-depth-0" style="width: 90px;">
+                                    <i class='fa fa-cart-plus' aria-hidden='true'></i> Cart
+                                </button>
                                 <span>&nbsp</span>
-                                <input type="submit" name="favourite" value="favourite" class="btn red z-depth-0" />
+                                <button type="submit" name="favourite" class="btn red z-depth-0" style="width: 90px;">
+                                    <i class="fa fa-heart" aria-hidden="true"></i>
+                                </button>
                             <?php } else if (substr($uid, 0, 3) == 'ADM') { ?>
                                 <input type="submit" name="delete" value="delete" class="btn brand z-depth-0" />
                             <?php } ?>
