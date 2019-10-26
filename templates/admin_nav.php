@@ -91,6 +91,12 @@
             &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp
             Edit Products
         </a>
+
+        <i class="material-icons black-text">add_a_photo</i>
+        <a href="/products/upload_gc.php">
+            &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp
+            Batch Image Upload
+        </a>
     </div>
 </li>
 

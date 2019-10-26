@@ -172,21 +172,34 @@ mysqli_free_result($result);
 mysqli_close($conn);
 ?>
 
+<style>
+    .main-image {
+        width: auto;
+        max-height: 325px;
+        margin: 25px;
+    }
+
+    .main-card {
+        height: 400px;
+    }
+</style>
+
 <html>
 <?php if ($product) : ?>
     <div class="container">
         <div class="row">
             <div class="col s6 m3">
                 <br>
-                <br>
-                <img src="<?php if ($product['IMAGE']) {
-                                    echo $product['IMAGE'];
-                                } else {
-                                    echo '/img/product_icon.svg';
-                                } ?>">
+                <div class="center">
+                    <img src="<?php if ($product['IMAGE']) {
+                                        echo $product['IMAGE'];
+                                    } else {
+                                        echo '/img/product_icon.svg';
+                                    } ?>" class="grey main-image">
+                </div>
             </div>
             <div class="col s8 m4 offset-m1">
-                <div class="card z-depth-0">
+                <div class="card z-depth-0 main-card">
                     <div class="card-content">
                         <h4><?php echo htmlspecialchars($product['PDTNAME']) . ' - ' . htmlspecialchars($product['WEIGHT']); ?></h4>
                         <div class="divider"></div>
@@ -204,13 +217,15 @@ mysqli_close($conn);
 
             </div>
             <div class="col s6 m3">
-                <div class="card z-depth-0">
+                <div class="card z-depth-0 main-card">
                     <div class="card-content">
-                        <h5>Price Tag <img src="/img/price_tag.svg" class="tag-icon"> </h5>
+                        <h5><img src="/img/price_tag.svg" class="tag-icon"> Price Tag</h5>
+                        <br>
+                        <div class="divider"></div>
 
                         <?php if ($product['PDTDISCNT'] > 0) { ?>
                             <div> <?php echo htmlspecialchars('Price: $' . $product['PDTPRICE']); ?>
-                                <label class="red-text">
+                                <label class="white-text discount-label">
                                     <?php echo htmlspecialchars(' -' . $product['PDTDISCNT'] . '% OFF'); ?>
                                 </label>
                             </div>
@@ -243,7 +258,9 @@ mysqli_close($conn);
                                     <i class="fa fa-heart" aria-hidden="true"></i>
                                 </button>
                             <?php } else if (substr($uid, 0, 3) == 'ADM') { ?>
-                                <input type="submit" name="delete" value="delete" class="btn brand z-depth-0" />
+                                <button type="submit" name="delete" class="btn brand z-depth-0" style="width: 195px;">
+                                    <i class="fa fa-trash-o" aria-hidden="true"></i> Delete
+                                </button>
                             <?php } ?>
 
                         </form>
@@ -293,8 +310,9 @@ mysqli_close($conn);
 
                                     <label>
                                         <strike> <?php echo htmlspecialchars('$' . $recommendation['PDTPRICE']); ?> </strike>
+                                        &nbsp
                                     </label>
-                                    <label class="red-text">
+                                    <label class="white-text discount-label">
                                         <?php echo htmlspecialchars('-' . $recommendation['PDTDISCNT'] . '% OFF'); ?>
                                     </label>
 
@@ -306,13 +324,15 @@ mysqli_close($conn);
                                 </div>
 
                     </a>
-                    <div class="card-action right-align">
-                        <?php if (substr($uid, 0, 3) == 'CUS' || substr($uid, 0, 3) == 'ANO') { ?>
+                    <?php if (substr($uid, 0, 3) == 'CUS' || substr($uid, 0, 3) == 'ANO') { ?>
+
+                        <div class="card-action right-align">
                             <a href="product_details.php?id=<?php echo $product['PDTID'] . '&cart=' . $recommendation['PDTID']; ?>">
                                 <div class="red-text"><i class="fa fa-shopping-cart"></i> Cart</div>
                             </a>
-                        <?php } ?>
-                    </div>
+                        </div>
+
+                    <?php } ?>
                 </div>
         </div>
     </div>

@@ -23,6 +23,7 @@ h5,
 
 .tag-icon {
   width: 40px;
+  height: 40px;
   position: relative;
   top: 10px;
 }
@@ -51,4 +52,3 @@ nav i.material-icons {
 .empty-cart-btn {
   width: 250px;
 }
-
