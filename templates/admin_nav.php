@@ -28,6 +28,14 @@
             Market Basket Analysis
         </a>
         <div class="divider"></div>
+
+        <i class="material-icons black-text">show_chart</i>
+        <a href="/analysis_report/revenue_report.php">
+            &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp
+            Revenue Forecast
+        </a>
+        <div class="divider"></div>
+
     </div>
 </li>
 

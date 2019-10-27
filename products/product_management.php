@@ -201,7 +201,12 @@ if (isset($_POST['submit'])) {
         PDTDISCNT = ROUND($pdtDiscount,0), THRESHOLD = '$pdtThreshold', PDTQTY = '$updateQty' WHERE PDTID = '$pdtid'";
 
         if (mysqli_query($conn, $sql)) {
-            echo "<script type='text/javascript'>window.top.location='product_management.php';</script>";
+            // Get current link
+            $link = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ?
+                "https" : "http") . "://" . $_SERVER['HTTP_HOST'] .
+                $_SERVER['REQUEST_URI'];
+
+            echo "<script type='text/javascript'>window.top.location='$link';</script>";
         } else {
             echo 'Query Error: ' . mysqli_error($conn);
         }
@@ -299,10 +304,7 @@ mysqli_close($conn);
 
         <h6 class="grey-text"> Search </h6>
         <input type="search" name="searchItem" <?php if ($getSearchItem != '') echo " value = '" . $getSearchItem . "'"; ?>>
-
-        <div class="center">
-            <input type="submit" name="search" value="Search" class="btn brand z-depth-0">
-        </div>
+        <button type="submit" name="search" class="btn brand z-depth-0 btn-small" style="width: 230px;">Search</button>
     </form>
 </div>
 

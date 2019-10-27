@@ -273,8 +273,8 @@ mysqli_close($conn);
             <div class="card z-depth-0">
                 <div class="card-content">
                     <form action="cart.php" method="POST" id="applydiscount">
-                        <h6><i class="fa fa-tag" aria-hidden="true"></i>&nbspDiscount Code:</h6>
-                        <input type="text" name="discountcode" />
+                        <h6><i class="fa fa-tag" aria-hidden="true"></i>&nbspCoupon:</h6>
+                        <input type="text" name="discountcode" placeholder="Discount Code" />
                         <div class="red-text"><?php echo htmlspecialchars($errors['discountcode']); ?></div>
 
                         <div class="center">

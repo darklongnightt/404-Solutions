@@ -172,6 +172,13 @@ if ($getFilter !== '' && $getSearchItem == '') {
 		$title = str_replace('-', ' ', $getFilter);
 }
 
+// Get current link
+$link = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ?
+	"https" : "http") . "://" . $_SERVER['HTTP_HOST'] .
+	$_SERVER['REQUEST_URI'];
+$linkCat = (strpos($link, '?') == TRUE) ? '&' : '?';
+
+
 // Free memory of result and close connection
 mysqli_free_result($result);
 mysqli_close($conn);
@@ -244,10 +251,8 @@ mysqli_close($conn);
 
 		<h6 class="grey-text"> Search </h6>
 		<input type="search" name="searchItem" <?php if ($getSearchItem != '') echo " value = '" . $getSearchItem . "'"; ?>>
+		<button type="submit" name="submit" class="btn brand z-depth-0 btn-small" style="width: 230px;">Search</button>
 
-		<div class="center">
-			<input type="submit" name="submit" value="Search" class="btn brand z-depth-0">
-		</div>
 	</form>
 </div>
 
@@ -285,7 +290,7 @@ mysqli_close($conn);
 				<div class="card-action right-align">
 
 					<?php if (substr($uid, 0, 3) == 'CUS' || substr($uid, 0, 3) == 'ANO') { ?>
-						<a href="search.php?cart=<?php echo $product['PDTID']; ?>">
+						<a href="<?php echo $link . $linkCat . 'cart=' . $product['PDTID']; ?>">
 							<div class="red-text"><i class="fa fa-shopping-cart"></i> Add to Cart</div>
 						</a>
 					<?php } else if (substr($uid, 0, 3) == 'ADM') {
@@ -294,7 +299,7 @@ mysqli_close($conn);
 							?>
 
 						<input type="hidden" name="url" value="<?php echo $product['IMAGE']; ?>">
-						<a href="search.php?delete=<?php echo $product['PDTID'] . '&file=' . $fileName; ?>">
+						<a href="<?php echo $link  . $linkCat .  'delete=' . $product['PDTID'] . '&file=' . $fileName; ?>">
 							<div class="red-text"><i class="fa fa-trash-alt"></i> DELETE</div>
 						</a>
 					<?php } ?>
