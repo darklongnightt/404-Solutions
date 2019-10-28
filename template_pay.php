@@ -23,10 +23,16 @@ if (isset($_GET['tid'])) {
   $tid = $_GET['tid'];
 }
 
+$sql = "SELECT * FROM address WHERE USERID='$uid'";
+$result = mysqli_query($conn, $sql);
+$address = mysqli_fetch_assoc($result);
+
 echo 'Name: ' . $totalName . '<br>';
 echo 'Total Net Price: ' . $totalPrice . '<br>';
 echo 'Total Qty: ' . $totalQty . '<br>';
-echo 'Transaction ID: ' . $tid;
+echo 'Transaction ID: ' . $tid . '<br>';
+
+print_r($address);
 
 ?>
 
