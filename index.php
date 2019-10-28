@@ -96,25 +96,19 @@ mysqli_close($conn);
                 <div class="slider">
                     <ul class="slides">
                         <li>
-                            <img src="/img/banner1.jpg">
-                            <div class="caption center-align">
-                                <h3 class="black-text bold">Discount Banner 1</h3>
-                                <h5 class="light grey-text text-lighten-3">Here's our small slogan.</h5>
-                            </div>
+                            <img src="/img/banner/welcome.png">
                         </li>
                         <li>
-                            <img src="/img/banner2.jpg">
-                            <div class="caption left-align">
-                                <h3 class="black-text bold">Discount Banner 2</h3>
-                                <h5 class="light grey-text text-lighten-3">Here's our small slogan.</h5>
-                            </div>
+                            <img src="/img//banner/Christmas.png">
                         </li>
                         <li>
-                            <img src="/img/banner3.jpg">
-                            <div class="caption right-align">
-                                <h3 class="black-text bold">Discount Banner 3</h3>
-                                <h5 class="light grey-text text-lighten-3">Here's our small slogan.</h5>
-                            </div>
+                            <img src="/img/banner/month.png">
+                        </li>
+                        <li>
+                            <img src="/img/banner/CNY.png">
+                        </li>
+                        <li>
+                            <img src="/img/banner/Tib.png">
                         </li>
                     </ul>
                 </div>

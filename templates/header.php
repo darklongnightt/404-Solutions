@@ -1,3 +1,5 @@
+<!DOCTYPE html>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <head>
 	<title>SUPERDATA</title>
 	<!-- Compiled and minified CSS -->

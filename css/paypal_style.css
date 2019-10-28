@@ -1,0 +1,31 @@
+h1{
+	text-align: center;
+}
+
+.error-container {
+  text-align: center;
+}
+
+.paypalerror {
+  color: #FF4136;
+  width: 70%;
+  border: 2px solid;
+  padding-top: 20px;
+  padding-right: 20px;
+  padding-bottom: 40px;
+  padding-left: 20px;
+  border-radius: 5px;
+  display: inline-block;
+}
+
+.paypalsuccess {
+  color: #3D9970;
+  width: 70%;
+  border: 2px solid;
+  padding-top: 20px;
+  padding-right: 20px;
+  padding-bottom: 40px;
+  padding-left: 20px;
+  border-radius: 5px;
+  display: inline-block;
+}
