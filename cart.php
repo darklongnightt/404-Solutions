@@ -145,13 +145,8 @@ if (isset($_POST['checkout']) && $cartList) {
         // Product name, quantity, sum price
         $payName = substr_replace($payName, "", -2);
         $payPrice = number_format($payPrice, 2, '.', '');
-<<<<<<< HEAD
-        header("Location: template_pay.php?price=$payPrice&qty=$payQty&name=$payName");
-=======
-
-        $location = "template_pay.php?price='$payPrice'&qty='$payQty'&name='$payName'";
+        $location = "template_pay.php?price=$payPrice&qty=$payQty&name=$payName";
         header("Location: $location");
->>>>>>> c09f590f87dbde19d015ffb2859b3e8836afe166
     } else {
         echo "<script type='text/javascript'>window.top.location='/authentication/login.php';</script>";
     }
