@@ -59,9 +59,7 @@ $result = mysqli_query($conn, $sql);
 $cluster_recommendations = mysqli_fetch_all($result, MYSQLI_ASSOC);
 
 // Get top 12 most popular products from database
-$sql = "SELECT COUNT(orders.PDTID) AS FREQ, orders.PDTID, product.PDTNAME, product.PDTPRICE, product.PDTDISCNT, product.IMAGE 
-FROM orders JOIN product ON orders.PDTID = product.PDTID
-GROUP BY orders.PDTID ORDER BY FREQ DESC LIMIT 0, 12";
+$sql = "SELECT * FROM top_products ORDER BY FREQUENCY DESC";
 $result = mysqli_query($conn, $sql);
 $top_products = mysqli_fetch_all($result, MYSQLI_ASSOC);
 
@@ -132,7 +130,7 @@ mysqli_close($conn);
                                             } ?>" class="recent-icon">
 
                             <div class="white-text discount-label">
-                                <?php echo '$' . number_format(htmlspecialchars($product['PDTPRICE']) / 100 * htmlspecialchars(100 - $product['PDTDISCNT']), 2, '.', ''); ?>
+                                <?php echo '$' . number_format(htmlspecialchars($product['PDTPRICE']) / 100 * htmlspecialchars(100 - $product['PDTDISCOUNT']), 2, '.', ''); ?>
                             </div>
                         </span>
                     </a>
@@ -184,9 +182,7 @@ mysqli_close($conn);
     <?php if ($uid && $cluster > 0) { ?>
         <div class="row">
             <h5 class="brand-text bold">&nbsp&nbspRecommended For You</h5>
-            <?php for ($i = 0; $i < 12; $i++) {
-                    $recommendation = $cluster_recommendations[$i];
-                    ?>
+            <?php foreach ($cluster_recommendations as $recommendation) { ?>
                 <div class="col s3 md2">
                     <a href="/products/product_details.php?id=<?php echo $recommendation['PDTID']; ?>">
                         <div class="card z-depth-0 small">

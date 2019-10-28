@@ -23,6 +23,7 @@ h5,
 
 .tag-icon {
   width: 40px;
+  height: 40px;
   position: relative;
   top: 10px;
 }
@@ -51,6 +52,7 @@ nav i.material-icons {
 .empty-cart-btn {
   width: 250px;
 }
+<<<<<<< HEAD
 
 /* For desktop: */
 .col-1 {width: 8.33%;}
@@ -73,3 +75,5 @@ nav i.material-icons {
     width: 100%;
   }
 }
+=======
+>>>>>>> c09f590f87dbde19d015ffb2859b3e8836afe166

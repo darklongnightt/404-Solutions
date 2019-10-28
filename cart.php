@@ -32,7 +32,7 @@ if (isset($_GET['remove'])) {
     $removePdt = mysqli_real_escape_string($conn, $_GET['remove']);
     $sql = "DELETE FROM cart WHERE PDTID = '$removePdt' AND USERID = '$uid'";
     if (mysqli_query($conn, $sql)) {
-        header('Location: cart.php');
+        echo "<script type='text/javascript'>window.top.location='cart.php';</script>";
     } else {
         echo 'Query Error: ' . mysqli_error($conn);
     }
@@ -40,7 +40,8 @@ if (isset($_GET['remove'])) {
 
 if (isset($_POST['applydiscount'])) {
     $couponcode = $_POST['discountcode'];
-    header("Location: cart.php?discount=$couponcode");
+    $location = "cart.php?discount=$couponcode";
+    echo "<script type='text/javascript'>window.top.location='$location';</script>";
 }
 
 if (isset($_GET['discount'])) {
@@ -144,9 +145,15 @@ if (isset($_POST['checkout']) && $cartList) {
         // Product name, quantity, sum price
         $payName = substr_replace($payName, "", -2);
         $payPrice = number_format($payPrice, 2, '.', '');
+<<<<<<< HEAD
         header("Location: template_pay.php?price=$payPrice&qty=$payQty&name=$payName");
+=======
+
+        $location = "template_pay.php?price='$payPrice'&qty='$payQty'&name='$payName'";
+        header("Location: $location");
+>>>>>>> c09f590f87dbde19d015ffb2859b3e8836afe166
     } else {
-        header('Location: authentication/login.php');
+        echo "<script type='text/javascript'>window.top.location='/authentication/login.php';</script>";
     }
 }
 
@@ -186,7 +193,7 @@ mysqli_close($conn);
                     ?>
 
                     <div class="card z-depth-0">
-                        <a href="product_details.php?id=<?php echo $product['PDTID']; ?>">
+                        <a href="/products/product_details.php?id=<?php echo $product['PDTID']; ?>">
                             <img src="<?php if ($product['IMAGE']) {
                                                     echo $product['IMAGE'];
                                                 } else {
@@ -257,29 +264,25 @@ mysqli_close($conn);
                     <div class="divider"></div>
                     <label>Payment: </label>
                     <select class="browser-default" name="payment" form="checkout">
-                        <option value="MasterCard">MasterCard</option>
                         <option value="PayPal">PayPal</option>
-                        <option value="Bank Transfer">Bank Transfer</option>
                     </select>
 
                     <br>
                     <form action="cart.php<?php if ($appliedDiscount > 0) echo '?discount=' . $couponcode; ?>" method="POST" class="center" id="checkout">
-                        <input type="submit" name="checkout" value="Checkout(<?php echo $totalQty; ?>)" class="btn red z-depth-0" />
+                        <input type="submit" name="checkout" value="Checkout(<?php echo $totalQty; ?>)" class="btn red z-depth-0" style="width: 200px;" />
                     </form>
                 </div>
             </div>
 
             <div class="card z-depth-0">
                 <div class="card-content">
-                    <h5>Discount Code</h5>
-
                     <form action="cart.php" method="POST" id="applydiscount">
-                        <label>Enter Discount Code: </label>
-                        <input type="text" name="discountcode" value="<?php echo htmlspecialchars($couponcode); ?>" />
+                        <h6><i class="fa fa-tag" aria-hidden="true"></i>&nbspCoupon:</h6>
+                        <input type="text" name="discountcode" placeholder="Discount Code" />
                         <div class="red-text"><?php echo htmlspecialchars($errors['discountcode']); ?></div>
 
                         <div class="center">
-                            <input type="submit" name="applydiscount" value="APPLY" class="btn brand z-depth-0" />
+                            <input type="submit" name="applydiscount" value="APPLY" class="btn brand z-depth-0" style="width: 200px;" />
                         </div>
                     </form>
 

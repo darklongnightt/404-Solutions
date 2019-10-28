@@ -7,7 +7,7 @@ if (isset($_GET['delete'])) {
     $couponcode_delete = $_GET['delete'];
     $sql = "DELETE FROM coupon WHERE COUPONCODE='$couponcode_delete'";
     if (mysqli_query($conn, $sql)) {
-        header("Location: view_coupons.php");
+        echo "<script type='text/javascript'>window.top.location='view_coupons.php';</script>";
     } else {
         echo 'Query Error: ' . mysqli_error($conn);
     }

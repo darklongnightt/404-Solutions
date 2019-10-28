@@ -16,6 +16,7 @@
 
 	<script src="https://code.jquery.com/jquery-1.10.2.js"></script>
 	<script src="https://code.jquery.com/ui/1.10.4/jquery-ui.js"></script>
+	<link rel="stylesheet" href="/css/dropdown.css" type="text/css">
 </head>
 
 <?php
@@ -34,6 +35,31 @@ if (isset($_SESSION['U_UID'])) {
 	}
 }
 ?>
+
+<script>
+	// Toggle when user clicks a dropdown button
+	function toggleDrop(e) {
+		e.parentNode.getElementsByClassName("dd-content")[0].classList.toggle("show");
+
+		// Remove dropdown content of elements that are not clicked
+		var list = document.getElementsByClassName("dd-content");
+		for (i = 0; i < list.length; i++) {
+			if (list[i] != e.parentNode.getElementsByClassName("dd-content")[0])
+				list[i].classList.remove('show');
+		}
+	}
+
+	// Close the dd if the user clicks outside of it
+	window.onclick = function(e) {
+		if (!e.target.matches('.dropbtn')) {
+			var list = document.getElementsByClassName("dd-content");
+
+			for (i = 0; i < list.length; i++) {
+				list[i].classList.remove('show');
+			}
+		}
+	}
+</script>
 
 <body class="grey lighten-4">
 	<nav class="white z-depth-0">
@@ -68,8 +94,7 @@ if (isset($_SESSION['U_UID'])) {
 						} else if (substr($uid, 0, 3) == 'ANL') {
 							include('analyst_nav.php');
 						}
-						?>
-				<?php } else { ?>
+					} else { ?>
 					<li>
 						<a href="../cart.php">
 							<div class="brand-text bold">

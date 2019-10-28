@@ -92,15 +92,15 @@ if (isset($_POST['submit'])) {
                     if (mysqli_query($conn, $sql)) {
 
                         if ($customer['CHANGEPW'] == 'FALSE') {
-                            header('Location: ../index.php?login=success');
+                            echo "<script type='text/javascript'>window.top.location='/index.php';</script>";
                         } else {
-                            header('Location: change_password.php?login=success');
+                            echo "<script type='text/javascript'>window.top.location='change_password.php';</script>";
                         }
                     } else {
                         echo 'Query Error: ' . mysqli_error($conn);
                     }
                 } else {
-                    header('Location: ../analysis/cluster_report.php?login=success');
+                    echo "<script type='text/javascript'>window.top.location='/analysis_report/cluster_report.php';</script>";
                 }
             }
         } else {

@@ -8,7 +8,7 @@ if (isset($_GET['delete'])) {
     $promotioncode_delete = $_GET['delete'];
     $sql = "DELETE FROM promotion WHERE PROMOCODE='$promotioncode_delete'";
     if (mysqli_query($conn, $sql)) {
-        header("Location: view_promotions.php");
+        echo "<script type='text/javascript'>window.top.location='view_promotions.php';</script>";
     } else {
         echo 'Query Error: ' . mysqli_error($conn);
     }

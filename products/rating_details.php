@@ -70,7 +70,7 @@ if (isset($_POST['submit'])) {
 			$sql = "UPDATE orders SET DELVRYSTS='$status' WHERE ORDERID='$orderid'";
 
 			if (mysqli_query($conn, $sql)) {
-				header("Location: /my_orders.php");
+				echo "<script type='text/javascript'>window.top.location='/my_orders.php';</script>";
 			} else {
 				echo 'Query Error: ' . mysqli_error($conn);
 			}

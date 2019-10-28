@@ -119,7 +119,7 @@ if (isset($_POST['submit'])) {
                 // Successfully registered user into db, admin and analyst does not require shipping address
                 mysqli_free_result($result);
                 mysqli_close($conn);
-                header("Location: index.php");
+                echo "<script type='text/javascript'>window.top.location='/index.php';</script>";
             } else {
                 echo 'Query Error: ' . mysqli_error($conn);
             }

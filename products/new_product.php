@@ -122,7 +122,7 @@ if (isset($_POST['submit'])) {
 		$sql = "INSERT INTO product(PDTID, PDTNAME, WEIGHT, DESCRIPTION, BRAND, CATEGORY, PDTQTY, CSTPRICE, PDTPRICE, PDTDISCNT, IMAGE) 
 		VALUES('$pdtid', '$pdtname', '$weight', '$desc', '$brand', '$category', '$pdtqty', '$cstprice', '$pdtprice', '$discount', '$url')";
 		if (mysqli_query($conn, $sql)) {
-			header('Location: ../index.php');
+			echo "<script type='text/javascript'>window.top.location='/index.php';</script>";
 		} else {
 			echo 'Query Error: ' . mysqli_error($conn);
 		}
@@ -193,7 +193,7 @@ if (isset($_POST['submit'])) {
 		<div class="red-text"><?php echo htmlspecialchars($errors['cstprice']); ?></div>
 
 		<label>Discount: </label>
-		<input type="number" name="discount" min="0" value="<?php echo htmlspecialchars($discount); ?>" step=".01">
+		<input type="number" name="discount" min="0" max="99" value="<?php echo htmlspecialchars($discount); ?>" step="1">
 		<div class="red-text"><?php echo htmlspecialchars($errors['discount']); ?></div>
 
 		<div class="center">

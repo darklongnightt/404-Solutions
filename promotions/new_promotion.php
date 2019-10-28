@@ -90,7 +90,7 @@ if (isset($_POST['submit'])) {
         VALUES('$promotioncode', '$category', '$desc', '$discount', '$today', '$expiry', '$url')";
 
         if (mysqli_query($conn, $sql)) {
-            header('Location: promotions_index.php');
+			echo "<script type='text/javascript'>window.top.location='/index.php';</script>";
         } else {
             echo 'Query Error: ' . mysqli_error($conn);
         }

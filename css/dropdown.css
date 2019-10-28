@@ -1,0 +1,47 @@
+.navbar {
+  overflow: hidden;
+  background-color: #333;
+}
+
+.navbar a {
+  float: left;
+  font-size: 16px;
+  color: white;
+  text-align: center;
+  padding: 14px 16px;
+  text-decoration: none;
+}
+
+.dd {
+  float: left;
+  overflow: hidden;
+}
+
+.dd .dropbtn {
+  color: black;
+}
+
+.dd-content {
+  display: none;
+  position: absolute;
+  background-color: white;
+  min-width: 160px;
+  box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
+  z-index: 10;
+}
+
+.dd-content a {
+  float: none;
+  color: black;
+  padding-left: 10px;
+  display: block;
+  text-align: left;
+}
+
+.dd-content a:hover {
+  background-color: #ddd;
+}
+
+.show {
+  display: block;
+}

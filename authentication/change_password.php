@@ -60,7 +60,7 @@ if (isset($_POST['submit'])) {
                 $email = $customer['EMAIL'];
                 $sql = "UPDATE salt SET CHANGEPW='FALSE' WHERE EMAIL='$email'";
                 if (mysqli_query($conn, $sql)) {
-                    header("Location: ../index.php");
+                    echo "<script type='text/javascript'>window.top.location='/index.php';</script>";
                 } else {
                     echo 'Query Error: ' . mysqli_error($conn);
                 }
