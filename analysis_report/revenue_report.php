@@ -50,28 +50,15 @@ mysqli_close($conn);
 ?>
 
 <style>
-    .table-wrapper {
-        overflow-x: scroll;
-        width: 100%;
-    }
-
-    td {
-        margin: 20px;
-    }
-
-    td img {
-        max-width: 100px;
-        height: 100px;
-        text-align: center;
-    }
-
     .method-icon {
         width: 170px;
         height: auto;
     }
 
-    .longer {
-        width: 200px;
+    .title-label {
+        border-radius: 25px;
+        background: grey;
+        padding: 10px;
     }
 </style>
 
@@ -127,7 +114,7 @@ mysqli_close($conn);
             <div class="col s12 m6">
                 <div class="card z-depth-0">
                     <div class="card-content">
-                        <h5>Past Revenue</h5>
+                        <h5 class="title-label white-text center">Past Revenue</h5>
                         <table class="responsive-table centered">
                             <thead>
                                 <tr>
@@ -153,7 +140,7 @@ mysqli_close($conn);
             <div class="col s12 m6">
                 <div class="card z-depth-0">
                     <div class="card-content">
-                        <h5>Forecasted Revenue</h5>
+                        <h5 class="title-label white-text center">Forecasted Revenue</h5>
                         <table class="responsive-table centered">
                             <thead>
                                 <tr>
