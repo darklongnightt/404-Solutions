@@ -32,6 +32,11 @@
   top: -30px;
 }
 
+img {
+  width: 100%;
+  height: auto;
+}
+
 .img-container {
   width: 100px;
   min-height: 100px;
