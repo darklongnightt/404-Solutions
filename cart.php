@@ -99,7 +99,6 @@ if (isset($_POST['checkout']) && $cartList) {
             $netPrice = mysqli_real_escape_string($conn, round($totalPrice - $totalDiscount, 2));;
             $pdtId = mysqli_real_escape_string($conn, $product['PDTID']);
             $orderQty = mysqli_real_escape_string($conn, $product['CARTQTY']);
-            $deliveryStatus = mysqli_real_escape_string($conn, 'Not Delivered');
             $deliveryDate = mysqli_real_escape_string($conn, date('Y-m-d h:i:sa', strtotime(date('Y-m-d h:i:sa') . ' + 5 days')));
             $payType = mysqli_real_escape_string($conn, $_POST['payment']);
 
@@ -109,10 +108,8 @@ if (isset($_POST['checkout']) && $cartList) {
             $payPrice += $netPrice;
 
             // Insert into orders table
-            $sql = "INSERT INTO orders(TRANSACTIONID, PDTID, USERID, ORDERQTY, 
-        DELVRYSTS, PMENTTYPE, TTLPRICE, TTLDISCNTPRICE, NETPRICE, DELVRYDATE)
-        VALUES('$transactionId', '$pdtId', '$uid', '$orderQty', '$deliveryStatus', 
-        '$payType', '$totalPrice', '$totalDiscount', '$netPrice', '$deliveryDate')";
+            $sql = "INSERT INTO orders(TRANSACTIONID, PDTID, USERID, ORDERQTY, PMENTTYPE, TTLPRICE, TTLDISCNTPRICE, NETPRICE, DELVRYDATE)
+            VALUES('$transactionId', '$pdtId', '$uid', '$orderQty', '$payType', '$totalPrice', '$totalDiscount', '$netPrice', '$deliveryDate')";
 
             // Check if insert statement returns an error
             if (mysqli_query($conn, $sql)) {
@@ -145,7 +142,7 @@ if (isset($_POST['checkout']) && $cartList) {
         // Product name, quantity, sum price
         $payName = substr_replace($payName, "", -2);
         $payPrice = number_format($payPrice, 2, '.', '');
-        $location = "template_pay.php?price=$payPrice&qty=$payQty&name=$payName";
+        $location = "template_pay.php?price='$payPrice'&qty='$payQty'&name='$payName'&tid='$transactionId'";
         header("Location: $location");
     } else {
         echo "<script type='text/javascript'>window.top.location='/authentication/login.php';</script>";

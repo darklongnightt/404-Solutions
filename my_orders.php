@@ -18,11 +18,11 @@ LIMIT $startingLimit, $resultsPerPage";
 $result = mysqli_query($conn, $sql);
 $orderList = mysqli_fetch_all($result, MYSQLI_ASSOC);
 
-// Change status of an order entry to delivered
+// Change status of an order entry to 'Confirmed Delivery'
 if (isset($_GET['change_status'])) {
-    $status = mysqli_real_escape_string($conn, 'Delivered');
+    $status = 'Confirmed Delivery';
     $orderId = mysqli_real_escape_string($conn, $_GET['change_status']);
-    $sql = "UPDATE orders SET DELVRYSTS = '$status' WHERE ORDERID = '$orderId'";
+    $sql = "UPDATE orders SET STATUS = '$status' WHERE ORDERID = '$orderId'";
     if (mysqli_query($conn, $sql)) {
         echo "<script type='text/javascript'>window.top.location='/my_orders.php';</script>";
     } else {
@@ -65,26 +65,26 @@ mysqli_close($conn);
 
                         <div> <?php echo htmlspecialchars('Ordered Quantity: ' . $order['ORDERQTY']); ?> </div>
 
-                        <?php if ($order['DELVRYSTS'] == "Delivered") { ?>
+                        <?php if ($order['STATUS'] == "Confirmed Delivery" || $order['STATUS'] == "Confirmed Payment") { ?>
                             <strong>
-                                <span class="green-text lighten-2"><?php echo htmlspecialchars($order['DELVRYSTS']); ?></span>
+                                <span class="green-text lighten-2"><?php echo htmlspecialchars($order['STATUS']); ?></span>
                             </strong>
-                        <?php } else if ($order['DELVRYSTS'] == "Not Delivered") { ?>
+                        <?php } else if ($order['STATUS'] == "Delivering" || $order['STATUS'] == "Pending Payment") { ?>
                             <strong>
-                                <span class="orange-text lighten"><?php echo htmlspecialchars($order['DELVRYSTS']); ?></span>
+                                <span class="orange-text lighten"><?php echo htmlspecialchars($order['STATUS']); ?></span>
                             </strong>
-                        <?php } else if ($order['DELVRYSTS'] == "Delivered & Reviewed") { ?>
+                        <?php } else if ($order['STATUS'] == "Delivered & Reviewed") { ?>
                             <strong>
-                                <span class="blue-text lighten"><?php echo htmlspecialchars($order['DELVRYSTS']); ?></span>
+                                <span class="blue-text lighten"><?php echo htmlspecialchars($order['STATUS']); ?></span>
                             </strong>
                         <?php } ?>
 
                         <div class="card-action right-align">
-                            <?php if ($order['DELVRYSTS'] == "Delivered") { ?>
+                            <?php if ($order['STATUS'] == "Confirmed Delivery") { ?>
                                 <a href="/products/rating_details.php?id=<?php echo $order['PDTID'] . "&order=" . $order['ORDERID']; ?>" class="brand-text">Rate & Review</a>
-                            <?php } else if ($order['DELVRYSTS'] == "Not Delivered") { ?>
+                            <?php } else if ($order['STATUS'] == "Delivering") { ?>
                                 <a href="my_orders.php?change_status=<?php echo $order['ORDERID']; ?>" class="brand-text">Confirm Delivery</a>
-                            <?php } else if ($order['DELVRYSTS'] == "Delivered & Reviewed") { ?>
+                            <?php } else if ($order['STATUS'] == "Delivered & Reviewed") { ?>
                                 <span class="brand-text">Thank You For Your Feedback!</span>
                             <?php } ?>
 

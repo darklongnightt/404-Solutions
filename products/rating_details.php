@@ -67,7 +67,7 @@ if (isset($_POST['submit'])) {
 		if (mysqli_query($conn, $sql)) {
 			// Update order status to "REVIEWED"
 			$status = 'Delivered & Reviewed';
-			$sql = "UPDATE orders SET DELVRYSTS='$status' WHERE ORDERID='$orderid'";
+			$sql = "UPDATE orders SET STATUS='$status' WHERE ORDERID='$orderid'";
 
 			if (mysqli_query($conn, $sql)) {
 				echo "<script type='text/javascript'>window.top.location='/my_orders.php';</script>";
