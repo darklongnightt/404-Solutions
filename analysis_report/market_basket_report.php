@@ -147,7 +147,7 @@ $orders_count = mysqli_fetch_assoc($result)['COUNT(*)'];
         <?php include("../templates/pagination_output.php"); ?>
 
     <?php else : ?>
-        <div>No Top Products Generated!</div>
+        <div>No Market Basket Report Generated!</div>
     <?php endif ?>
 
 </div>
