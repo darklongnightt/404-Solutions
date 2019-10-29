@@ -3,57 +3,57 @@
 include_once 'config.php';
 include("../config/db_connect.php");
 include("../templates/header.php");
+$uid = mysqli_real_escape_string($conn, $_SESSION['U_UID']);
 
 $currDir = "paypal/success.php";
 
 // If transaction data is available in the URL 
-if (!empty($_GET['item_number']) && !empty($_GET['tx']) && !empty($_GET['amt']) && !empty($_GET['cc']) && !empty($_GET['st'])) {
+if (!empty($_GET['tid']) && !empty($_GET['item_number']) && !empty($_GET['tx']) && !empty($_GET['amt']) && !empty($_GET['cc']) && !empty($_GET['st'])) {
     // Get transaction information from URL 
     $item_number = $_GET['item_number'];
+    $tid = $_GET['tid'];
     $txn_id = $_GET['tx'];
     $payment_gross = $_GET['amt'];
     $currency_code = $_GET['cc'];
     $payment_status = $_GET['st'];
 
-    // Get product info from the database 
-    // $productResult = $conn->query("SELECT * FROM products WHERE id = ".$item_number); 
-    // $productRow = $productResult->fetch_assoc(); 
-
-    // Check if transaction data exists with the same TXN ID. 
-    // $prevPaymentResult = $conn->query("SELECT * FROM payments WHERE txn_id = '".$txn_id."'"); 
-
-    // if($prevPaymentResult->num_rows > 0){ 
-    //     $paymentRow = $prevPaymentResult->fetch_assoc(); 
-    //     $payment_id = $paymentRow['payment_id']; 
-    //     $payment_gross = $paymentRow['payment_gross']; 
-    //     $payment_status = $paymentRow['payment_status']; 
-    // }else{ 
-    //     // Insert tansaction data into the database 
-    //     $insert = $conn->query("INSERT INTO payments(item_number,txn_id,payment_gross,currency_code,payment_status) VALUES('".$item_number."','".$txn_id."','".$payment_gross."','".$currency_code."','".$payment_status."')"); 
-    //     $payment_id = $conn->insert_id; 
-    // } 
 }
 ?>
 <link rel="stylesheet" type="text/css" href="/css/paypal_style.css">
 
 <div class="container">
-    <div class="error-container">
-        <!-- <?php if (!empty($payment_id)) { ?> 
-            <p><b>Reference Number:</b> <?php echo $payment_id; ?></p>
-            <h4>Product Information</h4>
-            <p><b>Name:</b> <?php echo $productRow['name']; ?></p>
-            <p><b>Price:</b> <?php echo $productRow['price']; ?></p>
-             <?php } else { ?>
-            <h1 class="error">Your Payment has Failed</h1>
-        <?php } ?> -->
-        <h1 class="paypalsuccess">Your Payment has been Successful</h1>
+	<div class="error-container">
+		<h1 class="paypalsuccess">Your Payment has been Successful</h1>
 
-        <h4>Payment Information</h4>
+			<h4>Payment Information</h4>
 
-        <p><b>Transaction ID:</b> <?php echo $txn_id; ?></p>
-        <p><b>Paid Amount:</b> <?php echo $payment_gross; ?></p>
-        <p><b>Payment Status:</b> <?php echo $payment_status; ?></p>
+			<p><b>Order ID:</b> <?php echo $tid; ?></p>
+			<p><b>Paypal Transaction ID:</b> <?php echo $txn_id; ?></p>
+			<p><b>Paid Amount:</b> <?php echo $payment_gross; ?></p>
+			<p><b>Payment Status:</b> <?php echo $payment_status; ?></p>
+			
+		 <?php 
+        		if (!empty($_GET['tid'])) 
+        		{
 
+        			// Change status of an order entry to 'Confirmed Payment'
+        			$status = 'Confirmed Payment';
+        			$sql = "UPDATE orders SET STATUS = '$status' WHERE TRANSACTIONID = '$tid'";
+				    if (mysqli_query($conn, $sql)) {
+				        //header("Refresh:0");
+				        sleep(3);
+				        echo "<script type='text/javascript'>window.top.location='/my_orders.php';</script>";
+				    } else {
+				        echo 'Query Error: ' . mysqli_error($conn);
+				    }
+				} 
+				else { ?>
+			<h1 class="paypalerror">Order ID invalid</h1>
+		<?php 
+			} 
+	// Free memory of result and close connection
+	mysqli_close($conn);
+	?>
 
     </div>
 </div>
