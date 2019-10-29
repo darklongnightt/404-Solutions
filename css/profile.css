@@ -1,0 +1,55 @@
+.profile-logo {
+  height: 100px;
+  width: 100px;
+  font-size: 40px;
+  font-weight: bold;
+  padding: 30px 0px;
+  text-shadow: 2px 2px grey;
+}
+
+.sidenav {
+  padding: 0 23.5px 0 31px;
+  margin-top: 64px;
+  box-shadow: 2px 0 rgba(0, 0, 0, 0.14);
+  text-decoration: none;
+}
+
+.sidenav li {
+  padding-top: 20px;
+  padding-bottom: 10px;
+  font-size: 20px;
+}
+
+.sidenav li:hover {
+  background-color: whitesmoke;
+  font-size: 23px;
+}
+
+.top-padding {
+  padding-top: 40px;
+}
+
+.right-contents {
+  padding-top: 5px;
+  padding-left: 400px;
+  padding-right: 120px;
+}
+
+.prof-detail-container {
+  padding: 0 60px 0 60px;
+}
+.prof-container {
+  background-color: white;
+  padding: 20px 20px 20px 20px;
+  box-shadow: 10px 10px 5px grey;
+  color: blue;
+}
+
+.prof-add-container {
+  display: inline-block;
+  border: 5px solid black;
+  box-shadow: 10px 10px 5px grey;
+  padding: 10px 30px 10px;
+  width: 500px;
+  height: 500px;
+}
