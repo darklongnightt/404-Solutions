@@ -33,7 +33,7 @@ $orders_count = mysqli_fetch_assoc($result)['COUNT(*)'];
 
     td img {
         max-width: 100px;
-        height: 100px;
+        height: auto;
         text-align: center;
     }
 
@@ -99,8 +99,8 @@ $orders_count = mysqli_fetch_assoc($result)['COUNT(*)'];
         </div>
     </div>
     <?php if ($products) : ?>
-        <div class="table-wrapper white">
-            <table class="responsive-table tabble-wrapper centered">
+        <div class="white">
+            <table class="responsive-table centered">
                 <thead>
                     <tr>
                         <?php

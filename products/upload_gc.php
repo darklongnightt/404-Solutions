@@ -3,6 +3,8 @@ include("../config/db_connect.php");
 include("../storage_connect.php");
 include("../templates/header.php");
 
+$files = array();
+
 // If upload button is clicked
 if ($_FILES) {
     if ($_FILES["uploaded_files"]["error"][0] > 0) {
@@ -46,18 +48,100 @@ if ($_FILES) {
 }
 ?>
 
-        <!DOCTYPE HTML>
-        <html>
-        <div class="container">
-            <h4>Upload Files</h4>
+<script>
+    function triggerClick(e) {
+        displayImage(e);
+    }
 
-            <form action="upload_gc.php" enctype="multipart/form-data" method="post">
-                Files to upload: <br>
-                <input type="file" name="uploaded_files[]" size="10000" multiple="multiple">
-                <input type="submit" value="Upload All">
-            </form>
+    function displayImage(e) {
+        if (e.files) {
+            for (var i = 0; i < e.files.length; i++) {
+                console.log(e.files[i]);
+                var filename = e.files[i].name;
+                <?php
+                $filename = "<script>document.write(filename);</script>";
+                array_push($files, $filename)
+                ?>
+            }
+        }
+
+        <?php print_r($files); ?>
+
+        if (e.files[0]) {
+            var reader = new FileReader();
+            reader.onload = function(e) {
+                document.querySelector('#preview').setAttribute('src', e.target.result);
+            }
+            reader.readAsDataURL(e.files[0]);
+        }
+    }
+</script>
+
+<!DOCTYPE HTML>
+<html>
+<div class="container">
+    <h4 class="center">Batch Image Upload</h4>
+
+    <div class="row">
+
+        <div class="col m4 s8">
+            <div class="card z-depth-0 small">
+                <div class="card-content">
+                    <h6 class="bold brand-text center">Before You Upload</h6>
+                    <ol>
+                        <li>Rename image to that of existing product id</li>
+                        <li>Upload as many as required</li>
+                    </ol>
+                </div>
+            </div>
         </div>
 
-        <?php include("../templates/footer.php"); ?>
+        <div class="col m4 s8">
+            <div class="card z-depth-0 small">
+                <div class="card-content center">
+                    <h6 class="brand-text bold">SuperData - Google Cloud Storage</h6>
 
-        </html>
+                    <br>
+                    <img src="../img/upload_cloud.png" class="method-icon" style="width: 150px; height: auto;">
+                </div>
+            </div>
+        </div>
+
+        <div class="col m4 s8">
+            <div class="card z-depth-0 small">
+                <div class="card-content">
+
+                    <h6 class="bold brand-text">Extensions Supported</h6>
+                    <ul>
+                        <li style="list-style-type: initial; margin-left: 15px">bmp</li>
+                        <li style="list-style-type: initial; margin-left: 15px">gif</li>
+                        <li style="list-style-type: initial; margin-left: 15px">jpg</li>
+                        <li style="list-style-type: initial; margin-left: 15px">jpeg</li>
+                        <li style="list-style-type: initial; margin-left: 15px">png</li>
+                    </ul>
+
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="card z-depth-0 EditForm">
+        <div class="card-content center">
+            <form action="upload_gc.php" enctype="multipart/form-data" method="post">
+                <h6 class="bold"> Upload Images </h6>
+                <div class="center">
+                    <label for="imageUpload"> <img src="/img/upload_placeholder1.png" id="preview" onclick="triggerClick()" style="width: 200px; margin: 20px; border-style: dotted; border-radius: 5px;"> </label>
+                    <input type="file" name="uploaded_files[]" id="imageUpload" size="10000" multiple="multiple" onchange="displayImage(this)" style="display: none;">
+                </div>
+
+                <input type="submit" value="Upload All" class="btn brand">
+            </form>
+        </div>
+    </div>
+
+</div>
+
+<?php include("../templates/footer.php"); ?>
+
+</html>
