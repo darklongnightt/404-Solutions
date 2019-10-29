@@ -120,7 +120,7 @@ if (isset($_POST['submit'])) {
                 mysqli_free_result($result);
                 mysqli_close($conn);
 
-                setcookie('LASTACTION', 'CREATESTAFF', time() + (120), "/");
+                $_SESSION['LASTACTION'] = 'CREATESTAFF';
                 echo "<script type='text/javascript'>window.top.location='/index.php';</script>";
             } else {
                 echo 'Query Error: ' . mysqli_error($conn);

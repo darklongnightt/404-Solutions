@@ -5,6 +5,14 @@ include('../templates/header.php');
 if (substr($uid, 0, 3) == 'ADM')
 	include('../storage_connect.php');
 
+// Check for toast message
+if (isset($_SESSION['LASTACTION'])) {
+	if ($_SESSION['LASTACTION'] == 'DELETEPDT') {
+		echo "<script>M.toast({html: 'Successfully deleted product!'});</script>";
+	}
+	$_SESSION['LASTACTION'] = 'NONE';
+}
+
 // Store previously selected variables
 $rangeCheck = $getSearchItem = $getSort = $getFilter = '';
 $limit = TRUE;
@@ -158,7 +166,7 @@ if (isset($_GET['delete'])) {
 
 	// Checks if query is successful
 	if (mysqli_query($conn, $sql)) {
-		echo "<script>M.toast({html: 'Successfully deleted product!'});</script>";
+		$_SESSION['LASTACTION'] = 'DELETEPDT';
 	} else {
 		echo 'Query Error' . mysqli_error($conn);
 	}

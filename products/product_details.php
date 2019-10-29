@@ -121,6 +121,7 @@ if (isset($_POST['delete'])) {
 
     // Checks if query is successful
     if (mysqli_query($conn, $sql)) {
+        $_SESSION['LASTACTION'] = 'DELETEPDT';
         echo "<script type='text/javascript'>window.top.location='/index.php';</script>";
     } else {
         echo 'Query Error' . mysqli_error($conn);

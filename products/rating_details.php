@@ -70,6 +70,7 @@ if (isset($_POST['submit'])) {
 			$sql = "UPDATE orders SET STATUS='$status' WHERE ORDERID='$orderid'";
 
 			if (mysqli_query($conn, $sql)) {
+				$_SESSION['LASTACTION'] = 'REVIEWED';
 				echo "<script type='text/javascript'>window.top.location='/my_orders.php';</script>";
 			} else {
 				echo 'Query Error: ' . mysqli_error($conn);

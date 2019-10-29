@@ -35,6 +35,8 @@ if (isset($_GET['generate'])) {
             echo 'Query Error: ' . mysqli_error($conn);
         }
     }
+
+    echo "<script>M.toast({html: 'Successfully generated top 12 products!'});</script>";
 }
 
 // Get all top products 

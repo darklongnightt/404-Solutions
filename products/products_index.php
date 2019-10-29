@@ -30,7 +30,7 @@ include("../templates/header.php");
                 </div>
             </a>
         </div>
-		<div class="col m4 s8 offset-m2">
+        <div class="col m4 s8 offset-m2">
             <a href="product_management.php">
                 <div class="card small">
                     <div class="card-content">

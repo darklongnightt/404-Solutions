@@ -6,13 +6,13 @@ $password = $email = $checkPassword = '';
 $errors = array('password' => '', 'email' => '');
 
 // Render toast popups
-if (isset($_COOKIE['LASTACTION'])) {
+if (isset($_SESSION['LASTACTION'])) {
 
-    if ($_COOKIE['LASTACTION'] == 'RESET') {
+    if ($_SESSION['LASTACTION'] == 'RESET') {
         echo "<script>M.toast({html: 'Reset password email successfully sent!'});</script>";
     }
 
-    setcookie('LASTACTION', 'NONE', time() + (120), "/");
+    $_SESSION['LASTACTION'] = 'NONE';
 }
 
 //Checks if button of name="submit" is clicked
@@ -68,7 +68,7 @@ if (isset($_POST['submit'])) {
 
                 if (substr($_SESSION['U_UID'], 0, 3) == "CUS") {
                     // Update cart from cookies
-                    $ano = $_COOKIE['UID'];
+                    $ano = $__SESSION['UID'];
                     $cus = $_SESSION['U_UID'];
 
                     // Get cart items from guest user
@@ -101,7 +101,7 @@ if (isset($_POST['submit'])) {
                     $sql = "DELETE FROM cart WHERE USERID='$ano'";
                     if (mysqli_query($conn, $sql)) {
 
-                        setcookie('LASTACTION', 'LOGIN', time() + (120), "/");
+                        $_SESSION["LASTACTION"] = "LOGIN";
                         if ($customer['CHANGEPW'] == 'FALSE') {
                             echo "<script type='text/javascript'>window.top.location='/index.php';</script>";
                         } else {
@@ -111,8 +111,8 @@ if (isset($_POST['submit'])) {
                         echo 'Query Error: ' . mysqli_error($conn);
                     }
                 } else {
-                    setcookie('LASTACTION', 'LOGIN', time() + (120), "/");
 
+                    $_SESSION["LASTACTION"] = "LOGIN";
                     if ($customer['CHANGEPW'] == 'FALSE') {
                         echo "<script type='text/javascript'>window.top.location='/analysis_report/cluster_report.php';</script>";
                     } else {

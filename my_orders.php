@@ -1,7 +1,14 @@
 <?php
 include("config/db_connect.php");
 include('templates/header.php');
-$uid = mysqli_real_escape_string($conn, $_SESSION['U_UID']);
+
+// Check for toast message
+if (isset($_SESSION['LASTACTION'])) {
+    if ($_SESSION['LASTACTION'] == 'REVIEWED') {
+        echo "<script>M.toast({html: 'Successfully reviewed product!'});</script>";
+    }
+    $_SESSION['LASTACTION'] = 'NONE';
+}
 
 // Pagination for all results
 $currDir = "my_orders.php";
