@@ -1,5 +1,3 @@
-<!DOCTYPE html>
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <head>
 	<title>SUPERDATA</title>
 	<!-- Compiled and minified CSS -->
@@ -13,10 +11,14 @@
 	<link rel="stylesheet" href="/css/form_update.css" type="text/css">
 	<link rel="stylesheet" href="/css/analytics.css" type="text/css">
 	<link rel="stylesheet" href="/css/homepage.css" type="text/css">
+	<link rel="stylesheet" href="/css/profile.css" type="text/css">
 	<link rel="stylesheet" href="/css/dropdown.css" type="text/css">
 
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
 	<script src="https://code.jquery.com/jquery-1.10.2.js"></script>
 	<script src="https://code.jquery.com/ui/1.10.4/jquery-ui.js"></script>
+
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 </head>
 
 <?php
@@ -80,7 +82,7 @@ if (isset($_SESSION['U_UID'])) {
 
 				<?php if (substr($uid, 0, 3) !== 'ANO') { ?>
 					<li class="right">
-						<a href="../index.php" class="btn btn-floating red"><?php echo $_SESSION['U_INITIALS'] ?></a>
+						<a href="../profile.php" class="btn btn-floating red"><?php echo $_SESSION['U_INITIALS'] ?></a>
 					</li>
 
 					<li class="right">

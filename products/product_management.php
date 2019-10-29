@@ -2,6 +2,14 @@
 include("../config/db_connect.php");
 include('../templates/header.php');
 
+// Check for toast message
+if (isset($_SESSION['LASTACTION'])) {
+    if ($_SESSION['LASTACTION'] == 'UPDATEPDT') {
+        echo "<script>M.toast({html: 'Successfully updated product!'});</script>";
+    }
+    $_SESSION['LASTACTION'] = 'NONE';
+}
+
 // Store previously selected variables
 $rangeCheck = $getSearchItem = $getSearchR = $getSort = $getFilter = '';
 $limit = TRUE;
@@ -206,6 +214,7 @@ if (isset($_POST['submit'])) {
                 "https" : "http") . "://" . $_SERVER['HTTP_HOST'] .
                 $_SERVER['REQUEST_URI'];
 
+            $_SESSION['LASTACTION'] = 'UPDATEPDT';
             echo "<script type='text/javascript'>window.top.location='$link';</script>";
         } else {
             echo 'Query Error: ' . mysqli_error($conn);

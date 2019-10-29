@@ -52,7 +52,8 @@ if (isset($_POST['submit'])) {
         VALUES('$couponcode', '$desc', '$discount', '$expiry')";
 
         if (mysqli_query($conn, $sql)) {
-			echo "<script type='text/javascript'>window.top.location='/index.php';</script>";
+            $_SESSION['LASTACTION'] = 'NEWCOUPON';
+            echo "<script type='text/javascript'>window.top.location='/index.php';</script>";
         } else {
             echo 'Query Error: ' . mysqli_error($conn);
         }

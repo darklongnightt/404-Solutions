@@ -153,6 +153,7 @@ if (isset($_POST['submit'])) {
                 // Delete guest items from cart
                 $sql = "DELETE FROM cart WHERE USERID='$ano'";
                 if (mysqli_query($conn, $sql)) {
+                    setcookie('LASTACTION', 'REGISTER', time() + (120), "/");
                     echo "<script type='text/javascript'>window.top.location='shipping_details.php';</script>";
                 } else {
                     echo 'Query Error: ' . mysqli_error($conn);

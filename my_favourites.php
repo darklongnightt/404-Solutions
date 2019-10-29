@@ -33,7 +33,7 @@ if (isset($_GET['addcart'])) {
     }
 
     if (mysqli_query($conn, $sql)) {
-        echo 'Successfully added product to cart!';
+        echo "<script>M.toast({html: 'Successfully added to cart!'});</script>";
     } else {
         echo 'Query Error: ' . mysqli_error($conn);
     }
@@ -44,10 +44,19 @@ if (isset($_GET['remove'])) {
     $removePdt = mysqli_real_escape_string($conn, $_GET['remove']);
     $sql = "DELETE FROM favourite WHERE PDTID = '$removePdt' AND USERID = '$uid'";
     if (mysqli_query($conn, $sql)) {
+        setcookie('LASTACTION', 'REMOVEFAVE', time() + (120), "/");
         echo "<script type='text/javascript'>window.top.location='my_favourites.php';</script>";
     } else {
         echo 'Query Error: ' . mysqli_error($conn);
     }
+}
+
+// Render toast popups
+if (isset($_COOKIE['LASTACTION'])) {
+    if ($_COOKIE['LASTACTION'] == 'REMOVEFAVE')
+        echo "<script>M.toast({html: 'Successfully removed from favourites!'});</script>";
+
+    setcookie('LASTACTION', 'NONE', time() + (120), "/");
 }
 
 // Free memory of result and close connection
@@ -89,15 +98,17 @@ mysqli_close($conn);
                     <div class="flow-text"> <?php echo htmlspecialchars('$' . number_format($netPrice, 2, '.', '')); ?> </div>
 
                     <div class="card-action right-align">
-                        <a href="my_favourites.php?remove=<?php echo $product['PDTID']; ?>" class="brand-text">Remove</a>
+                        <a href="my_favourites.php?remove=<?php echo $product['PDTID']; ?>" class="brand-text">
+                            <i class="fa fa-trash" aria-hidden="true"></i> Remove
+                        </a>
                         <a href="my_favourites.php?addcart=<?php echo $product['PDTID']; ?>" class="red-text">
                             <i class="fa fa-shopping-cart"></i> Add to Cart
                         </a>
                     </div>
                 </div>
             </div>
-        <?php include("templates/pagination_output.php");
-            }
+        <?php }
+            include("templates/pagination_output.php");
         } else { ?>
         <div class="center">
             <img src="img/empty_fave.png" class="center empty-cart">
@@ -107,7 +118,7 @@ mysqli_close($conn);
         <br>
         <br>
         <h6 class="center">Your favourite list is empty!</h6>
-        <a href="index.php">
+        <a href="/products/search.php">
             <div class="center">
                 <button class="btn brand z-depth-0 empty-cart-btn">Continue Browsing</button>
             </div>

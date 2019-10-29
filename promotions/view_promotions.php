@@ -3,11 +3,20 @@ include("../config/db_connect.php");
 include("../templates/header.php");
 include('../storage_connect.php');
 
+// Check for toast message
+if (isset($_SESSION['LASTACTION'])) {
+    if ($_SESSION['LASTACTION'] == 'DELETEPROMO') {
+        echo "<script>M.toast({html: 'Successfully deleted promotion!'});</script>";
+    }
+    $_SESSION['LASTACTION'] = 'NONE';
+}
+
 // Check if delete button is clicked
 if (isset($_GET['delete'])) {
     $promotioncode_delete = $_GET['delete'];
     $sql = "DELETE FROM promotion WHERE PROMOCODE='$promotioncode_delete'";
     if (mysqli_query($conn, $sql)) {
+        $_SESSION['LASTACTION'] = 'DELETEPROMO';
         echo "<script type='text/javascript'>window.top.location='view_promotions.php';</script>";
     } else {
         echo 'Query Error: ' . mysqli_error($conn);

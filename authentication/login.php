@@ -5,6 +5,16 @@ include("../templates/header.php");
 $password = $email = $checkPassword = '';
 $errors = array('password' => '', 'email' => '');
 
+// Render toast popups
+if (isset($_SESSION['LASTACTION'])) {
+
+    if ($_SESSION['LASTACTION'] == 'RESET') {
+        echo "<script>M.toast({html: 'Reset password email successfully sent!'});</script>";
+    }
+
+    $_SESSION['LASTACTION'] = 'NONE';
+}
+
 //Checks if button of name="submit" is clicked
 if (isset($_POST['submit'])) {
     //Gets data from the POST request 
@@ -58,7 +68,7 @@ if (isset($_POST['submit'])) {
 
                 if (substr($_SESSION['U_UID'], 0, 3) == "CUS") {
                     // Update cart from cookies
-                    $ano = $_COOKIE['UID'];
+                    $ano = $__SESSION['UID'];
                     $cus = $_SESSION['U_UID'];
 
                     // Get cart items from guest user
@@ -91,6 +101,7 @@ if (isset($_POST['submit'])) {
                     $sql = "DELETE FROM cart WHERE USERID='$ano'";
                     if (mysqli_query($conn, $sql)) {
 
+                        $_SESSION["LASTACTION"] = "LOGIN";
                         if ($customer['CHANGEPW'] == 'FALSE') {
                             echo "<script type='text/javascript'>window.top.location='/index.php';</script>";
                         } else {
@@ -100,12 +111,19 @@ if (isset($_POST['submit'])) {
                         echo 'Query Error: ' . mysqli_error($conn);
                     }
                 } else {
-                    echo "<script type='text/javascript'>window.top.location='/analysis_report/cluster_report.php';</script>";
+
+                    $_SESSION["LASTACTION"] = "LOGIN";
+                    if ($customer['CHANGEPW'] == 'FALSE') {
+                        echo "<script type='text/javascript'>window.top.location='/analysis_report/cluster_report.php';</script>";
+                    } else {
+                        echo "<script type='text/javascript'>window.top.location='change_password.php';</script>";
+                    }
                 }
             }
         } else {
             echo 'Query Error: ' . mysqli_error($conn);
         }
+
 
         mysqli_free_result($result);
         mysqli_close($conn);

@@ -97,7 +97,9 @@ if (isset($_POST['submit'])) {
     }
 
     // Sends email to customers in the cluster
+    $count = sizeof($cus_list);
     sendEmail($cluster_emails, $coupon_use['DISCOUNT'], $coupon_use['EXPIRY'], $coupon_use['DESCRIPTION'], $coupon_use['COUPONCODE']);
+    echo "<script>M.toast({html: 'Successfully sent coupon to $count users!'});</script>";
 }
 
 // Free memory of result and close connection

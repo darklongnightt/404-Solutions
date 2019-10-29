@@ -3,3 +3,4 @@
     session_unset();
     session_destroy();
     echo "<script type='text/javascript'>window.top.location='/index.php';</script>";
+    setcookie('LASTACTION', 'LOGOUT', time() + (120), "/");

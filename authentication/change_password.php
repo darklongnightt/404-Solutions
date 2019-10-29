@@ -5,6 +5,16 @@ include("../templates/header.php");
 $errors = array('oldpassword' => '', 'newpassword1' => '', 'newpassword2' => '');
 $oldpassword = $newpassword1 = $newpassword2 = '';
 
+// Render toast popups
+if (isset($_SESSION['LASTACTION'])) {
+
+    if ($_SESSION['LASTACTION'] == 'LOGIN') {
+        echo "<script>M.toast({html: 'You are successfully logged in!'});</script>";
+    }
+
+    $_SESSION['LASTACTION'] = 'NONE';
+}
+
 // Checks if change password button is pressed
 if (isset($_POST['submit'])) {
 
@@ -60,6 +70,7 @@ if (isset($_POST['submit'])) {
                 $email = $customer['EMAIL'];
                 $sql = "UPDATE salt SET CHANGEPW='FALSE' WHERE EMAIL='$email'";
                 if (mysqli_query($conn, $sql)) {
+                    $_SESSION['LASTACTION'] = 'CHANGEPW';
                     echo "<script type='text/javascript'>window.top.location='/index.php';</script>";
                 } else {
                     echo 'Query Error: ' . mysqli_error($conn);

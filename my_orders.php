@@ -1,7 +1,14 @@
 <?php
 include("config/db_connect.php");
 include('templates/header.php');
-$uid = mysqli_real_escape_string($conn, $_SESSION['U_UID']);
+
+// Check for toast message
+if (isset($_SESSION['LASTACTION'])) {
+    if ($_SESSION['LASTACTION'] == 'REVIEWED') {
+        echo "<script>M.toast({html: 'Successfully reviewed product!'});</script>";
+    }
+    $_SESSION['LASTACTION'] = 'NONE';
+}
 
 // Pagination for all results
 $currDir = "my_orders.php";
@@ -103,7 +110,7 @@ mysqli_close($conn);
             <br>
             <br>
             <h6 class="center">Your order history is empty!</h6>
-            <a href="index.php">
+            <a href="/products/search.php">
                 <div class="center">
                     <button class="btn brand z-depth-0 empty-cart-btn">Continue Browsing</button>
                 </div>

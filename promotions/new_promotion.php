@@ -37,19 +37,19 @@ if (isset($_POST['submit'])) {
 
     // Check for image selected
     if ($_FILES["fileToUpload"]["size"] !== 0) {
-		// Checks if file is an image
-		$imageCheck = getimagesize($_FILES["fileToUpload"]["tmp_name"]);
+        // Checks if file is an image
+        $imageCheck = getimagesize($_FILES["fileToUpload"]["tmp_name"]);
 
-		if (!$imageCheck) {
-			$errors['image'] = "Invalid image file selected!";
-		} else {
-			// Get the file name and temp file path
-			$fileName = $_FILES['fileToUpload']['name'];
-			$tmpFilePath = $_FILES['fileToUpload']['tmp_name'];
-		}
-	} else {
-		$errors['image'] = "Product image is required!";
-	}
+        if (!$imageCheck) {
+            $errors['image'] = "Invalid image file selected!";
+        } else {
+            // Get the file name and temp file path
+            $fileName = $_FILES['fileToUpload']['name'];
+            $tmpFilePath = $_FILES['fileToUpload']['tmp_name'];
+        }
+    } else {
+        $errors['image'] = "Product image is required!";
+    }
 
     // Checks if form is error free
     if (!array_filter($errors)) {
@@ -71,26 +71,27 @@ if (isset($_POST['submit'])) {
         } while (!$unique);
 
         // Resizing image to 300 x 300
-		$pic_type = strtolower(strrchr($fileName, "."));
-		$pic_name = "../temp/temp$pic_type";
-		move_uploaded_file($tmpFilePath, $pic_name);
-		if (true !== ($pic_error = @image_resize($pic_name, $tmpFilePath, 800, 300))) {
-			$tmpFilePath = $pic_name;
+        $pic_type = strtolower(strrchr($fileName, "."));
+        $pic_name = "../temp/temp$pic_type";
+        move_uploaded_file($tmpFilePath, $pic_name);
+        if (true !== ($pic_error = @image_resize($pic_name, $tmpFilePath, 800, 300))) {
+            $tmpFilePath = $pic_name;
         }
 
-		// Upload to google cloud storage
-		upload_object($bucketName, $fileName, $tmpFilePath);
+        // Upload to google cloud storage
+        upload_object($bucketName, $fileName, $tmpFilePath);
 
-		// Create url for the uploaded image
-		$url = "https://storage.cloud.google.com/" . $bucketName . "/" . $fileName . "?cloudshell=false";
-		$url = mysqli_real_escape_string($conn, $url);
+        // Create url for the uploaded image
+        $url = "https://storage.cloud.google.com/" . $bucketName . "/" . $fileName . "?cloudshell=false";
+        $url = mysqli_real_escape_string($conn, $url);
 
         // Inserts data to db and redirects user to homepage
         $sql = "INSERT INTO promotion(PROMOCODE, CATEGORY, DESCRIPTION, DISCOUNT, DATEFROM, DATETO, IMAGE) 
         VALUES('$promotioncode', '$category', '$desc', '$discount', '$today', '$expiry', '$url')";
 
         if (mysqli_query($conn, $sql)) {
-			echo "<script type='text/javascript'>window.top.location='/index.php';</script>";
+            $_SESSION['LASTACTION'] = 'NEWPROMO';
+            echo "<script type='text/javascript'>window.top.location='/index.php';</script>";
         } else {
             echo 'Query Error: ' . mysqli_error($conn);
         }
