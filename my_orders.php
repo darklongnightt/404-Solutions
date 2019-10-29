@@ -103,7 +103,7 @@ mysqli_close($conn);
             <br>
             <br>
             <h6 class="center">Your order history is empty!</h6>
-            <a href="index.php">
+            <a href="/products/search.php">
                 <div class="center">
                     <button class="btn brand z-depth-0 empty-cart-btn">Continue Browsing</button>
                 </div>

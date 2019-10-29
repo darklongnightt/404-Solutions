@@ -1,4 +1,7 @@
 <?php
+
+use Symfony\Component\BrowserKit\Cookie;
+
 include('config/db_connect.php');
 include('templates/header.php');
 
@@ -32,6 +35,7 @@ if (isset($_GET['remove'])) {
     $removePdt = mysqli_real_escape_string($conn, $_GET['remove']);
     $sql = "DELETE FROM cart WHERE PDTID = '$removePdt' AND USERID = '$uid'";
     if (mysqli_query($conn, $sql)) {
+        setcookie('LASTACTION', 'REMOVECART', time() + (120), "/");
         echo "<script type='text/javascript'>window.top.location='cart.php';</script>";
     } else {
         echo 'Query Error: ' . mysqli_error($conn);
@@ -63,6 +67,7 @@ if (isset($_GET['discount'])) {
     // If error free, apply coupon to cart
     if (!array_filter($errors)) {
         $appliedDiscount = $coupon['DISCOUNT'];
+        setcookie('LASTACTION', 'DISCOUNT', time() + (120), "/");
     }
 }
 
@@ -149,10 +154,32 @@ if (isset($_POST['checkout']) && $cartList) {
     }
 }
 
+// Render toast popups
+if (isset($_COOKIE['LASTACTION'])) {
+    if ($_COOKIE['LASTACTION'] == 'REMOVECART')
+        echo "<script>M.toast({html: 'Successfully removed from cart!'});</script>";
+    else if ($_COOKIE['LASTACTION'] == 'DISCOUNT')
+        echo "<script>M.toast({html: 'Successfully applied discount!'});</script>";
+
+
+    setcookie('LASTACTION', 'NONE', time() + (120), "/");
+}
+
 // Free memory of result and close connection
 mysqli_free_result($result);
 mysqli_close($conn);
 ?>
+
+<script>
+    $(function() {
+        var refURL = document.referrer;
+        if (refURL.search('http://localhost:8090/cart.php?remove=(+*)') > 0) {
+            M.toast({
+                html: 'Successfully deleted from cart!'
+            });
+        }
+    });
+</script>
 
 <!DOCTYPE html>
 <html>
@@ -216,14 +243,14 @@ mysqli_close($conn);
                 } else { ?>
 
                 <div class="center">
-                    <img src="img/empty_cart.png" class="empty-cart">
+                    <img src="/img/empty_cart.png" class="empty-cart">
                 </div>
 
                 <br>
                 <br>
                 <br>
                 <h6 class="center">Your shopping cart is empty!</h6>
-                <a href="index.php">
+                <a href="/products/search.php">
                     <div class="center">
                         <button class="btn brand z-depth-0 empty-cart-btn">Continue Browsing</button>
                     </div>

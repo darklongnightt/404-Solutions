@@ -5,6 +5,16 @@ include("../templates/header.php");
 $password = $email = $checkPassword = '';
 $errors = array('password' => '', 'email' => '');
 
+// Render toast popups
+if (isset($_COOKIE['LASTACTION'])) {
+
+    if ($_COOKIE['LASTACTION'] == 'RESET') {
+        echo "<script>M.toast({html: 'Reset password email successfully sent!'});</script>";
+    }
+
+    setcookie('LASTACTION', 'NONE', time() + (120), "/");
+}
+
 //Checks if button of name="submit" is clicked
 if (isset($_POST['submit'])) {
     //Gets data from the POST request 
@@ -91,6 +101,7 @@ if (isset($_POST['submit'])) {
                     $sql = "DELETE FROM cart WHERE USERID='$ano'";
                     if (mysqli_query($conn, $sql)) {
 
+                        setcookie('LASTACTION', 'LOGIN', time() + (120), "/");
                         if ($customer['CHANGEPW'] == 'FALSE') {
                             echo "<script type='text/javascript'>window.top.location='/index.php';</script>";
                         } else {
@@ -100,12 +111,19 @@ if (isset($_POST['submit'])) {
                         echo 'Query Error: ' . mysqli_error($conn);
                     }
                 } else {
-                    echo "<script type='text/javascript'>window.top.location='/analysis_report/cluster_report.php';</script>";
+                    setcookie('LASTACTION', 'LOGIN', time() + (120), "/");
+
+                    if ($customer['CHANGEPW'] == 'FALSE') {
+                        echo "<script type='text/javascript'>window.top.location='/analysis_report/cluster_report.php';</script>";
+                    } else {
+                        echo "<script type='text/javascript'>window.top.location='change_password.php';</script>";
+                    }
                 }
             }
         } else {
             echo 'Query Error: ' . mysqli_error($conn);
         }
+
 
         mysqli_free_result($result);
         mysqli_close($conn);

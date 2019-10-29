@@ -4,7 +4,7 @@ include('../templates/header.php');
 if (substr($uid, 0, 3) == 'ADM')
     include('../storage_connect.php');
 
-$id = $product = $message = '';
+$id = $product = '';
 $count = $cartQty = 0;
 $more = FALSE;
 
@@ -58,7 +58,7 @@ function addCart($conn, $id, $qty)
         }
 
         if (mysqli_query($conn, $sql)) {
-            $GLOBALS['message'] = 'Successfully added product to cart!';
+            echo "<script>M.toast({html: 'Successfully added to cart!'});</script>";
         } else {
             echo 'Query Error: ' . mysqli_error($conn);
         }
@@ -158,7 +158,7 @@ if (isset($_POST['favourite'])) {
         }
 
         if (mysqli_query($conn, $sql)) {
-            $message = 'Successfully added product to favourite!';
+            echo "<script>M.toast({html: 'Successfully added to favourites!'});</script>";
         } else {
             echo 'Query Error: ' . mysqli_error($conn);
         }
@@ -268,10 +268,6 @@ mysqli_close($conn);
                     </div>
                 </div>
             </div>
-        </div>
-
-        <div class="row center grey-text">
-            <?php echo $message; ?>
         </div>
 
         <?php if ($recommendation_list) { ?>

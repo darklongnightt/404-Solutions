@@ -15,7 +15,8 @@ $address = $address2 = array();
 //Personal details of this customer
 $queryPD = "SELECT * FROM customer WHERE USERID = '$uid'";
 $resultPD = mysqli_query($conn, $queryPD);
-$cust_details = mysqli_fetch_all($resultPD, MYSQLI_ASSOC);
+$cust_details = mysqli_fetch_assoc($resultPD);
+$currentEmail = $cust_details['EMAIL'];
 
 //Address of this customer
 $queryADD = "SELECT * FROM address WHERE USERID = '$uid'";
@@ -33,12 +34,13 @@ if (isset($_POST['updateDetails'])) {
 			$errors['email'] = 'Email is not of valid format!';
 		} else {
 			// Check db for existing email
-			$currentEmail = $cust_details[0]['EMAIL'];
-			$sql = "SELECT * FROM customer WHERE EMAIL = '$email'";
-			$result = mysqli_query($conn, $sql);
+			if ($email != $currentEmail) {
+				$sql = "SELECT * FROM customer WHERE EMAIL = '$email'";
+				$result = mysqli_query($conn, $sql);
 
-			if ($email != $currentEmail && mysqli_num_rows($result) > 0) {
-				$errors['email'] = 'Entered email is already in use!';
+				if (mysqli_num_rows($result) > 0) {
+					$errors['email'] = 'Entered email is already in use!';
+				}
 			}
 		}
 	}
@@ -71,8 +73,18 @@ if (isset($_POST['updateDetails'])) {
 	}
 
 	if (!array_filter($errors)) {
-		$updateQ = "UPDATE customer SET FIRSTNAME = '$fname', LASTNAME = '$lname',EMAIL = '$email',PHONENO = '$contactno',DOB = '$dob' WHERE USERID = '$uid'";
+		// Updates personal details in customers table
+		$updateQ = "UPDATE customer SET FIRSTNAME = '$fname', LASTNAME = '$lname', EMAIL = '$email', PHONENO = '$contactno', DOB = '$dob' WHERE USERID = '$uid'";
 		if (mysqli_query($conn, $updateQ)) {
+
+			// Updates email address in salt table
+			if ($email != $currentEmail) {
+				$sql = "UPDATE salt SET EMAIL='$email' WHERE EMAIL='$currentEmail'";
+				if (!mysqli_query($conn, $sql)) {
+					echo 'Query Error: ' . mysqli_error($conn);
+				}
+			}
+
 			echo "<script type='text/javascript'>window.top.location='profile.php';</script>";
 		} else {
 			echo 'Query Error: ' . mysqli_error($conn);
@@ -254,37 +266,38 @@ if (isset($_POST['changePass'])) {
 
 	<div class="right-contents">
 		<div id="personal-div" class="prof-detail-container">
-			<h4 class="center"> Personal Details</h4>
+			<h4 class="center top-padding"> Personal Details</h4>
 			<br>
 			<form method="post" class="EditForm">
 				<label>First Name: </label>
-				<input type="text" name="firstname" value="<?php echo htmlspecialchars($cust_details[0]['FIRSTNAME']); ?>">
+				<input type="text" name="firstname" value="<?php echo htmlspecialchars($cust_details['FIRSTNAME']); ?>">
 				<div class="red-text"><?php echo htmlspecialchars($errors['fname']); ?></div>
 
 				<label>Last Name:</label>
-				<input type="text" name="lastname" value="<?php echo htmlspecialchars($cust_details[0]['LASTNAME']); ?>">
+				<input type="text" name="lastname" value="<?php echo htmlspecialchars($cust_details['LASTNAME']); ?>">
 				<div class="red-text"><?php echo htmlspecialchars($errors['lname']); ?></div>
 
 				<label>Email: </label>
-				<input type="text" name="email" value="<?php echo htmlspecialchars($cust_details[0]['EMAIL']); ?>">
+				<input type="text" name="email" value="<?php echo htmlspecialchars($cust_details['EMAIL']); ?>">
 				<div class="red-text"><?php echo htmlspecialchars($errors['email']); ?></div>
 
 				<label>Date Of Birth: </label>
-				<input type="date" name="dob" value="<?php echo htmlspecialchars($cust_details[0]['DOB']); ?>">
+				<input type="date" name="dob" value="<?php echo htmlspecialchars($cust_details['DOB']); ?>">
 				<div class="red-text"><?php echo htmlspecialchars($errors['dob']); ?></div>
 
 				<label>Contact Number:</label>
-				<input type="text" name="contactno" value="<?php echo htmlspecialchars($cust_details[0]['PHONENO']); ?>" maxlength="8">
+				<input type="text" name="contactno" value="<?php echo htmlspecialchars($cust_details['PHONENO']); ?>" maxlength="8">
 				<div class="red-text"><?php echo htmlspecialchars($errors['contactno']); ?></div>
 
+				<br>
 				<div class="center">
-					<input type="submit" name="updateDetails" value="update" class="btn-small brand z-depth-0">
+					<input type="submit" name="updateDetails" value="update" class="btn brand z-depth-0">
 				</div>
 			</form>
 		</div>
 
 		<div id="address-div">
-			<h4 class="center"> Delivery Address </h4>
+			<h4 class="center top-padding"> Delivery Address </h4>
 
 			<div class="row">
 				<div class="col s12 m6">
@@ -339,9 +352,7 @@ if (isset($_POST['changePass'])) {
 		</div>
 
 		<div id="changePass-div">
-			<div class="top-padding">
-				<h4 class="center">Change Password</h4>
-			</div>
+			<h4 class="center top-padding">Change Password</h4>
 			<br>
 			<form class="EditForm" method="POST">
 				<label>Old Password: </label>

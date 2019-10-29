@@ -57,6 +57,7 @@ if (isset($_POST['submit'])) {
         VALUES('$userId', '$addr1', '$addr2', '$postal1', '$postal2', '$country1', '$country2')";
 
         if (mysqli_query($conn, $sql)) {
+            setcookie('LASTACTION', 'REGISTER', time() + (120), "/");
             echo "<script type='text/javascript'>window.top.location='/index.php';</script>";
         } else {
             echo 'Query Error: ' . mysqli_error($conn);

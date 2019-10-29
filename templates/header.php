@@ -14,8 +14,11 @@
 	<link rel="stylesheet" href="/css/profile.css" type="text/css">
 	<link rel="stylesheet" href="/css/dropdown.css" type="text/css">
 
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
 	<script src="https://code.jquery.com/jquery-1.10.2.js"></script>
 	<script src="https://code.jquery.com/ui/1.10.4/jquery-ui.js"></script>
+
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 </head>
 
 <?php

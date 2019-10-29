@@ -140,7 +140,7 @@ if (isset($_GET['cart'])) {
 		}
 
 		if (mysqli_query($conn, $sql)) {
-			$message = 'Successfully added product to cart!';
+			echo "<script>M.toast({html: 'Successfully added to cart!'});</script>";
 		} else {
 			echo 'Query Error: ' . mysqli_error($conn);
 		}
@@ -158,7 +158,7 @@ if (isset($_GET['delete'])) {
 
 	// Checks if query is successful
 	if (mysqli_query($conn, $sql)) {
-		echo "<script type='text/javascript'>window.top.location='search.php';</script>";
+		echo "<script>M.toast({html: 'Successfully deleted product!'});</script>";
 	} else {
 		echo 'Query Error' . mysqli_error($conn);
 	}
