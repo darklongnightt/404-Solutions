@@ -69,7 +69,10 @@ print_r($address);
       <input type="hidden" name="currency_code" value="<?php echo PAYPAL_CURRENCY; ?>">
       <!-- Specify URLs -->
       <input type="hidden" name="notify_url" value="<?php echo PAYPAL_NOTIFY_URL; ?>">
-      <input type="hidden" name="return" value="<?php echo PAYPAL_RETURN_URL; ?>">
+      
+      <input type="hidden" name="rm" value="2">
+      <input type="hidden" name="return" value="http://localhost/paypal/success.php?tid=<?php echo $tid; ?>">
+
       <input type="hidden" name="cancel_return" value="<?php echo PAYPAL_CANCEL_URL; ?>">
 
 
