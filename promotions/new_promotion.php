@@ -3,10 +3,10 @@ include('../config/db_connect.php');
 include('../templates/header.php');
 include('../storage_connect.php');
 
-$promotioncode = $desc = $expiry = $category = '';
+$desc = $expiry = $category = $promocode = '';
 $discount = 0;
 $today = date('Y-m-d');
-$errors = array('desc' => '', 'expiry' => '', 'discount' => '', 'image' => '');
+$errors = array('desc' => '', 'expiry' => '', 'discount' => '', 'image' => '', 'promocode' => '');
 
 // Get all distinct categories
 $sql = "SELECT DISTINCT CATEGORY FROM product";
@@ -17,6 +17,19 @@ $categories = mysqli_fetch_all($result, MYSQLI_ASSOC);
 if (isset($_POST['submit'])) {
 
     //Gets data from the POST request for error checking
+    if (empty($_POST['promocode'])) {
+        $errors['promocode'] = 'Promotion code is required!';
+    } else {
+        // Check if entered promocode is unique
+        $promocode = mysqli_real_escape_string($conn, $_POST['promocode']);
+        $sql = "SELECT * FROM promotion WHERE PROMOCODE = '$promocode'";
+        $result = mysqli_query($conn, $sql);
+        $checkResult = mysqli_num_rows($result);
+        if ($checkResult > 0) {
+            $errors['promocode'] = 'Entered promotion code already exists!';
+        }
+    }
+
     if (empty($_POST['desc'])) {
         $errors['desc'] = 'Promotion description is required!';
     } else {
@@ -57,20 +70,9 @@ if (isset($_POST['submit'])) {
         $desc = mysqli_real_escape_string($conn, $_POST['desc']);
         $expiry = mysqli_real_escape_string($conn, $_POST['expiry']);
         $category = mysqli_real_escape_string($conn, $_POST['category']);
+        $promocode = mysqli_real_escape_string($conn, $_POST['promocode']);
 
-        // Generate unique uid for the Promotion
-        $unique = true;
-        do {
-            $promotioncode = strtoupper(uniqid(substr($desc, 0, 3)));
-            $sql = "SELECT * FROM promotion WHERE PROMOCODE = '$promotioncode'";
-            $result = mysqli_query($conn, $sql);
-            $checkResult = mysqli_num_rows($result);
-            if ($checkResult > 0) {
-                $unique = false;
-            }
-        } while (!$unique);
-
-        // Resizing image to 300 x 300
+        // Resizing image to 800 x 300
         $pic_type = strtolower(strrchr($fileName, "."));
         $pic_name = "../temp/temp$pic_type";
         move_uploaded_file($tmpFilePath, $pic_name);
@@ -87,7 +89,7 @@ if (isset($_POST['submit'])) {
 
         // Inserts data to db and redirects user to homepage
         $sql = "INSERT INTO promotion(PROMOCODE, CATEGORY, DESCRIPTION, DISCOUNT, DATEFROM, DATETO, IMAGE) 
-        VALUES('$promotioncode', '$category', '$desc', '$discount', '$today', '$expiry', '$url')";
+        VALUES('$promocode', '$category', '$desc', '$discount', '$today', '$expiry', '$url')";
 
         if (mysqli_query($conn, $sql)) {
             $_SESSION['LASTACTION'] = 'NEWPROMO';
@@ -128,6 +130,10 @@ if (isset($_POST['submit'])) {
         </div>
         <div class="red-text center"><?php echo htmlspecialchars($errors['image']); ?></div>
         <br>
+
+        <label>Promotion Code: </label>
+        <input type="text" name="promocode" value="<?php echo htmlspecialchars($promocode); ?>">
+        <div class="red-text"><?php echo htmlspecialchars($errors['promocode']); ?></div>
 
         <label>Promotion Description: </label>
         <input type="text" name="desc" value="<?php echo htmlspecialchars($desc); ?>">

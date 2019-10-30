@@ -210,7 +210,7 @@ mysqli_close($conn);
         <input type="search" name="searchItem" <?php if ($getSearchItem != '') echo " value = '" . $getSearchItem . "'"; ?>>
 
         <div class="center">
-            <input type="submit" name="search" value="Search" class="btn brand z-depth-0">
+            <button type="submit" name="search" class="btn brand z-depth-0 btn-small" style="width: 230px;">Search</button>
         </div>
     </form>
 </div>

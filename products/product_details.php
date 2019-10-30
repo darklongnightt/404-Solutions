@@ -107,6 +107,22 @@ if (isset($_GET['id'])) {
             $more = TRUE;
         }
     }
+
+    // Fetch product ratings
+    $sql = "SELECT * FROM review WHERE PDTID='$id'";
+    $result = mysqli_query($conn, $sql);
+    $ratings = mysqli_fetch_all($result);
+
+    // Calculate the mean product rating
+    $mean = 0;
+    if ($ratings) {
+        foreach ($ratings as $rating) {
+            $score = ($rating['PRATING'] + $rating['SRATING'] + $rating['DRATING']) / 3;
+            $mean += $score;
+        }
+        $mean /= sizeof($ratings);
+        echo $mean . '<br>' . sizeof($rating);
+    }
 }
 
 // Checks if delete button is clicked
@@ -176,12 +192,21 @@ mysqli_close($conn);
 <style>
     .main-image {
         width: auto;
-        max-height: 325px;
-        margin: 25px;
+        max-height: 300px;
     }
 
     .main-card {
         height: 400px;
+    }
+
+    .star {
+        color: gold;
+        margin-left: 3px;
+        font-size: 18px;
+    }
+
+    .rating-font {
+        font-size: 18px;
     }
 </style>
 
@@ -189,17 +214,26 @@ mysqli_close($conn);
 <?php if ($product) : ?>
     <div class="container">
         <div class="row">
-            <div class="col s6 m3">
-                <br>
-                <div class="center">
-                    <img src="<?php if ($product['IMAGE']) {
-                                        echo $product['IMAGE'];
-                                    } else {
-                                        echo '/img/product_icon.svg';
-                                    } ?>" class="grey main-image">
+            <div class="col s10 m5">
+                <div class="card z-depth-0 main-card">
+                    <div class="card-content center">
+                        <img src="<?php if ($product['IMAGE']) {
+                                            echo $product['IMAGE'];
+                                        } else {
+                                            echo '/img/product_icon.svg';
+                                        } ?>" class="grey main-image">
+                        <div style="margin-top: 10px;">
+                            <?php
+                                for ($i = 0; $i < 5; $i++) {
+                                    echo '<i class="fa fa-star star" aria-hidden="true"></i>';
+                                } ?>
+
+                            <span class="rating-font"> (123 Ratings) </span>
+                        </div>
+                    </div>
                 </div>
             </div>
-            <div class="col s8 m4 offset-m1">
+            <div class="col s8 m4">
                 <div class="card z-depth-0 main-card">
                     <div class="card-content">
                         <h4><?php echo htmlspecialchars($product['PDTNAME']) . ' - ' . htmlspecialchars($product['WEIGHT']); ?></h4>
@@ -233,7 +267,7 @@ mysqli_close($conn);
                             <div><?php echo 'Savings: -$' . number_format(htmlspecialchars($product['PDTPRICE']) / 100 * htmlspecialchars($product['PDTDISCNT']), 2, '.', ''); ?></div>
                         <?php } ?>
 
-                        <div class="bold"><?php echo 'Net Price: $' . number_format(htmlspecialchars($product['PDTPRICE']) / 100 * (100 - htmlspecialchars($product['PDTDISCNT'])), 2, '.', ''); ?></div>
+                        <h6 class="bold"><?php echo 'Net Price: $' . number_format(htmlspecialchars($product['PDTPRICE']) / 100 * (100 - htmlspecialchars($product['PDTDISCNT'])), 2, '.', ''); ?></h6>
 
                         <div class="divider"></div>
                         <br>

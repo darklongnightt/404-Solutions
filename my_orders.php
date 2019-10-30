@@ -6,7 +6,12 @@ include('templates/header.php');
 if (isset($_SESSION['LASTACTION'])) {
     if ($_SESSION['LASTACTION'] == 'REVIEWED') {
         echo "<script>M.toast({html: 'Successfully reviewed product!'});</script>";
+    } else if ($_SESSION['LASTACTION'] == 'PAYCONFIRM') {
+        echo "<script>M.toast({html: 'Paypal payment successful!'});</script>";
+    } else if ($_SESSION['LASTACTION'] == 'PAYCANCEL') {
+        echo "<script>M.toast({html: 'Paypal payment cancelled!'});</script>";
     }
+
     $_SESSION['LASTACTION'] = 'NONE';
 }
 

@@ -4,6 +4,7 @@ include('templates/header.php');
 
 $name = 'Guest';
 $cluster = 0;
+$now = time();
 
 // Add an item to cart
 function addCart($conn, $id, $qty)
@@ -44,6 +45,11 @@ if (isset($_SESSION['U_UID'])) {
 } else {
     $cluster = 1;
 }
+
+// Get all promotions and banners
+$sql = "SELECT * FROM promotion ORDER BY DATETO";
+$result = mysqli_query($conn, $sql);
+$promotions = mysqli_fetch_all($result, MYSQLI_ASSOC);
 
 // Get all recent views for this user
 $uid = mysqli_real_escape_string($conn, $uid);
@@ -142,21 +148,20 @@ mysqli_close($conn);
                     <div class="col s24 m12">
                         <div class="slider">
                             <ul class="slides">
-                                <li>
-                                    <img src="/img/banner/welcome.png">
-                                </li>
-                                <li>
-                                    <img src="/img//banner/Christmas.png">
-                                </li>
-                                <li>
-                                    <img src="/img/banner/month.png">
-                                </li>
-                                <li>
-                                    <img src="/img/banner/CNY.png">
-                                </li>
-                                <li>
-                                    <img src="/img/banner/Tib.png">
-                                </li>
+
+                                <?php foreach ($promotions as $promo) {
+                                    $expiry = strtotime($promo['DATETO']);
+                                    $diffDay = round(($expiry - $now) / (60 * 60 * 24), 0);
+                                    ?>
+                                    <li>
+                                        <img src="<?php echo $promo['IMAGE']; ?>">
+
+                                        <div class="caption right-align brand-text">
+                                            <h4 class="bold"><?php echo $promo['DISCOUNT'] . '% OFF ' . $promo['CATEGORY']; ?></h4>
+                                            <h6 class="bold"><?php echo $diffDay . ' DAYS LEFT' ?></h6>
+                                        </div>
+                                    </li>
+                                <?php } ?>
                             </ul>
                         </div>
                     </div>

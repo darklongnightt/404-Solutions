@@ -40,9 +40,22 @@ mysqli_close($conn);
 
 ?>
 
-<head>
-    <link rel="stylesheet" href="../css/promotion.css" type="text/css">
-</head>
+<style>
+    .promo-icon {
+        height: 130px;
+        width: auto;
+        border-style: dashed;
+        display: inline-block;
+    }
+
+    .promo-text {
+        display: inline-block;
+        margin: 10px;
+        top: 20px;
+        position: absolute;
+        font-size: 16;
+    }
+</style>
 
 <!DOCTYPE HTML>
 <html>

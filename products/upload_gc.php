@@ -54,23 +54,13 @@ if ($_FILES) {
     }
 
     function displayImage(e) {
-        if (e.files) {
-            for (var i = 0; i < e.files.length; i++) {
-                console.log(e.files[i]);
-                var filename = e.files[i].name;
-                <?php
-                $filename = "<script>document.write(filename);</script>";
-                array_push($files, $filename)
-                ?>
-            }
-        }
-
-        <?php print_r($files); ?>
-
         if (e.files[0]) {
             var reader = new FileReader();
+            var count = e.files.length;
+
             reader.onload = function(e) {
                 document.querySelector('#preview').setAttribute('src', e.target.result);
+                document.getElementById('fileCount').innerHTML = 'Total ' + count + ' files selected.';
             }
             reader.readAsDataURL(e.files[0]);
         }
@@ -89,8 +79,8 @@ if ($_FILES) {
                 <div class="card-content">
                     <h6 class="bold brand-text center">Before You Upload</h6>
                     <ol>
-                        <li>Rename image to that of existing product id</li>
-                        <li>Upload as many as required</li>
+                        <li>To associate product with image, <u>rename image to product id</u></li>
+                        <li>Each product can only be associated with one image</li>
                     </ol>
                 </div>
             </div>
@@ -133,6 +123,8 @@ if ($_FILES) {
                 <div class="center">
                     <label for="imageUpload"> <img src="/img/upload_placeholder1.png" id="preview" onclick="triggerClick()" style="width: 200px; margin: 20px; border-style: dotted; border-radius: 5px;"> </label>
                     <input type="file" name="uploaded_files[]" id="imageUpload" size="10000" multiple="multiple" onchange="displayImage(this)" style="display: none;">
+                    <div id="fileCount"></div>
+                    <br>
                 </div>
 
                 <input type="submit" value="Upload All" class="btn brand">
