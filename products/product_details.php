@@ -111,7 +111,7 @@ if (isset($_GET['id'])) {
     // Fetch product ratings
     $sql = "SELECT * FROM review WHERE PDTID='$id'";
     $result = mysqli_query($conn, $sql);
-    $ratings = mysqli_fetch_all($result);
+    $ratings = mysqli_fetch_all($result, MYSQLI_ASSOC);
 
     // Calculate the mean product rating
     $mean = 0;
@@ -121,7 +121,6 @@ if (isset($_GET['id'])) {
             $mean += $score;
         }
         $mean /= sizeof($ratings);
-        echo $mean . '<br>' . sizeof($rating);
     }
 }
 
@@ -206,7 +205,7 @@ mysqli_close($conn);
     }
 
     .rating-font {
-        font-size: 18px;
+        font-size: 16px;
     }
 </style>
 
@@ -224,11 +223,23 @@ mysqli_close($conn);
                                         } ?>" class="grey main-image">
                         <div style="margin-top: 10px;">
                             <?php
-                                for ($i = 0; $i < 5; $i++) {
-                                    echo '<i class="fa fa-star star" aria-hidden="true"></i>';
+                                for ($i = 1; $i <= 5; $i++) {
+                                    if ($i <= $mean) {
+                                        echo '<i class="fa fa-star star" aria-hidden="true"></i>';
+                                    } else if ($i <= $mean + 0.5) {
+                                        echo '<i class="fa fa-star-half-o star" aria-hidden="true"></i>';
+                                    } else if ($i > $mean) {
+                                        echo '<i class="fa fa-star-o star" aria-hidden="true"></i>';
+                                    }
                                 } ?>
 
-                            <span class="rating-font"> (123 Ratings) </span>
+                            <?php if (sizeof($ratings) > 0) : ?>
+                                <a href="product_reviews.php?id=<?php echo $id; ?>">
+                                    <span class="rating-font"> (<?php echo sizeof($ratings); ?> Ratings) </span>
+                                </a>
+                            <?php else : ?>
+                                <span class="rating-font"> (<?php echo sizeof($ratings); ?> Ratings) </span>
+                            <?php endif ?>
                         </div>
                     </div>
                 </div>
@@ -242,7 +253,6 @@ mysqli_close($conn);
                         <br>
                         <p><?php echo 'Category: ' . htmlspecialchars($product['CATEGORY']); ?></p>
                         <p><?php echo 'Brand: ' . htmlspecialchars($product['BRAND']); ?></p>
-                        <p><?php echo 'Weight: ' . htmlspecialchars($product['WEIGHT']); ?></p>
                         <p><?php echo 'Quantity Available: ' . htmlspecialchars($product['PDTQTY']); ?></p>
                         <p><?php echo 'Production Date: ' . date($product['CREATED_AT']); ?></p>
                         <label><?php echo htmlspecialchars($product['PDTID']); ?></label>
