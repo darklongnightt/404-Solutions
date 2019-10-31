@@ -13,6 +13,7 @@
 	<link rel="stylesheet" href="/css/homepage.css" type="text/css">
 	<link rel="stylesheet" href="/css/profile.css" type="text/css">
 	<link rel="stylesheet" href="/css/dropdown.css" type="text/css">
+	<link rel="stylesheet" href="/css/materialize.css" type="text/css">
 
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
 	<script src="https://code.jquery.com/jquery-1.10.2.js"></script>
@@ -64,7 +65,7 @@ if (isset($_SESSION['U_UID'])) {
 </script>
 
 <body class="grey lighten-4">
-	<nav class="white z-depth-0">
+	<nav class="white z-depth-0" style="margin-bottom: 0px;">
 		<div class="container">
 			<strong>
 				<?php if (substr($uid, 0, 3) == 'ANL') {
@@ -76,8 +77,8 @@ if (isset($_SESSION['U_UID'])) {
 							Super<span class="red-text">D</span>ata
 							</a>';
 				} ?>
-
 			</strong>
+
 			<ul id="nav-mobile" class="right hide-on-small-and-down">
 
 				<?php if (substr($uid, 0, 3) !== 'ANO') { ?>

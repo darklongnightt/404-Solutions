@@ -68,7 +68,7 @@ if (isset($_POST['submit'])) {
 
                 if (substr($_SESSION['U_UID'], 0, 3) == "CUS") {
                     // Update cart from cookies
-                    $ano = $__SESSION['UID'];
+                    $ano = $_COOKIE['UID'];
                     $cus = $_SESSION['U_UID'];
 
                     // Get cart items from guest user
@@ -114,7 +114,7 @@ if (isset($_POST['submit'])) {
 
                     $_SESSION["LASTACTION"] = "LOGIN";
                     if ($customer['CHANGEPW'] == 'FALSE') {
-                        echo "<script type='text/javascript'>window.top.location='/analysis_report/cluster_report.php';</script>";
+                        echo "<script type='text/javascript'>window.top.location='/index.php';</script>";
                     } else {
                         echo "<script type='text/javascript'>window.top.location='change_password.php';</script>";
                     }

@@ -33,7 +33,7 @@ foreach ($products as $product) {
     $pid = $product['PDTID'];
 
     // Generate n number of reviews
-    $reviewCount = random_int(6, 25);
+    $reviewCount = random_int(2, 5);
     for ($i = 0; $i < $reviewCount; $i++) {
         // Randomly select a customer id for review
         $custIndex = random_int(0, sizeof($customers) - 1);

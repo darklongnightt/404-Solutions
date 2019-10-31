@@ -322,7 +322,7 @@ if (isset($_GET['id'])) {
                                                 echo '<i class="fa fa-star-o star" aria-hidden="true"></i>';
                                             }
                                         }
-                                        echo ' by ' . $rating['FIRSTNAME'] . '</td>';
+                                        echo '<div>by ' . $rating['FIRSTNAME'] . '</div></td>';
                                         echo '<td>' . $rating['COMMENT'] . '</td>';
                                         echo '</tr>';
                                     }

@@ -33,6 +33,13 @@ function addCart($conn, $id, $qty)
     }
 }
 
+// Checks if search button is pressed
+if (isset($_POST['submit'])) {
+    $search = $_POST['search'];
+    $link = '/products/search.php?Filter=all&sort=default&priceRange=%240.6+-+%2417.91&check=1&searchItem=' . $search . '&submit=';
+    echo "<script type='text/javascript'>window.top.location='$link';</script>";
+}
+
 // Checks if recommended cart is clicked
 if (isset($_GET['cart'])) {
     addCart($conn, $_GET['cart'], 1);
@@ -75,7 +82,7 @@ $result = mysqli_query($conn, $sql);
 $categories = mysqli_fetch_all($result, MYSQLI_ASSOC);
 
 // Render toast popups
-if (isset($_COOKIE['LASTACTION'])) {
+if (isset($_COOKIE['LASTACTION']) && substr($uid, 0, 3) != 'ADM') {
 
     switch ($_COOKIE['LASTACTION']) {
         case 'LOGOUT':
@@ -139,31 +146,48 @@ mysqli_close($conn);
                 $('.slider').slider({
                     height: 230
                 });
+
+
+                $('input.autocomplete').autocomplete({
+                    data: {
+                        "BAZAAR": null,
+                        "BEVERAGE": null,
+                        "CONCESSIONAIRES": null,
+                        "HEALTH CARE": null,
+                        "FRESH FOOD": null,
+                        "FROZEN FOOD": null,
+                        "GROCERIES": null,
+                        "HOUSEHOLD CONSUMMABLES": null,
+                        "COSMETICS": null,
+                        "TEXTILE": null,
+                        "TIDBITS": null,
+                        "TOILETRIES": null
+                    }
+                });
             });
         </script>
 
         <div class="container">
-            <div class="section">
-                <div class="row">
-                    <div class="col s24 m12">
-                        <div class="slider">
-                            <ul class="slides">
 
-                                <?php foreach ($promotions as $promo) {
-                                    $expiry = strtotime($promo['DATETO']);
-                                    $diffDay = round(($expiry - $now) / (60 * 60 * 24), 0);
-                                    ?>
-                                    <li>
-                                        <img src="<?php echo $promo['IMAGE']; ?>">
+            <div class="row" style="margin-top: 15px;">
+                <div class="col s24 m12">
+                    <div class="slider">
+                        <ul class="slides">
 
-                                        <div class="caption right-align brand-text">
-                                            <h4 class="bold"><?php echo $promo['DISCOUNT'] . '% OFF ' . $promo['CATEGORY']; ?></h4>
-                                            <h6 class="bold"><?php echo $diffDay . ' DAYS LEFT' ?></h6>
-                                        </div>
-                                    </li>
-                                <?php } ?>
-                            </ul>
-                        </div>
+                            <?php foreach ($promotions as $promo) {
+                                $expiry = strtotime($promo['DATETO']);
+                                $diffDay = round(($expiry - $now) / (60 * 60 * 24), 0);
+                                ?>
+                                <li>
+                                    <img src="<?php echo $promo['IMAGE']; ?>">
+
+                                    <div class="caption right-align brand-text">
+                                        <h4 class="bold"><?php echo $promo['DISCOUNT'] . '% OFF ' . $promo['CATEGORY']; ?></h4>
+                                        <h6 class="bold"><?php echo $diffDay . ' DAYS LEFT' ?></h6>
+                                    </div>
+                                </li>
+                            <?php } ?>
+                        </ul>
                     </div>
                 </div>
             </div>
@@ -210,6 +234,20 @@ mysqli_close($conn);
                             </a>
                         <?php } ?>
                     </div>
+                </div>
+            </div>
+
+            <div class="row " style="margin-bottom: 0px;">
+                <div class="col s24 m12">
+                    <form action="index.php" method="POST" style="margin-bottom: 0%;">
+
+                        <div class="input-field col s12 search-bar" style="border-radius: 5px; border-style: solid; color: grey; border-width: thin; background: white;">
+                            <input type="text" name="search" placeholder="Search Products" style="width: 95%;">
+                            <button type="submit" name="submit" class="btn white z-depth-0">
+                                <i class="material-icons prefix black-text">search</i>
+                            </button>
+                        </div>
+                    </form>
                 </div>
             </div>
 

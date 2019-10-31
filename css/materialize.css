@@ -1,0 +1,24 @@
+.input-field input:focus + label {
+  color: red !important;
+}
+
+.form input:focus + label {
+  color: red !important;
+}
+
+.row .input-field input:focus {
+  border-bottom: 1px solid red !important;
+  box-shadow: 0 1px 0 0 red !important;
+}
+
+.input-field input.autocomplete {
+  color: black !important;
+}
+
+.input-field .prefix.active {
+  color: black !important;
+}
+
+.autocomplete-content li .highlight {
+  color: red !important;
+}
