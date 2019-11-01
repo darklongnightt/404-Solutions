@@ -241,8 +241,8 @@ mysqli_close($conn);
                 <div class="col s24 m12">
                     <form action="index.php" method="POST" style="margin-bottom: 0%;">
 
-                        <div class="input-field col s12 search-bar" style="border-radius: 5px; border-style: solid; color: grey; border-width: thin; background: white;">
-                            <input type="text" name="search" placeholder="Search Products" style="width: 95%;">
+                        <div class="input-field col s12 search-bar" style="border-radius: 25px; border-style: solid; color: grey; border-width: thin; background: white;">
+                            <input type="text" name="search" placeholder="Search Products" style="margin-left: 15px; width: 92%;">
                             <button type="submit" name="submit" class="btn white z-depth-0">
                                 <i class="material-icons prefix black-text">search</i>
                             </button>

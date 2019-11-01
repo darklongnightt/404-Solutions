@@ -102,6 +102,21 @@ if (isset($_POST['submit'])) {
     echo "<script>M.toast({html: 'Successfully sent coupon to $count users!'});</script>";
 }
 
+
+// Getting data from table: customers for piechart
+$sql = "SELECT CLUSTER, COUNT(*) AS COUNT FROM customer GROUP BY CLUSTER ";
+$result = mysqli_query($conn, $sql);
+$groupings = mysqli_fetch_all($result, MYSQLI_ASSOC);
+
+$dataPoints = array();
+
+foreach ($groupings as $group) {
+    $label = "C" . $group['CLUSTER'];
+    $percentage = number_format($group['COUNT'] / $curr_cluster['NUM_CUSTOMERS'] * 100, 2, '.', '');
+    $data = array("label" => $label, "y" => $percentage);
+    array_push($dataPoints, $data);
+}
+
 // Free memory of result and close connection
 mysqli_free_result($result);
 mysqli_close($conn);
@@ -154,6 +169,33 @@ function sendEmail($to, $discount, $expiry, $title, $code)
 }
 ?>
 
+<head>
+    <script src="https://canvasjs.com/assets/script/canvasjs.min.js"></script>
+</head>
+
+<script>
+    window.onload = function() {
+
+        var chart = new CanvasJS.Chart("chartContainer", {
+            animationEnabled: true,
+            title: {
+                text: "Cluster Groupings"
+            },
+            subtitles: [{
+                text: "<?php echo $curr_cluster['CREATED_AT']; ?>"
+            }],
+            data: [{
+                type: "pie",
+                yValueFormatString: "#,##0.00\"%\"",
+                indexLabel: "{label} ({y})",
+                dataPoints: <?php echo json_encode($dataPoints, JSON_NUMERIC_CHECK); ?>
+            }]
+        });
+        chart.render();
+    }
+</script>
+
+
 <!DOCTYPE HTML>
 <html>
 <h4 class="center grey-text">Customer Demographics Report</h4>
@@ -204,7 +246,7 @@ function sendEmail($to, $discount, $expiry, $title, $code)
             </div>
         </div>
 
-        <div class="col m3 s6">
+        <div class="col m4 s8">
             <div class="card z-depth-0 small">
                 <div class="card-content">
                     <h6 class="brand-text bold red-text">
@@ -236,13 +278,19 @@ function sendEmail($to, $discount, $expiry, $title, $code)
                 </div>
             </div>
         </div>
-
     </div>
+
     <div class="row">
-        <div class="col m11 s22">
+        <div class="col m4 s8">
+            <div class="card z-depth-0">
+                <div id="chartContainer" style="height: 340px; width: 100%;"></div>
+            </div>
+        </div>
+
+        <div class="col m8 s16">
             <div class="card z-depth-0">
                 <div class="card-content">
-                    <h5 class="bold">Cluster Statistic Means</h5>
+                    <h5 class="bold">Cluster Average</h5>
                     <table class="striped responsive-table">
                         <thead>
                             <tr>
@@ -307,7 +355,7 @@ function sendEmail($to, $discount, $expiry, $title, $code)
     </div>
 
     <div class="row">
-        <div class="col m11 s22">
+        <div class="col m12 s24">
             <div class="card z-depth-0">
                 <div class="card-content">
 
