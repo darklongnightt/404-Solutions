@@ -36,6 +36,12 @@
         </a>
         <div class="divider"></div>
 
+        <i class="material-icons black-text">rate_review</i>
+        <a href="/analysis_report/review_analysis.php">
+            &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp
+            Satisfaction Analysis
+        </a>
+
     </div>
 </li>
 

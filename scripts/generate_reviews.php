@@ -31,6 +31,7 @@ $products = mysqli_fetch_all($result, MYSQLI_ASSOC);
 foreach ($products as $product) {
     // Loop through all product id
     $pid = $product['PDTID'];
+    $category = mysqli_real_escape_string($conn, $product['CATEGORY']);
 
     // Generate n number of reviews
     $reviewCount = random_int(2, 5);
@@ -45,7 +46,7 @@ foreach ($products as $product) {
         $p = $s = $d = 0;
 
         // 2 categories categories with more bad ratings 
-        if ($product['CATEGORY'] == 'FROZEN FOOD' || $product['CATEGORY'] ==  'FRESH FOOD') {
+        if ($category == 'FROZEN FOOD' || $category ==  'FRESH FOOD') {
             if ($type >= 1 && $type <= 50) {
                 // Generate bad rating (50%)
                 $p = random_int(1, 3);
@@ -74,7 +75,7 @@ foreach ($products as $product) {
                 $selectComment = random_int(0, sizeof($goodComments) - 1);
                 $selectedComment = $goodComments[$selectComment];
             }
-        } else if ($product['CATEGORY'] == 'TIDBITS' || $product['CATEGORY'] ==  'CONCESSIONAIRES' || $product['CATEGORY'] == 'HOUSEHOLD CONSUMMABLES') {
+        } else if ($category == 'TIDBITS' || $category ==  'CONCESSIONAIRES' || $category == 'HOUSEHOLD CONSUMMABLES') {
 
             // 3 Categories with extremely good ratings
             if ($type >= 1 && $type <= 80) {
@@ -96,6 +97,15 @@ foreach ($products as $product) {
                 $selectComment = random_int(0, sizeof($goodComments) - 1);
                 $selectedComment = $goodComments[$selectComment];
             }
+        } else if ($category == 'TOILETRIES') {
+            // Generate bad rating
+            $p = random_int(1, 2);
+            $s = random_int(1, 4);
+            $d = random_int(1, 1);
+
+            // Select random good comment
+            $selectComment = random_int(0, sizeof($badComments) - 1);
+            $selectedComment = $badComments[$selectComment];
         } else {
 
             if ($type >= 1 && $type <= 70) {
@@ -131,8 +141,8 @@ foreach ($products as $product) {
         $reviewid = uniqid('RNR');
         $selectedComment = mysqli_real_escape_string($conn, $selectedComment);
 
-        $sql = "INSERT INTO review(REVIEWID, PDTID, USERID, PRATING, SRATING, DRATING, COMMENT) 
-VALUES ('$reviewid', '$pid', '$customerId', '$p', '$s', '$d', '$selectedComment')";
+        $sql = "INSERT INTO review(REVIEWID, PDTID, USERID, PRATING, SRATING, DRATING, COMMENT, CATEGORY) 
+VALUES ('$reviewid', '$pid', '$customerId', '$p', '$s', '$d', '$selectedComment', '$category')";
         if (!mysqli_query($conn, $sql)) {
             echo "Query Error: " . mysqli_error($conn);
             exit();

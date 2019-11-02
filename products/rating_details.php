@@ -47,6 +47,7 @@ if (isset($_POST['submit'])) {
 		$delirating = mysqli_real_escape_string($conn, $_POST['delirating']);
 		$srating = mysqli_real_escape_string($conn, $_POST['srating']);
 		$review = mysqli_real_escape_string($conn, $_POST['review']);
+		$category = mysqli_real_escape_string($conn, $product['CATEOGRY']);
 
 		// Generate unique uid for the rating
 		$unique = true;
@@ -61,8 +62,8 @@ if (isset($_POST['submit'])) {
 		} while (!$unique);
 
 		// Insert review into the db
-		$sql = "INSERT INTO review(REVIEWID, USERID, PDTID, PRATING, DRATING, SRATING, COMMENT)
-		VALUES('$reviewid', '$uid', '$pdtid', '$productrating', '$delirating', '$srating', '$review')";
+		$sql = "INSERT INTO review(REVIEWID, USERID, PDTID, PRATING, DRATING, SRATING, COMMENT, CATEGORY)
+		VALUES('$reviewid', '$uid', '$pdtid', '$productrating', '$delirating', '$srating', '$review', '$category')";
 
 		if (mysqli_query($conn, $sql)) {
 			// Update order status to "REVIEWED"
