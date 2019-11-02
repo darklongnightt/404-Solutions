@@ -26,7 +26,7 @@ function addCart($conn, $id, $qty)
         }
 
         if (mysqli_query($conn, $sql)) {
-            $GLOBALS['message'] = 'Successfully added product to cart!';
+            echo "<script>M.toast({html: 'Successfully added to cart!'});</script>";
         } else {
             echo 'Query Error: ' . mysqli_error($conn);
         }

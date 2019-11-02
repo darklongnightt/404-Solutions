@@ -21,13 +21,13 @@ print_r($stats);
 // Fetch all customers
 $sql = "SELECT customer.CLUSTER, customer.USERID, orders.ORDERID, orders.TRANSACTIONID 
 FROM customer JOIN orders ON customer.USERID = orders.USERID 
-WHERE customer.CLUSTER = 1";
+WHERE customer.CLUSTER = 2";
 $result = mysqli_query($conn, $sql);
 $orders = mysqli_fetch_all($result, MYSQLI_ASSOC);
 $n = sizeof($orders);
 echo $n;
 
-for ($i = 0; $i < 2000; $i++) {
+for ($i = 0; $i < 50000; $i++) {
     $deleteIndex = random_int(0, $n - 3);
     $oid = $orders[$deleteIndex]['ORDERID'];
     $sql = "DELETE FROM orders WHERE ORDERID = '$oid'";
@@ -35,7 +35,6 @@ for ($i = 0; $i < 2000; $i++) {
         echo "Query Error: " . mysqli_error($conn);
         exit();
     }
-
 }
 
 mysqli_free_result($result);

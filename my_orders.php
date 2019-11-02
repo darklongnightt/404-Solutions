@@ -10,6 +10,8 @@ if (isset($_SESSION['LASTACTION'])) {
         echo "<script>M.toast({html: 'Paypal payment successful!'});</script>";
     } else if ($_SESSION['LASTACTION'] == 'PAYCANCEL') {
         echo "<script>M.toast({html: 'Paypal payment cancelled!'});</script>";
+    } else if ($_SESSION['LASTACTION'] == 'CONFIRMDELIVERY') {
+        echo "<script>M.toast({html: 'Delivery Confirmed!'});</script>";
     }
 
     $_SESSION['LASTACTION'] = 'NONE';
@@ -36,6 +38,7 @@ if (isset($_GET['change_status'])) {
     $orderId = mysqli_real_escape_string($conn, $_GET['change_status']);
     $sql = "UPDATE orders SET STATUS = '$status' WHERE ORDERID = '$orderId'";
     if (mysqli_query($conn, $sql)) {
+        $_SESSION['LASTACTION'] = "CONFIRMDELIVERY";
         echo "<script type='text/javascript'>window.top.location='/my_orders.php';</script>";
     } else {
         echo 'Query Error: ' . mysqli_error($conn);

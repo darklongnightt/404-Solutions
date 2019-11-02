@@ -17,7 +17,29 @@ if (!empty($_GET['tid']) && !empty($_GET['item_number']) && !empty($_GET['tx']) 
 	$currency_code = $_GET['cc'];
 	$payment_status = $_GET['st'];
 }
+
+
+if (!empty($_GET['tid'])) {
+
+	// Change status of an order entry to 'Confirmed Payment'
+	$status = 'Confirmed Payment';
+	$sql = "UPDATE orders SET STATUS = '$status' WHERE TRANSACTIONID = '$tid'";
+	if (mysqli_query($conn, $sql)) {
+		sleep(7);
+		$_SESSION['LASTACTION'] = 'PAYCONFIRM';
+		echo "<script type='text/javascript'>window.top.location='/my_orders.php';</script>";
+	} else {
+		echo 'Query Error: ' . mysqli_error($conn);
+	}
+} else { ?>
+	<h1 class="paypalerror">Order ID invalid</h1>
+<?php
+}
+
+// Free memory of result and close connection
+mysqli_close($conn);
 ?>
+
 <link rel="stylesheet" type="text/css" href="/css/paypal_style.css">
 
 <div class="container">
@@ -26,31 +48,19 @@ if (!empty($_GET['tid']) && !empty($_GET['item_number']) && !empty($_GET['tx']) 
 
 		<h4>Payment Information</h4>
 
-		<p><b>Order ID:</b> <?php echo $tid; ?></p>
-		<p><b>Paypal Transaction ID:</b> <?php echo $txn_id; ?></p>
-		<p><b>Paid Amount:</b> <?php echo $payment_gross; ?></p>
-		<p><b>Payment Status:</b> <?php echo $payment_status; ?></p>
+		<div class="grey-text">Order ID:</div>
+		<div style="font-size: 18px;"><?php echo $tid; ?></div>
 
-		<?php
-		if (!empty($_GET['tid'])) {
+		<div class="grey-text">Paypal Transaction ID:</div>
+		<div style="font-size: 18px;"><?php echo $txn_id; ?></div>
 
-			// Change status of an order entry to 'Confirmed Payment'
-			$status = 'Confirmed Payment';
-			$sql = "UPDATE orders SET STATUS = '$status' WHERE TRANSACTIONID = '$tid'";
-			if (mysqli_query($conn, $sql)) {
-				sleep(3);
-				$_SESSION['LASTACTION'] = 'PAYCONFIRM';
-				echo "<script type='text/javascript'>window.top.location='/my_orders.php';</script>";
-			} else {
-				echo 'Query Error: ' . mysqli_error($conn);
-			}
-		} else { ?>
-			<h1 class="paypalerror">Order ID invalid</h1>
-		<?php
-		}
-		// Free memory of result and close connection
-		mysqli_close($conn);
-		?>
+		<div class="grey-text">Paid Amount:</div>
+		<div style="font-size: 18px;"><?php echo $payment_gross; ?></div>
+
+		<div class="grey-text">Payment Status:</div>
+		<div style="font-size: 18px;"><?php echo $payment_status; ?></div>
+
+
 
 	</div>
 </div>
