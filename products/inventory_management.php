@@ -234,7 +234,7 @@ mysqli_close($conn);
                             <label>Update Quantity: </label>
                             <input type="number" name="updateqty" value="<?php echo htmlspecialchars($product['PDTQTY']); ?>">
                             <input type="hidden" name="updateid" value="<?php echo $product['PDTID']; ?>" />
-                            <input type="submit" name="submit" value="update" class="btn-small brand z-depth-0">
+                            <input type="submit" name="submit" value="update" class="btn-small brand z-depth-0" style="margin-top: 13px;">
                         </form>
 
                         <span class="title black-text"><?php echo htmlspecialchars($product['PDTNAME'] . ' - ' . $product['WEIGHT']); ?></span>

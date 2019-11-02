@@ -88,16 +88,22 @@
         </a>
         <div class="divider"></div>
 
-        <i class="material-icons black-text">format_list_bulleted</i>
+        <i class="material-icons black-text">touch_app</i>
         <a href="/products/inventory_management.php">
             &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp
-            View Products
+            Update Stock
         </a>
 
         <i class="material-icons black-text">edit</i>
         <a href="/products/product_management.php">
             &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp
             Edit Products
+        </a>
+
+        <i class="material-icons black-text">format_list_bulleted</i>
+        <a href="/products/process_orders.php">
+            &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp
+            Process Orders
         </a>
 
         <i class="material-icons black-text">add_a_photo</i>
