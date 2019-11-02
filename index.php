@@ -3,7 +3,6 @@ include('config/db_connect.php');
 include('templates/header.php');
 
 $name = 'Guest';
-$cluster = 0;
 $now = time();
 
 // Add an item to cart
@@ -49,8 +48,19 @@ if (isset($_GET['cart'])) {
 if (isset($_SESSION['U_UID'])) {
     $name = $_SESSION['U_FIRSTNAME'] . ' ' . $_SESSION['U_LASTNAME'];
     $cluster = $_SESSION['U_CLUSTER'];
+
+    if ($cluster == 0) {
+        $sql = "SELECT MAX(CLUSTER) FROM customer";
+        $result = mysqli_query($conn, $sql);
+        $max = mysqli_fetch_assoc($result)['MAX(CLUSTER)'];
+        $cluster = random_int(1, $max);
+        
+    }
 } else {
-    $cluster = 1;
+    $sql = "SELECT MAX(CLUSTER) FROM customer";
+    $result = mysqli_query($conn, $sql);
+    $max = mysqli_fetch($result, MYSQLI_ASSOC)['MAX(CLUSTER)'];
+    $cluster = random_int(1, $max);
 }
 
 // Get all promotions and banners
