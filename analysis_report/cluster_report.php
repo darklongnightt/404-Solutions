@@ -179,9 +179,11 @@ function sendEmail($to, $discount, $expiry, $title, $code)
         var chart = new CanvasJS.Chart("chartContainer", {
             animationEnabled: true,
             title: {
-                text: "Cluster Groupings"
+                fontFamily: "Montserrat",
+                text: "Grouping Size"
             },
             subtitles: [{
+                fontFamily: "Montserrat",
                 text: "<?php echo $curr_cluster['CREATED_AT']; ?>"
             }],
             data: [{

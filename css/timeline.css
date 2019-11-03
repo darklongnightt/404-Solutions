@@ -1,0 +1,110 @@
+/* ---- Timeline ---- */
+.tl {
+  position: relative;
+  display: block;
+  margin-top: 30px;
+  height: 4px;
+  background: #999999;
+}
+
+.tl::before,
+.tl::after {
+  content: "";
+  position: absolute;
+  top: -8px;
+  display: block;
+  width: 0;
+  height: 0;
+  border-radius: 10px;
+  border: 10px solid #999999;
+}
+
+.tl::before {
+  left: -5px;
+}
+
+.tl::after {
+  right: -10px;
+  border: 10px solid transparent;
+  border-right: 0;
+  border-left: 20px solid #999999;
+  border-radius: 3px;
+}
+
+/* ---- Timeline elements ---- */
+.element {
+  position: relative;
+  display: inline-block;
+  float: left;
+  width: 175px;
+  font: bold 14px arial;
+  height: 50px;
+}
+
+.element .status {
+  position: absolute;
+  top: -47px;
+  left: 36%;
+  color: black;
+  font-size: 30px;
+}
+
+.point {
+  content: "";
+  top: -3px;
+  left: 43%;
+  display: block;
+  width: 10px;
+  height: 10px;
+  border: 3px solid #999999;
+  border-radius: 20px;
+  background: #999999;
+  position: absolute;
+}
+
+.active-point {
+  content: "";
+  top: -6px;
+  left: 43%;
+  display: block;
+  width: 16px;
+  height: 16px;
+  border: 3px solid black;
+  border-radius: 20px;
+  background: white;
+  position: absolute;
+}
+
+.active-point .description {
+  display: none;
+  color: black;
+  background-color: #f4f4f4;
+  padding: 10px;
+  margin-top: 20px;
+  position: relative;
+  font-weight: normal;
+  z-index: 1;
+  top: 20px;
+}
+
+.description::before {
+  content: "";
+  width: 0;
+  height: 0;
+  border-left: 5px solid transparent;
+  border-right: 5px solid transparent;
+  border-bottom: 5px solid #f4f4f4;
+  position: absolute;
+  top: -5px;
+}
+
+/* ---- Hover effects ---- */
+.active-point:hover {
+  cursor: pointer;
+  color: #48a4d2;
+}
+
+.active-point:hover .description {
+  display: inline-block;
+  width: 200px;
+}

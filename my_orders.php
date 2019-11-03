@@ -50,6 +50,10 @@ mysqli_free_result($result);
 mysqli_close($conn);
 ?>
 
+<head>
+    <link rel="stylesheet" href="/css/timeline.css" type="text/css">
+</head>
+
 <!DOCTYPE HTML>
 <html>
 
@@ -69,30 +73,80 @@ mysqli_close($conn);
                             <h6 class="black-text"> <?php echo htmlspecialchars($order['PDTNAME'] . ' - ' . $order['WEIGHT']); ?> </h6>
                         </a>
 
-                        <div> <?php echo htmlspecialchars('Net Total Price: $' . number_format($order['NETPRICE'], 2, '.', '')); ?> </div>
+                        <div class="flow-text"> <?php echo '$' . htmlspecialchars(number_format($order['NETPRICE'], 2, '.', '')); ?> </div>
 
                         <?php if ($order['PDTDISCNT'] > 0) { ?>
                             <div class="grey-text">
                                 <strike><?php echo htmlspecialchars('$' . number_format($order['TTLPRICE'], 2, '.', '')); ?></strike>
-                                <?php echo htmlspecialchars('-' . $order['TTLDISCNTPRICE'] . '%'); ?>
+                                <span class="discount-label white-text"><?php echo htmlspecialchars('-$' . $order['TTLDISCNTPRICE']); ?></span>
                             </div>
                         <?php } ?>
 
                         <div> <?php echo htmlspecialchars('Ordered Quantity: ' . $order['ORDERQTY']); ?> </div>
 
-                        <?php if ($order['STATUS'] == "Confirmed Delivery" || $order['STATUS'] == "Confirmed Payment") { ?>
-                            <strong>
-                                <span class="green-text lighten-2"><?php echo htmlspecialchars($order['STATUS']); ?></span>
-                            </strong>
-                        <?php } else if ($order['STATUS'] == "Delivering" || $order['STATUS'] == "Pending Payment") { ?>
-                            <strong>
-                                <span class="orange-text lighten"><?php echo htmlspecialchars($order['STATUS']); ?></span>
-                            </strong>
-                        <?php } else if ($order['STATUS'] == "Delivered & Reviewed") { ?>
-                            <strong>
-                                <span class="blue-text lighten"><?php echo htmlspecialchars($order['STATUS']); ?></span>
-                            </strong>
-                        <?php } ?>
+
+
+                        <div class="card z-depth-0">
+                            <div class="card-content">
+                                <ol class="tl">
+                                    <li class="element">
+                                        <p class="status"><i class="fa fa-shopping-cart" aria-hidden="true"></i></p>
+                                        <?php if ($order['STATUS'] == 'Pending Payment') : ?>
+                                            <span class="active-point">
+                                                <p class="description">Pending Payment</p>
+                                            </span>
+                                        <?php else : ?>
+                                            <span class="point"></span>
+                                        <?php endif ?>
+                                    </li>
+
+                                    <li class="element">
+                                        <p class="status"><i class="fa fa-credit-card" aria-hidden="true"></i></p>
+                                        <?php if ($order['STATUS'] == 'Confirmed Payment') : ?>
+                                            <span class="active-point">
+                                                <p class="description">Payment is confirmed, we are currently processing your order!</p>
+                                            </span>
+                                        <?php else : ?>
+                                            <span class="point"></span>
+                                        <?php endif ?>
+                                    </li>
+
+                                    <li class="element">
+                                        <p class="status"><i class="fa fa-truck" aria-hidden="true"></i></p>
+                                        <?php if ($order['STATUS'] == 'Delivering') : ?>
+                                            <span class="active-point">
+                                                <p class="description">Please be patient, your order is currently being delivered!</p>
+                                            </span>
+                                        <?php else : ?>
+                                            <span class="point"></span>
+                                        <?php endif ?>
+                                    </li>
+
+                                    <li class="element">
+                                        <p class="status"><i class="fa fa-archive" aria-hidden="true"></i></p>
+                                        <?php if ($order['STATUS'] == 'Confirmed Delivery') : ?>
+                                            <span class="active-point">
+                                                <p class="description">Delivery is confirmed! Please leave us a feedback!</p>
+                                            </span>
+                                        <?php else : ?>
+                                            <span class="point"></span>
+                                        <?php endif ?>
+                                    </li>
+
+                                    <li class="element">
+                                        <p class="status"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></p>
+                                        <?php if ($order['STATUS'] == 'Delivered & Reviewed') : ?>
+                                            <span class="active-point">
+                                                <p class="description">We value your feedback!</p>
+                                            </span>
+                                        <?php else : ?>
+                                            <span class="point"></span>
+                                        <?php endif ?>
+                                    </li>
+
+                                </ol>
+                            </div>
+                        </div>
 
                         <div class="card-action right-align">
                             <?php if ($order['STATUS'] == "Confirmed Delivery") { ?>

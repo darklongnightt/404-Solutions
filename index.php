@@ -54,12 +54,11 @@ if (isset($_SESSION['U_UID'])) {
         $result = mysqli_query($conn, $sql);
         $max = mysqli_fetch_assoc($result)['MAX(CLUSTER)'];
         $cluster = random_int(1, $max);
-        
     }
 } else {
     $sql = "SELECT MAX(CLUSTER) FROM customer";
     $result = mysqli_query($conn, $sql);
-    $max = mysqli_fetch($result, MYSQLI_ASSOC)['MAX(CLUSTER)'];
+    $max = mysqli_fetch_assoc($result)['MAX(CLUSTER)'];
     $cluster = random_int(1, $max);
 }
 
@@ -283,8 +282,11 @@ mysqli_close($conn);
 
             <?php if ($uid && $cluster > 0) { ?>
                 <div class="row">
-                    <h5 class="brand-text bold">&nbsp&nbspRecommended For You</h5>
-                    <?php foreach ($cluster_recommendations as $recommendation) { ?>
+                    <h5 class="brand-text bold">&nbsp&nbspRecommended For You (<?php echo $cluster; ?>)</h5>
+                    <?php $count = 0;
+                        foreach ($cluster_recommendations as $recommendation) {
+                            if ($count >= 12) break;
+                            ?>
                         <div class="col s3 md2">
                             <a href="/products/product_details.php?id=<?php echo $recommendation['PDTID']; ?>">
                                 <div class="card z-depth-0 small">
@@ -325,7 +327,8 @@ mysqli_close($conn);
                         </div>
                 </div>
         </div>
-    <?php } ?>
+    <?php $count++;
+        } ?>
 
 
     </div>

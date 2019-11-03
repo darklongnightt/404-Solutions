@@ -12,47 +12,56 @@ $dataPoints = array(
 );
 
 ?>
+
+<head>
+    <link rel="stylesheet" href="/css/timeline.css" type="text/css">
+</head>
+
 <!DOCTYPE HTML>
 <html>
 
-<head>
+<div class="row">
+    <div class="col m6 s12">
 
-    <script src="https://canvasjs.com/assets/script/canvasjs.min.js"></script>
-
-</head>
-
-<script>
-    window.onload = function() {
-
-        var chart = new CanvasJS.Chart("chartContainer", {
-            animationEnabled: true,
-            title: {
-                text: "Usage Share of Desktop Browsers"
-            },
-            subtitles: [{
-                text: "November 2017"
-            }],
-            data: [{
-                type: "pie",
-                yValueFormatString: "#,##0.00\"%\"",
-                indexLabel: "{label} ({y})",
-                dataPoints: <?php echo json_encode($dataPoints, JSON_NUMERIC_CHECK); ?>
-            }]
-        });
-        chart.render();
-    }
-</script>
-
-<body>
-    <div class="container center">
-        <div class="card z-depth-0 white">
+        <div class="card z-depth-0">
             <div class="card-content">
+                <ol class="tl">
+                    <li class="element">
+                        <p class="status"><i class="fa fa-shopping-cart" aria-hidden="true"></i></p>
+                        <span class="point">
+                        </span>
 
-                <div id="chartContainer" style="height: 370px; width: 50%;"></div>
+                    </li>
+                    <li class="element">
+                        <p class="status"><i class="fa fa-credit-card" aria-hidden="true"></i></p>
+                        <span class="active-point">
+                            <p class="description">Confirmed Payment</p>
+                        </span>
+                    </li>
+                    <li class="element">
+                        <p class="status"><i class="fa fa-truck" aria-hidden="true"></i></p>
+                        <span class="point">
+                        </span>
+                    </li>
+                    <li class="element">
+                        <p class="status"><i class="fa fa-archive" aria-hidden="true"></i>
+                        </p>
+                        <span class="point">
+                        </span>
+                    </li>
+                    <li class="element">
+                        <p class="status"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></p>
+                        <span class="point">
+                        </span>
+                    </li>
+                </ol>
             </div>
         </div>
+
+
+
     </div>
-</body>
+</div>
 
 <?php include("templates/footer.php"); ?>
 

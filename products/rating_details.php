@@ -47,7 +47,7 @@ if (isset($_POST['submit'])) {
 		$delirating = mysqli_real_escape_string($conn, $_POST['delirating']);
 		$srating = mysqli_real_escape_string($conn, $_POST['srating']);
 		$review = mysqli_real_escape_string($conn, $_POST['review']);
-		$category = mysqli_real_escape_string($conn, $product['CATEOGRY']);
+		$category = mysqli_real_escape_string($conn, $product['CATEGORY']);
 
 		// Generate unique uid for the rating
 		$unique = true;
