@@ -195,6 +195,7 @@ mysqli_close($conn);
 <!DOCTYPE html>
 <html>
 <h4 class="center grey-text"><?php echo $title; ?></h4>
+
 <div class="sidebar sidebar-padding">
 	<form id="sfform" name="sfform" method="get" action="search.php">
 		<h6 class="grey-text">Category</h6>
@@ -264,10 +265,11 @@ mysqli_close($conn);
 	</form>
 </div>
 
-<div class="container">
+<div class="container" style="margin-left: 300px;">
 	<div class="row">
 		<?php foreach ($productList as $product) { ?>
-			<div class="col s4 md2">
+
+			<div class="col s12 m4">
 				<a href="product_details.php?id=<?php echo $product['PDTID']; ?>">
 					<div class="card z-depth-0 small">
 

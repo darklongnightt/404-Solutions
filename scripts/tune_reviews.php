@@ -3,11 +3,13 @@ include("../config/db_connect.php");
 include("../templates/header.php");
 
 // Fetch all reviews
-$sql = "SELECT DISTINCT(PDTID) FROM review";
+$sql = "SELECT * FROM review";
 $result = mysqli_query($conn, $sql);
 $ratings = mysqli_fetch_all($result, MYSQLI_ASSOC);
 
 foreach ($ratings as $rating) {
+
+    /* 
     // Get category for this product
     $pid = $rating['PDTID'];
     $sql = "SELECT CATEGORY FROM product WHERE PDTID='$pid'";
@@ -16,6 +18,20 @@ foreach ($ratings as $rating) {
 
     // Update reviews
     $sql = "UPDATE review SET CATEGORY='$category' WHERE PDTID='$pid'";
+    if (!mysqli_query($conn, $sql)) {
+        echo 'Query Error: ' . mysqli_error($conn);
+        exit();
+    }
+    */
+
+    // Update date to random date
+    $rid = $rating['REVIEWID'];
+    $date = $rating['CREATED_AT'];
+    $day = random_int(1, 666);
+    $updateDate = date('Y-m-d', strtotime($date . "- $day day"));
+    $updateDate .= ' ' . random_int(10, 23) . ':' . random_int(10, 59) . ':' . random_int(10, 59);
+
+    $sql = "UPDATE review SET CREATED_AT='$updateDate' WHERE REVIEWID='$rid'";
     if (!mysqli_query($conn, $sql)) {
         echo 'Query Error: ' . mysqli_error($conn);
         exit();

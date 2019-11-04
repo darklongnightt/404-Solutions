@@ -1,13 +1,21 @@
 .recent-icon {
   max-width: 75px;
   max-height: 75px;
-  margin: 15px;
+  margin: 15 15 0 0;
+  position: relative;
+}
+
+.top-icon {
+  max-width: 75px;
+  max-height: 75px;
+  margin-top: 15px;
+  margin-bottom: 15px;
   position: relative;
 }
 
 .welcome-label {
   border-radius: 25px;
-  background: #f44336  ;
+  background: #f44336;
   padding: 10px;
 }
 
@@ -52,7 +60,7 @@ img {
 }
 
 .category-card {
-  height: 170px;
+  max-height: 170px;
   margin-bottom: 20px;
   border-radius: 10px;
 }

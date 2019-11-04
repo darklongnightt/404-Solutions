@@ -148,8 +148,6 @@ mysqli_close($conn);
             <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
         </head>
 
-        <!DOCTYPE HTML>
-        <html>
         <script>
             $(document).ready(function() {
                 $('.slider').slider({
@@ -176,10 +174,14 @@ mysqli_close($conn);
             });
         </script>
 
+        <!DOCTYPE HTML>
+        <html>
+
+
         <div class="container">
 
             <div class="row" style="margin-top: 15px;">
-                <div class="col s24 m12">
+                <div class="col s12 m12">
                     <div class="slider">
                         <ul class="slides">
 
@@ -202,54 +204,68 @@ mysqli_close($conn);
             </div>
 
             <div class="row">
-                <div class="col s16 m8">
-                    <div class="card z-depth-0" style="height: 350px;">
-                        <br>
-                        <h6 class="brand-text bold center">Most Popular Products</h6>
+                <div class="col s12 m8">
+                    <div class="card z-depth-0">
+                        <div class="card-content">
 
-                        <?php foreach ($top_products as $product) { ?>
-                            <a href="/products/product_details.php?id=<?php echo $product['PDTID']; ?>">
-                                <span class="img-container" style="margin-left: 10px;">
-                                    <img src="<?php if ($product['IMAGE']) {
-                                                        echo $product['IMAGE'];
-                                                    } else {
-                                                        echo 'img/product_icon.svg';
-                                                    } ?>" class="recent-icon">
+                            <h6 class="brand-text bold center">Most Popular Products</h6>
 
-                                    <div class="white-text discount-label">
-                                        <?php echo '$' . number_format(htmlspecialchars($product['PDTPRICE']) / 100 * htmlspecialchars(100 - $product['PDTDISCOUNT']), 2, '.', ''); ?>
+                            <div class="row">
+                                <?php foreach ($top_products as $product) { ?>
+                                    <div class="col s4 m2 center">
+
+                                        <a href="/products/product_details.php?id=<?php echo $product['PDTID']; ?>">
+                                            <img src="<?php if ($product['IMAGE']) {
+                                                                echo $product['IMAGE'];
+                                                            } else {
+                                                                echo 'img/product_icon.svg';
+                                                            } ?>" class="top-icon">
+
+                                            <div class="white-text discount-label">
+                                                <?php echo '$' . number_format(htmlspecialchars($product['PDTPRICE']) / 100 * htmlspecialchars(100 - $product['PDTDISCOUNT']), 2, '.', ''); ?>
+                                            </div>
+                                        </a>
+
                                     </div>
-                                </span>
-                            </a>
-                        <?php } ?>
+
+                                <?php } ?>
+                            </div>
+
+                        </div>
                     </div>
                 </div>
 
-                <div class="col s8 m4">
-                    <div class="card z-depth-0" style="height: 350px;">
+                <div class="col s12 m4">
+                    <div class="card z-depth-0">
                         <div class="card-content center">
                             <a href="/profile.php">
                                 <h6 class="white-text bold welcome-label z-depth-1"><i class="fa fa-user-o" aria-hidden="true" style="margin-right: 10px;"></i>Welcome, <?php echo $name . '!' ?> </h6>
                             </a>
+                            <div class="bold center">Recently Viewed</div>
+                            <div class="row">
+                                <?php foreach ($recent_views as $product) { ?>
+                                    <div class="col m4 s4 center">
+                                        <a href="/products/product_details.php?id=<?php echo $product['PDTID']; ?>">
+                                            <span class="img-container">
+                                                <img src="<?php if ($product['IMAGE']) {
+                                                                    echo $product['IMAGE'];
+                                                                } else {
+                                                                    echo 'img/product_icon.svg';
+                                                                } ?>" class="recent-icon">
+                                            </span>
+                                        </a>
+                                    </div>
+                                <?php } ?>
+
+                            </div>
                         </div>
-                        <div class="bold center">Recently Viewed</div>
-                        <?php foreach ($recent_views as $product) { ?>
-                            <a href="/products/product_details.php?id=<?php echo $product['PDTID']; ?>">
-                                <span class="img-container">
-                                    <img src="<?php if ($product['IMAGE']) {
-                                                        echo $product['IMAGE'];
-                                                    } else {
-                                                        echo 'img/product_icon.svg';
-                                                    } ?>" class="recent-icon">
-                                </span>
-                            </a>
-                        <?php } ?>
+
                     </div>
                 </div>
             </div>
 
             <div class="row " style="margin-bottom: 0px;">
-                <div class="col s24 m12">
+                <div class="col s12 m12">
                     <form action="index.php" method="POST" style="margin-bottom: 0%;">
 
                         <div class="input-field col s12 search-bar" style="border-radius: 25px; border-style: solid; color: grey; border-width: thin; background: white;">
@@ -266,7 +282,7 @@ mysqli_close($conn);
                 <h5 class="brand-text bold">&nbsp&nbspShop By Category</h5>
                 <?php foreach ($categories as $category) { ?>
                     <a href="products/search.php?Filter=<?php echo str_replace(' ', '-', $category['CATEGORY']); ?>&sort=default&priceRange=%240+-+%2410000&check=&searchItem=&submit=Search">
-                        <div class="col s3 md2">
+                        <div class="col s6 m3">
                             <div class="card z-depth-0 category-card">
                                 <img src="img/category/<?php echo $category['CATEGORY'] . '.jpg'; ?>" class="category-icon">
 
@@ -289,7 +305,7 @@ mysqli_close($conn);
                         foreach ($cluster_recommendations as $recommendation) {
                             if ($count >= 12) break;
                             ?>
-                        <div class="col s3 md2">
+                        <div class="col s12 m3">
                             <a href="/products/product_details.php?id=<?php echo $recommendation['PDTID']; ?>">
                                 <div class="card z-depth-0 small">
 
@@ -336,8 +352,8 @@ mysqli_close($conn);
     </div>
 <?php } ?>
 </div>
+<?php include("templates/footer.php"); ?>
 
 </div>
-<?php include("templates/footer.php"); ?>
 
         </html>

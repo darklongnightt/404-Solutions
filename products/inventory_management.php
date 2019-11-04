@@ -215,7 +215,7 @@ mysqli_close($conn);
     </form>
 </div>
 
-<div class="container">
+<div class="container" style="margin-left: 250px;">
     <div class="row">
         <div class="col s22 m11 offset-m1">
 

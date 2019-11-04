@@ -14,7 +14,8 @@ if (isset($_GET['id'])) {
     $product = mysqli_fetch_assoc($result);
 
     // Fetch the product reviews
-    $sql = "SELECT * FROM review JOIN customer ON review.USERID = customer.USERID WHERE PDTID='$id'";
+    $sql = "SELECT * FROM review JOIN customer ON review.USERID = customer.USERID 
+    WHERE PDTID='$id' ORDER BY review.CREATED_AT DESC";
     $result = mysqli_query($conn, $sql);
     $ratings = mysqli_fetch_all($result, MYSQLI_ASSOC);
 
@@ -344,7 +345,7 @@ if (isset($_GET['id'])) {
                                         }
                                         echo '<div>by ' . $rating['FIRSTNAME'] . '</div>';
                                         echo '<div><i class="material-icons" style="margin-top:5px;">verified_user</i></div></td>';
-                                        echo '<td>' . $rating['COMMENT'] . '</td>';
+                                        echo '<td>' . $rating['COMMENT'] . ' <div class="grey-text" style="font-size: 14px; margin-top: 5px;">' . date('d-M-Y H:i', strtotime($rating['CREATED_AT'])) . '</div></td>';
                                         echo '</tr>';
                                     }
                                     ?>

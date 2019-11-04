@@ -184,8 +184,8 @@ mysqli_close($conn);
 <!DOCTYPE html>
 <html>
 
-<h4 class="center grey-text">My Shopping Cart</h4>
 <div class="container">
+    <h4 class="center grey-text">My Shopping Cart</h4>
     <div class="row">
         <div class="col s16 m8">
             <?php if ($cartList) {

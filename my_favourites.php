@@ -67,8 +67,8 @@ mysqli_close($conn);
 <!DOCTYPE HTML>
 <html>
 
-<h4 class="center grey-text">My Favourite List</h4>
 <div class="container">
+    <h4 class="center grey-text">My Favourites</h4>
     <?php if ($faveList) {
         foreach ($faveList as $product) {
             $totalPrice =  $product['PDTPRICE'];

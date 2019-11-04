@@ -16,7 +16,7 @@ if (isset($_POST['submit'])) {
 
 if (isset($_SESSION['LASTACTION'])) {
     if ($_SESSION['LASTACTION'] == "DELIVER") {
-        echo "<script>M.toast({html: 'Order set to delivering!'});</script>";
+        echo "<script>M.toast({html: 'Order sent for delivery!'});</script>";
     }
 
     $_SESSION['LASTACTION'] = "NONE";
