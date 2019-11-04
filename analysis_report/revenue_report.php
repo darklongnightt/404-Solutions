@@ -28,18 +28,34 @@ $predicted_profits = array();
 $timesteps = explode('|', $revenue['TIMESTEP']);
 $profits = explode('|', $revenue['REVENUE']);
 
+// Set values for graph
+$dataPoints = array();
+$dataPoints1 = array();
+
 for ($i = 0; $i < sizeof($timesteps); $i++) {
     if ($timesteps[$i] != '') {
 
         $formatted = date("F Y", strtotime($timesteps[$i]));
+        $jsDate = strtotime($formatted) * 1000;
+        $data = array("x" => $jsDate, "y" => $profits[$i]);
+
+        if (date("Y-m", strtotime($timesteps[$i])) == date("Y-m", strtotime(("-1 months")))) {
+            array_push($dataPoints1, $data);
+        }
 
         if (date("Y-m", strtotime($timesteps[$i])) >= date("Y-m", strtotime($today))) {
 
             array_push($predicted_timesteps, $formatted);
             array_push($predicted_profits, $profits[$i]);
+
+            // Set values for graph
+            array_push($dataPoints1, $data);
         } else {
             array_push($past_timesteps, $formatted);
             array_push($past_profits, $profits[$i]);
+
+            // Set values for graph
+            array_push($dataPoints, $data);
         }
     }
 }
@@ -48,6 +64,50 @@ for ($i = 0; $i < sizeof($timesteps); $i++) {
 mysqli_free_result($result);
 mysqli_close($conn);
 ?>
+
+<script>
+    window.onload = function() {
+
+        var chart = new CanvasJS.Chart("chartContainer", {
+            animationEnabled: true,
+            title: {
+                text: "SuperData Monthly Revenue",
+                fontFamily: "Montserrat"
+            },
+            axisY: {
+                title: "Revenue (SGD)",
+                prefix: "$"
+            },
+            axisX: {
+                valueFormatString: "YYYY-MMM"
+            },
+            data: [{
+                    type: "line",
+                    markerSize: 5,
+                    lineColor: "#2196f3",
+                    markerColor: "black",
+                    xValueFormatString: "YYYY-MMM",
+                    yValueFormatString: "$#,##0.##",
+                    xValueType: "dateTime",
+                    dataPoints: <?php echo json_encode($dataPoints, JSON_NUMERIC_CHECK); ?>
+                },
+                {
+                    type: "line",
+                    markerSize: 5,
+                    lineColor: "red",
+                    markerColor: "black",
+                    xValueFormatString: "YYYY-MMM",
+                    yValueFormatString: "$#,##0.##",
+                    xValueType: "dateTime",
+                    dataPoints: <?php echo json_encode($dataPoints1, JSON_NUMERIC_CHECK); ?>
+                }
+            ]
+        });
+
+        chart.render();
+
+    }
+</script>
 
 <style>
     .method-icon {
@@ -110,12 +170,26 @@ mysqli_close($conn);
     </div>
 
     <?php if ($revenue) : ?>
+
+        <div class="row">
+            <div class="col m12 s24">
+                <div class="card z-depth-0 center">
+                    <div class="card-content">
+
+                        <div id="chartContainer" style="height: 400px; width: 100%;"></div>
+                        <script src="https://canvasjs.com/assets/script/canvasjs.min.js"></script>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <div class="row">
             <div class="col s12 m6">
                 <div class="card z-depth-0">
                     <div class="card-content">
-                        <h5 class="title-label white-text center">Past Revenue</h5>
-                        <table class="responsive-table centered">
+                        <h5 class="center bold blue-text">Past Revenue</h5>
+                        <table class="responsive-table centered highlight">
                             <thead>
                                 <tr>
                                     <th>Date</th>
@@ -140,8 +214,8 @@ mysqli_close($conn);
             <div class="col s12 m6">
                 <div class="card z-depth-0">
                     <div class="card-content">
-                        <h5 class="title-label white-text center">Forecasted Revenue</h5>
-                        <table class="responsive-table centered">
+                        <h5 class="center bold red-text">Forecasted Revenue</h5>
+                        <table class="responsive-table centered highlight">
                             <thead>
                                 <tr>
                                     <th>Date</th>
