@@ -8,7 +8,8 @@ $query = "SELECT * FROM product_recommendation";
 include('../templates/pagination_query.php');
 
 // Fetch product recommendations
-$sql = "SELECT * FROM product_recommendation LIMIT $startingLimit, $resultsPerPage";
+$sql = "SELECT * FROM product_recommendation ORDER BY CHAR_LENGTH(RECOMMENDATIONS) DESC
+LIMIT $startingLimit, $resultsPerPage";
 $result = mysqli_query($conn, $sql);
 $products = mysqli_fetch_all($result, MYSQLI_ASSOC);
 

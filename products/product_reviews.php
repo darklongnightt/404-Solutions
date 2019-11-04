@@ -342,7 +342,8 @@ if (isset($_GET['id'])) {
                                                 echo '<i class="fa fa-star-o star" aria-hidden="true"></i>';
                                             }
                                         }
-                                        echo '<div>by ' . $rating['FIRSTNAME'] . '</div></td>';
+                                        echo '<div>by ' . $rating['FIRSTNAME'] . '</div>';
+                                        echo '<div><i class="material-icons" style="margin-top:5px;">verified_user</i></div></td>';
                                         echo '<td>' . $rating['COMMENT'] . '</td>';
                                         echo '</tr>';
                                     }

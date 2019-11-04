@@ -14,6 +14,7 @@
 	<link rel="stylesheet" href="/css/profile.css" type="text/css">
 	<link rel="stylesheet" href="/css/dropdown.css" type="text/css">
 	<link rel="stylesheet" href="/css/materialize.css" type="text/css">
+	<link rel="stylesheet" href="/css/timeline.css" type="text/css">
 
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
 	<script src="https://code.jquery.com/jquery-1.10.2.js"></script>

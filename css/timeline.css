@@ -3,8 +3,8 @@
   position: relative;
   display: block;
   margin-top: 30px;
-  height: 4px;
-  background: #999999;
+  height: 3px;
+  background: black;
 }
 
 .tl::before,
@@ -16,7 +16,7 @@
   width: 0;
   height: 0;
   border-radius: 10px;
-  border: 10px solid #999999;
+  border: 10px solid black;
 }
 
 .tl::before {
@@ -27,7 +27,7 @@
   right: -10px;
   border: 10px solid transparent;
   border-right: 0;
-  border-left: 20px solid #999999;
+  border-left: 20px solid black;
   border-radius: 3px;
 }
 
@@ -56,9 +56,9 @@
   display: block;
   width: 10px;
   height: 10px;
-  border: 3px solid #999999;
+  border: 3px solid black;
   border-radius: 20px;
-  background: #999999;
+  background: black;
   position: absolute;
 }
 
@@ -85,6 +85,7 @@
   font-weight: normal;
   z-index: 1;
   top: 20px;
+  right: 25px;
 }
 
 .description::before {
@@ -107,4 +108,19 @@
 .active-point:hover .description {
   display: inline-block;
   width: 200px;
+}
+
+.order-card {
+  border-radius: 15px;
+}
+
+.card-roof {
+  background-color: black;
+  height: 25px;
+  border-radius: 15px;
+}
+
+.bill-card {
+  border-radius: 15px;
+  border-style: solid;
 }

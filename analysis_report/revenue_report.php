@@ -173,7 +173,7 @@ mysqli_close($conn);
 
         <div class="row">
             <div class="col m12 s24">
-                <div class="card z-depth-0 center">
+                <div class="card center">
                     <div class="card-content">
 
                         <div id="chartContainer" style="height: 400px; width: 100%;"></div>

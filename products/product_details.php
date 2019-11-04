@@ -344,7 +344,7 @@ mysqli_close($conn);
                                                     echo $recommendation['IMAGE'];
                                                 } else {
                                                     echo 'img/product_icon.svg';
-                                                } ?>" class="product-icon">
+                                                } ?>" class="product-icon circle">
                             <div class="card-content center">
                                 <h6 class="black-text"> <?php echo htmlspecialchars($recommendation['PDTNAME']); ?> <label> <?php echo htmlspecialchars($recommendation['WEIGHT']); ?> </label></h6>
                                 <?php if ($recommendation['PDTDISCNT'] > 0) { ?>

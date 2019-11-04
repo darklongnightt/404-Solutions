@@ -50,19 +50,15 @@ mysqli_free_result($result);
 mysqli_close($conn);
 ?>
 
-<head>
-    <link rel="stylesheet" href="/css/timeline.css" type="text/css">
-</head>
-
 <!DOCTYPE HTML>
 <html>
 
-<h4 class="center grey-text">My Orders</h4>
+<h4 class="center grey-text">My Order History</h4>
 <div class="container">
     <?php if ($orderList) {
         foreach ($orderList as $order) { ?>
             <div class="col s8 md4">
-                <div class="card z-depth-0">
+                <div class="card order-card">
                     <div class="card-content center">
                         <a href="/products/product_details.php?id=<?php echo $order['PDTID']; ?>">
                             <img src="<?php if ($order['IMAGE']) {
@@ -92,7 +88,7 @@ mysqli_close($conn);
                                     <li class="element">
                                         <p class="status"><i class="fa fa-shopping-cart" aria-hidden="true"></i></p>
                                         <?php if ($order['STATUS'] == 'Pending Payment') : ?>
-                                            <span class="active-point">
+                                            <span class="btn-floating pulse active-point">
                                                 <p class="description">Pending Payment</p>
                                             </span>
                                         <?php else : ?>
@@ -103,7 +99,7 @@ mysqli_close($conn);
                                     <li class="element">
                                         <p class="status"><i class="fa fa-credit-card" aria-hidden="true"></i></p>
                                         <?php if ($order['STATUS'] == 'Confirmed Payment') : ?>
-                                            <span class="active-point">
+                                            <span class="btn-floating pulse active-point">
                                                 <p class="description">Payment is confirmed, we are currently processing your order!</p>
                                             </span>
                                         <?php else : ?>
@@ -114,7 +110,7 @@ mysqli_close($conn);
                                     <li class="element">
                                         <p class="status"><i class="fa fa-truck" aria-hidden="true"></i></p>
                                         <?php if ($order['STATUS'] == 'Delivering') : ?>
-                                            <span class="active-point">
+                                            <span class="btn-floating pulse active-point">
                                                 <p class="description">Please be patient, your order is currently being delivered!</p>
                                             </span>
                                         <?php else : ?>
@@ -123,9 +119,9 @@ mysqli_close($conn);
                                     </li>
 
                                     <li class="element">
-                                        <p class="status"><i class="fa fa-archive" aria-hidden="true"></i></p>
+                                        <p class="status"><i class="fa fa-archive" aria-hidden="true" style="margin-left: 3px;"></i></p>
                                         <?php if ($order['STATUS'] == 'Confirmed Delivery') : ?>
-                                            <span class="active-point">
+                                            <span class="btn-floating pulse active-point">
                                                 <p class="description">Delivery is confirmed! Please leave us a feedback!</p>
                                             </span>
                                         <?php else : ?>
@@ -134,9 +130,9 @@ mysqli_close($conn);
                                     </li>
 
                                     <li class="element">
-                                        <p class="status"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></p>
+                                        <p class="status"><i class="fa fa-pencil-square-o" style="margin-left: 5px;" aria-hidden="true"></i></p>
                                         <?php if ($order['STATUS'] == 'Delivered & Reviewed') : ?>
-                                            <span class="active-point">
+                                            <span class="btn-floating pulse active-point">
                                                 <p class="description">We value your feedback!</p>
                                             </span>
                                         <?php else : ?>

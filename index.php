@@ -228,7 +228,9 @@ mysqli_close($conn);
                 <div class="col s8 m4">
                     <div class="card z-depth-0" style="height: 350px;">
                         <div class="card-content center">
-                            <h6 class="white-text bold welcome-label">Welcome, <?php echo $name . '!' ?> </h6>
+                            <a href="/profile.php">
+                                <h6 class="white-text bold welcome-label z-depth-1"><i class="fa fa-user-o" aria-hidden="true" style="margin-right: 10px;"></i>Welcome, <?php echo $name . '!' ?> </h6>
+                            </a>
                         </div>
                         <div class="bold center">Recently Viewed</div>
                         <?php foreach ($recent_views as $product) { ?>

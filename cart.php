@@ -211,28 +211,35 @@ mysqli_close($conn);
                     $totalQty += $product['CARTQTY'];
                     ?>
 
-                    <div class="card z-depth-0">
+                    <div class="card z-depth-0 order-card">
                         <a href="/products/product_details.php?id=<?php echo $product['PDTID']; ?>">
                             <img src="<?php if ($product['IMAGE']) {
                                                     echo $product['IMAGE'];
                                                 } else {
                                                     echo 'img/product_icon.svg';
-                                                } ?>" class="product-icon"> </a>
+                                                } ?>" class="product-icon circle"> </a>
                         <div class="card-content center">
                             <h6> <?php echo htmlspecialchars($product['PDTNAME'] . ' - ' . $product['WEIGHT']); ?> </h6>
 
-                            <h6> <?php echo htmlspecialchars('Unit Price: $' . number_format($netUnit, 2, '.', '')); ?> </h6>
+                            <div>
+                                <span class="grey-text">Unit Price: </span>
+                                <span class="flow-text">
+                                    <?php echo '$' . number_format($netUnit, 2, '.', ''); ?>
+                                </span>
+                            </div>
 
                             <?php if ($product['PDTDISCNT'] > 0) { ?>
                                 <span class="grey-text">
                                     <strike><?php echo htmlspecialchars('$' . number_format($unitPrice, 2, '.', '')); ?></strike>
                                 </span>
-                                <span class="red-text"> <?php echo htmlspecialchars(' -' . $product['PDTDISCNT'] . '%'); ?> </span>
+                                <span class="white-text discount-label"> <?php echo htmlspecialchars(' -' . $product['PDTDISCNT'] . '%'); ?> </span>
                             <?php } ?>
 
                             <div> <?php echo htmlspecialchars('Quantity: ' . $product['CARTQTY']); ?> </div>
                             <div class="card-action right-align">
-                                <a href="cart.php?remove=<?php echo $product['PDTID']; ?>" class="brand-text">Remove</a>
+                                <a href="cart.php?remove=<?php echo $product['PDTID']; ?>" class="brand-text">
+                                    <i class="fa fa-trash" aria-hidden="true"></i> Remove
+                                </a>
                             </div>
                         </div>
                     </div>
@@ -260,7 +267,7 @@ mysqli_close($conn);
         </div>
 
         <div class="col s6 m3 offset-m1">
-            <div class="card z-depth-0">
+            <div class="card z-depth-0 bill-card">
                 <div class="card-content">
                     <h5>Order Summary</h5>
                     <div>Subtotal: $<?php echo htmlspecialchars(number_format($sumSubTotal, 2, '.', '')); ?> </div>
@@ -293,7 +300,7 @@ mysqli_close($conn);
                 </div>
             </div>
 
-            <div class="card z-depth-0">
+            <div class="card z-depth-0 bill-card">
                 <div class="card-content">
                     <form action="cart.php" method="POST" id="applydiscount">
                         <h6><i class="fa fa-tag" aria-hidden="true"></i>&nbspCoupon:</h6>

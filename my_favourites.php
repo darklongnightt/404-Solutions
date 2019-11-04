@@ -76,13 +76,13 @@ mysqli_close($conn);
             $netPrice = round($totalPrice - $totalDiscount, 2);
             ?>
 
-            <div class="card z-depth-0">
+            <div class="card z-depth-0 order-card">
                 <a href="/products/product_details.php?id=<?php echo $product['PDTID']; ?>">
                     <img src="<?php if ($product['IMAGE']) {
                                             echo $product['IMAGE'];
                                         } else {
                                             echo 'img/product_icon.svg';
-                                        } ?>" class="product-icon"> </a>
+                                        } ?>" class="product-icon circle"> </a>
                 <div class="card-content center">
                     <h6> <?php echo htmlspecialchars($product['PDTNAME'] . ' - ' . $product['WEIGHT']); ?> </h6>
 
