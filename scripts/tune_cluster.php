@@ -45,9 +45,6 @@ for ($i = 0; $i < 4600; $i++) {
     }
 }
 
-
-
-
 mysqli_free_result($result);
 mysqli_close($conn);
 ?>
