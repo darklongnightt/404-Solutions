@@ -236,7 +236,7 @@ mysqli_close($conn);
                 </div>
 
                 <div class="col s12 m4">
-                    <div class="card z-depth-0">
+                    <div class="card z-depth-0" style="min-height: 356px;">
                         <div class="card-content center">
                             <a href="/profile.php">
                                 <h6 class="white-text bold welcome-label z-depth-1"><i class="fa fa-user-o" aria-hidden="true" style="margin-right: 10px;"></i>Welcome, <?php echo $name . '!' ?> </h6>
@@ -265,17 +265,15 @@ mysqli_close($conn);
             </div>
 
             <div class="row " style="margin-bottom: 0px;">
-                <div class="col s12 m12">
-                    <form action="index.php" method="POST" style="margin-bottom: 0%;">
+                <form action="index.php" method="POST" style="margin-bottom: 0%;">
 
-                        <div class="input-field col s12 search-bar" style="border-radius: 25px; border-style: solid; color: grey; border-width: thin; background: white;">
-                            <input type="text" name="search" placeholder="Search Products" style="margin-left: 15px; width: 92%;">
-                            <button type="submit" name="submit" class="btn white z-depth-0">
-                                <i class="material-icons prefix black-text">search</i>
-                            </button>
-                        </div>
-                    </form>
-                </div>
+                    <div class="input-field search-bar" style="border-radius: 25px; border-style: solid; color: grey; border-width: thin; background: white;">
+                        <input type="text" name="search" placeholder="Search Products" style="margin-left: 15px; width: 92%;">
+                        <button type="submit" name="submit" class="btn white z-depth-0 hide-on-med-and-down">
+                            <i class="material-icons prefix black-text">search</i>
+                        </button>
+                    </div>
+                </form>
             </div>
 
             <div class="row">
