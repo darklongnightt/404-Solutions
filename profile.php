@@ -2,6 +2,24 @@
 include('config/db_connect.php');
 include('templates/header.php');
 
+if (isset($_SESSION['LASTACTION'])) {
+	switch ($_SESSION['LASTACTION']) {
+		case 'UPDATEPROFILE':
+			echo "<script>M.toast({html: 'Successfully updated personal details!'});</script>";
+			break;
+
+		case 'UPDATEPASSWORD':
+			echo "<script>M.toast({html: 'Successfully updated password!'});</script>";
+			break;
+
+		case 'UPDATEADDRESS':
+			echo "<script>M.toast({html: 'Successfully updated shipping address!'});</script>";
+			break;
+	}
+
+	$_SESSION['LASTACTION'] = "NONE";
+}
+
 $errors = array(
 	'oldpassword' => '', 'newpassword1' => '', 'newpassword2' => '',
 	'fname' => '', 'lname' => '', 'email' => '', 'dob' => '', 'contactno' => '',
@@ -85,6 +103,7 @@ if (isset($_POST['updateDetails'])) {
 				}
 			}
 
+			$_SESSION['LASTACTION'] = 'UPDATEPROFILE';
 			echo "<script type='text/javascript'>window.top.location='profile.php';</script>";
 		} else {
 			echo 'Query Error: ' . mysqli_error($conn);
@@ -136,7 +155,8 @@ if (isset($_POST['updateAdd'])) {
 		}
 
 		if (mysqli_query($conn, $updateQ)) {
-			echo "<script type='text/javascript'>window.top.location='profile.php';</script>";
+			$_SESSION['LASTACTION'] = 'UPDATEADDRESS';
+			echo "<script type='text/javascript'>window.location.href='profile.php';</script>";
 		} else {
 			echo 'Query Error: ' . mysqli_error($conn);
 		}
@@ -198,6 +218,7 @@ if (isset($_POST['changePass'])) {
 				$email = $customer['EMAIL'];
 				$sql = "UPDATE salt SET CHANGEPW='FALSE' WHERE EMAIL='$email'";
 				if (mysqli_query($conn, $sql)) {
+					$_SESSION['LASTACTION'] = 'UPDATEPASSWORD';
 					echo "<script type='text/javascript'>window.top.location='/profile.php';</script>";
 				} else {
 					echo 'Query Error: ' . mysqli_error($conn);
@@ -215,164 +236,169 @@ if (isset($_POST['changePass'])) {
 
 ?>
 
-<style>
-	.EditFormSide {
-		border: 2px solid;
-		border-radius: 5px;
-		padding: 20px;
-	}
-</style>
+	<style>
+		.EditFormSide {
+			border: 2px solid;
+			border-radius: 5px;
+			padding: 20px;
+		}
+	</style>
 
-<html>
-<script>
-	$(document).ready(function() {
-		$("#personal-div").show().siblings().hide();
+	<html>
+	<script>
+		$(document).ready(function() {
+			if (window.location.href.indexOf("#address") > -1)
+				$("#address-div").show().siblings().hide();
+			else if (window.location.href.indexOf("#password") > -1)
+				$("#changePass-div").show().siblings().hide();
+			else
+				$("#personal-div").show().siblings().hide();
 
-		$("#details").click(function() {
-			$("#personal-div").show().siblings().hide();
+			$("#details").click(function() {
+				$("#personal-div").show().siblings().hide();
+			});
+
+			$("#address").click(function() {
+				$("#address-div").show().siblings().hide();
+			});
+
+			$("#changePass").click(function() {
+				$("#changePass-div").show().siblings().hide();
+			});
 		});
+	</script>
 
-		$("#address").click(function() {
-			$("#address-div").show().siblings().hide();
-		});
-
-		$("#changePass").click(function() {
-			$("#changePass-div").show().siblings().hide();
-		});
-	});
-</script>
-
-<body>
-	<div class="sidenav sidenav-fixed ">
-		<div class="center top-padding">
-			<span class="btn profile-logo btn-floating red"> <?php echo $_SESSION['U_INITIALS'] ?></span>
-		</div>
-		<br>
-		<ul class="center">
-			<a href="#">
-				<li id="details" class="black-text"> My Personal Details </li>
-			</a>
-			<?php if (substr($uid, 0, 3) == 'CUS') { ?>
-				<a href="#">
-					<li id="address" class="black-text"> My Address </li>
-				</a>
-			<?php } ?>
-			<a href="#">
-				<li id="changePass" class="black-text"> Change Password </li>
-			</a>
-
-		</ul>
-	</div>
-
-	<div class="right-contents">
-		<div id="personal-div" class="prof-detail-container">
-			<h4 class="center top-padding"> Personal Details</h4>
+	<body>
+		<div class="sidenav sidenav-fixed ">
+			<div class="center top-padding">
+				<span class="btn profile-logo btn-floating red"> <?php echo $_SESSION['U_INITIALS'] ?></span>
+			</div>
 			<br>
-			<form method="post" class="EditForm">
-				<label>First Name: </label>
-				<input type="text" name="firstname" value="<?php echo htmlspecialchars($cust_details['FIRSTNAME']); ?>">
-				<div class="red-text"><?php echo htmlspecialchars($errors['fname']); ?></div>
+			<ul class="center">
+				<a href="#">
+					<li id="details" class="black-text"> My Personal Details </li>
+				</a>
+				<?php if (substr($uid, 0, 3) == 'CUS') { ?>
+					<a href="#">
+						<li id="address" class="black-text"> My Address </li>
+					</a>
+				<?php } ?>
+				<a href="#">
+					<li id="changePass" class="black-text"> Change Password </li>
+				</a>
 
-				<label>Last Name:</label>
-				<input type="text" name="lastname" value="<?php echo htmlspecialchars($cust_details['LASTNAME']); ?>">
-				<div class="red-text"><?php echo htmlspecialchars($errors['lname']); ?></div>
-
-				<label>Email: </label>
-				<input type="text" name="email" value="<?php echo htmlspecialchars($cust_details['EMAIL']); ?>">
-				<div class="red-text"><?php echo htmlspecialchars($errors['email']); ?></div>
-
-				<label>Date Of Birth: </label>
-				<input type="date" name="dob" value="<?php echo htmlspecialchars($cust_details['DOB']); ?>">
-				<div class="red-text"><?php echo htmlspecialchars($errors['dob']); ?></div>
-
-				<label>Contact Number:</label>
-				<input type="text" name="contactno" value="<?php echo htmlspecialchars($cust_details['PHONENO']); ?>" maxlength="8">
-				<div class="red-text"><?php echo htmlspecialchars($errors['contactno']); ?></div>
-
-				<br>
-				<div class="center">
-					<input type="submit" name="updateDetails" value="update" class="btn brand z-depth-0">
-				</div>
-			</form>
+			</ul>
 		</div>
 
-		<div id="address-div">
-			<h4 class="center top-padding"> Delivery Address </h4>
+		<div class="right-contents">
+			<div id="personal-div" class="prof-detail-container">
+				<h4 class="center top-padding"> Personal Details</h4>
+				<br>
+				<form method="post" class="EditForm">
+					<label>First Name: </label>
+					<input type="text" name="firstname" value="<?php echo htmlspecialchars($cust_details['FIRSTNAME']); ?>">
+					<div class="red-text"><?php echo htmlspecialchars($errors['fname']); ?></div>
 
-			<div class="row">
-				<div class="col s12 m6">
-					<form method="post">
+					<label>Last Name:</label>
+					<input type="text" name="lastname" value="<?php echo htmlspecialchars($cust_details['LASTNAME']); ?>">
+					<div class="red-text"><?php echo htmlspecialchars($errors['lname']); ?></div>
+
+					<label>Email: </label>
+					<input type="text" name="email" value="<?php echo htmlspecialchars($cust_details['EMAIL']); ?>">
+					<div class="red-text"><?php echo htmlspecialchars($errors['email']); ?></div>
+
+					<label>Date Of Birth: </label>
+					<input type="date" name="dob" value="<?php echo htmlspecialchars($cust_details['DOB']); ?>">
+					<div class="red-text"><?php echo htmlspecialchars($errors['dob']); ?></div>
+
+					<label>Contact Number:</label>
+					<input type="text" name="contactno" value="<?php echo htmlspecialchars($cust_details['PHONENO']); ?>" maxlength="8">
+					<div class="red-text"><?php echo htmlspecialchars($errors['contactno']); ?></div>
+
+					<br>
+					<div class="center">
+						<input type="submit" name="updateDetails" value="update" class="btn brand z-depth-0">
+					</div>
+				</form>
+			</div>
+
+			<div id="address-div">
+				<h4 class="center top-padding"> Shipping Address </h4>
+
+				<div class="row">
+					<div class="col s12 m6">
+						<form method="post" action="profile.php?#address">
+							<div class="card z-depth-0 EditFormSide">
+								<h6>Primary Address</h6>
+								<br>
+
+								<label>Address:</label>
+								<input type="text" name="address1" value="<?php echo htmlspecialchars($cust_address['ADDRESS1']); ?>">
+								<div class="red-text"><?php echo htmlspecialchars($errors['address1']); ?></div>
+
+
+								<label>Postal Code:</label>
+								<input type="text" name="postal1" value="<?php echo htmlspecialchars($cust_address['POSTALCD1']); ?>" maxlength="6">
+								<div class="red-text"><?php echo htmlspecialchars($errors['postal1']); ?></div>
+
+								<label>Country: </label>
+								<select class="browser-default" name="country1">
+									<option value="Singapore" <?php if ($cust_address['COUNTRY1'] == 'Singapore') echo 'selected="selected"'; ?>>Singapore</option>
+									<option value="Malaysia" <?php if ($cust_address['COUNTRY1'] == 'Malaysia') echo 'selected="selected"'; ?>>Malaysia</option>
+								</select>
+							</div>
+					</div>
+
+					<div class="col s12 m6">
 						<div class="card z-depth-0 EditFormSide">
-							<h6>Primary Address</h6>
+							<h6>Secondary Address</h6>
 							<br>
 
 							<label>Address:</label>
-							<input type="text" name="address1" value="<?php echo htmlspecialchars($cust_address['ADDRESS1']); ?>">
-							<div class="red-text"><?php echo htmlspecialchars($errors['address1']); ?></div>
-
+							<input type="text" name="address2" value="<?php echo htmlspecialchars($cust_address['ADDRESS2']); ?>">
 
 							<label>Postal Code:</label>
-							<input type="text" name="postal1" value="<?php echo htmlspecialchars($cust_address['POSTALCD1']); ?>" maxlength="6">
-							<div class="red-text"><?php echo htmlspecialchars($errors['postal1']); ?></div>
+							<input type="text" name="postal2" value="<?php echo htmlspecialchars($cust_address['POSTALCD2']); ?>" maxlength="6">
+							<div class="red-text"><?php echo htmlspecialchars($errors['postal2']); ?></div>
 
 							<label>Country: </label>
-							<select class="browser-default" name="country1">
-								<option value="Singapore" <?php if ($cust_address['COUNTRY1'] == 'Singapore') echo 'selected="selected"'; ?>>Singapore</option>
-								<option value="Malaysia" <?php if ($cust_address['COUNTRY1'] == 'Malaysia') echo 'selected="selected"'; ?>>Malaysia</option>
+							<select class="browser-default" name="country2">
+								<option value="Singapore" <?php if ($cust_address['COUNTRY2'] == 'Singapore') echo 'selected="selected"'; ?>>Singapore</option>
+								<option value="Malaysia" <?php if ($cust_address['COUNTRY2'] == 'Malaysia') echo 'selected="selected"'; ?>>Malaysia</option>
 							</select>
 						</div>
-				</div>
-
-				<div class="col s12 m6">
-					<div class="card z-depth-0 EditFormSide">
-						<h6>Secondary Address</h6>
-						<br>
-
-						<label>Address:</label>
-						<input type="text" name="address2" value="<?php echo htmlspecialchars($cust_address['ADDRESS2']); ?>">
-
-						<label>Postal Code:</label>
-						<input type="text" name="postal2" value="<?php echo htmlspecialchars($cust_address['POSTALCD2']); ?>" maxlength="6">
-						<div class="red-text"><?php echo htmlspecialchars($errors['postal2']); ?></div>
-
-						<label>Country: </label>
-						<select class="browser-default" name="country2">
-							<option value="Singapore" <?php if ($cust_address['COUNTRY2'] == 'Singapore') echo 'selected="selected"'; ?>>Singapore</option>
-							<option value="Malaysia" <?php if ($cust_address['COUNTRY2'] == 'Malaysia') echo 'selected="selected"'; ?>>Malaysia</option>
-						</select>
 					</div>
 				</div>
-			</div>
 
-			<div class="center">
-				<input type="submit" name="updateAdd" value="update" class="btn brand z-depth-0">
-			</div>
-
-			</form>
-		</div>
-
-		<div id="changePass-div">
-			<h4 class="center top-padding">Change Password</h4>
-			<br>
-			<form class="EditForm" method="POST">
-				<label>Old Password: </label>
-				<input type="password" name="oldpassword">
-				<div class="red-text"><?php echo htmlspecialchars($errors['oldpassword']); ?></div>
-
-				<label>New Password: </label>
-				<input type="password" name="newpassword1">
-				<div class="red-text"><?php echo htmlspecialchars($errors['newpassword1']); ?></div>
-
-				<label>Confirm New Password: </label>
-				<input type="password" name="newpassword2">
-				<div class="red-text"><?php echo htmlspecialchars($errors['newpassword2']); ?></div>
-				<br>
 				<div class="center">
-					<input type="submit" name="changePass" value="Change Password" class="btn brand z-depth-0">
+					<input type="submit" name="updateAdd" value="update" class="btn brand z-depth-0">
 				</div>
-			</form>
-		</div>
-	</div>
-</body>
 
-</html>
+				</form>
+			</div>
+
+			<div id="changePass-div">
+				<h4 class="center top-padding">Change Password</h4>
+				<br>
+				<form class="EditForm" method="POST" action="profile.php?#password">
+					<label>Old Password: </label>
+					<input type="password" name="oldpassword">
+					<div class="red-text"><?php echo htmlspecialchars($errors['oldpassword']); ?></div>
+
+					<label>New Password: </label>
+					<input type="password" name="newpassword1">
+					<div class="red-text"><?php echo htmlspecialchars($errors['newpassword1']); ?></div>
+
+					<label>Confirm New Password: </label>
+					<input type="password" name="newpassword2">
+					<div class="red-text"><?php echo htmlspecialchars($errors['newpassword2']); ?></div>
+					<br>
+					<div class="center">
+						<input type="submit" name="changePass" value="Change Password" class="btn brand z-depth-0">
+					</div>
+				</form>
+			</div>
+		</div>
+	</body>
+
+	</html>

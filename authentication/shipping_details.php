@@ -69,7 +69,7 @@ if (isset($_POST['submit'])) {
 <!DOCTYPE HTML>
 <html>
 <section class="container grey-text">
-    <h4 class="center">Shipping Details</h4>
+    <h4 class="center">Shipping Address</h4>
 
     <form action="shipping_details.php" class="EditForm" method="POST">
         <label>Main Shipping Address: </label>

@@ -5,6 +5,14 @@ include("../templates/header.php");
 
 $files = array();
 
+if (isset($_SESSION['LASTACTION'])) {
+    if ($_SESSION['LASTACTION'] == 'UPLOADGC') {
+        echo "<script>M.toast({html: 'Successfully uploaded image(s) to product(s)!'});</script>";
+    }
+
+    $_SESSION['LASTACTION'] = 'NONE';
+}
+
 // If upload button is clicked
 if ($_FILES) {
     if ($_FILES["uploaded_files"]["error"][0] > 0) {
@@ -39,6 +47,7 @@ if ($_FILES) {
             // Update product image url in database
             $sql = "UPDATE product SET IMAGE='$url' WHERE PDTID='$pdtid';";
             if (mysqli_query($conn, $sql)) {
+                $_SESSION['LASTACTION'] = 'UPLOADGC';
                 echo "<script type='text/javascript'>window.top.location='upload_gc.php';</script>";
             } else {
                 echo 'Query Error: ' . mysqli_error($conn);
