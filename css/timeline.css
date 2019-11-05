@@ -35,8 +35,7 @@
 .element {
   position: relative;
   display: inline-block;
-  float: left;
-  width: 175px;
+  width: 19%;
   font: bold 14px arial;
   height: 50px;
 }
@@ -47,6 +46,14 @@
   left: 36%;
   color: black;
   font-size: 30px;
+}
+
+.element .status-small {
+  position: absolute;
+  top: -36px;
+  left: 34%;
+  color: black;
+  font-size: 26px;
 }
 
 .point {

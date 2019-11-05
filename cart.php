@@ -187,7 +187,7 @@ mysqli_close($conn);
 <div class="container">
     <h4 class="center grey-text">My Shopping Cart</h4>
     <div class="row">
-        <div class="col s16 m8">
+        <div class="col s12 m8">
             <?php if ($cartList) {
                 foreach ($cartList as $product) {
                     $unitPrice = round($product['PDTPRICE'], 2);
@@ -266,7 +266,7 @@ mysqli_close($conn);
             <?php } ?>
         </div>
 
-        <div class="col s6 m3 offset-m1">
+        <div class="col s12 m3 offset-m1">
             <div class="card z-depth-0 bill-card">
                 <div class="card-content">
                     <h5>Order Summary</h5>
@@ -295,7 +295,7 @@ mysqli_close($conn);
 
                     <br>
                     <form action="cart.php<?php if ($appliedDiscount > 0) echo '?discount=' . $couponcode; ?>" method="POST" class="center" id="checkout">
-                        <input type="submit" name="checkout" value="Checkout(<?php echo $totalQty; ?>)" class="btn red z-depth-0" style="width: 200px;" />
+                        <input type="submit" name="checkout" value="Checkout(<?php echo $totalQty; ?>)" class="btn red z-depth-0" style="width: 100%;" />
                     </form>
                 </div>
             </div>
@@ -308,7 +308,7 @@ mysqli_close($conn);
                         <div class="red-text"><?php echo htmlspecialchars($errors['discountcode']); ?></div>
 
                         <div class="center">
-                            <input type="submit" name="applydiscount" value="APPLY" class="btn brand z-depth-0" style="width: 200px;" />
+                            <input type="submit" name="applydiscount" value="APPLY" class="btn brand z-depth-0" style="width: 100%;" />
                         </div>
                     </form>
 

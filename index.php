@@ -32,13 +32,6 @@ function addCart($conn, $id, $qty)
     }
 }
 
-// Checks if search button is pressed
-if (isset($_POST['submit'])) {
-    $search = $_POST['search'];
-    $link = '/products/search.php?Filter=all&sort=default&priceRange=%240.6+-+%2417.91&check=1&searchItem=' . $search . '&submit=';
-    echo "<script type='text/javascript'>window.top.location='$link';</script>";
-}
-
 // Checks if recommended cart is clicked
 if (isset($_GET['cart'])) {
     addCart($conn, $_GET['cart'], 1);
@@ -264,12 +257,12 @@ mysqli_close($conn);
                 </div>
             </div>
 
-            <div class="row " style="margin-bottom: 0px;">
+            <div class="row hide-on-med-and-down" style="margin-bottom: 0px;">
                 <form action="index.php" method="POST" style="margin-bottom: 0%;">
 
                     <div class="input-field search-bar" style="border-radius: 25px; border-style: solid; color: grey; border-width: thin; background: white;">
                         <input type="text" name="search" placeholder="Search Products" style="margin-left: 15px; width: 92%;">
-                        <button type="submit" name="submit" class="btn white z-depth-0 hide-on-med-and-down">
+                        <button type="submit" name="submit" class="btn white z-depth-0">
                             <i class="material-icons prefix black-text">search</i>
                         </button>
                     </div>

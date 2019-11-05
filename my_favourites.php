@@ -102,7 +102,7 @@ mysqli_close($conn);
                             <i class="fa fa-trash" aria-hidden="true"></i> Remove
                         </a>
                         <a href="my_favourites.php?addcart=<?php echo $product['PDTID']; ?>" class="red-text">
-                            <i class="fa fa-shopping-cart"></i> Add to Cart
+                            <i class="fa fa-shopping-cart"></i> Cart
                         </a>
                     </div>
                 </div>

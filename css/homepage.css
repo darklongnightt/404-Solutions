@@ -60,7 +60,7 @@ img {
 }
 
 .category-card {
-  max-height: 170px;
+  height: auto;
   margin-bottom: 20px;
   border-radius: 10px;
 }

@@ -81,7 +81,7 @@ mysqli_close($conn);
 
                         <div> <?php echo htmlspecialchars('Ordered Quantity: ' . $order['ORDERQTY']); ?> </div>
 
-                        <div class="card z-depth-0">
+                        <div class="card z-depth-0 hide-on-small-and-down">
                             <div class="card-content">
                                 <ol class="tl">
                                     <li class="element">
@@ -143,12 +143,56 @@ mysqli_close($conn);
                             </div>
                         </div>
 
+
+                        <div class="center hide-on-med-and-up" style="margin-top: 50px;">
+                            <?php if ($order['STATUS'] == 'Pending Payment') : ?>
+                                <li class="element">
+                                    <p class="status-small"><i class="fa fa-credit-card" aria-hidden="true"></i></p>
+                                    <span class="btn-floating pulse cyan active-point">
+                                        <p class="description">Pending payment, please pay via paypal!</p>
+                                    </span>
+                                </li>
+
+                            <?php elseif ($order['STATUS'] == 'Confirmed Payment') : ?>
+                                <li class="element">
+                                    <p class="status-small"><i class="fa fa-list-ul" aria-hidden="true"></i></p>
+                                    <span class="btn-floating pulse cyan active-point">
+                                        <p class="description">Payment is confirmed, we are currently processing your order!</p>
+                                    </span>
+                                </li>
+
+                            <?php elseif ($order['STATUS'] == 'Delivering') : ?>
+                                <li class="element">
+                                    <p class="status-small"><i class="fa fa-truck" aria-hidden="true"></i></p>
+                                    <span class="btn-floating pulse cyan active-point">
+                                        <p class="description">Please be patient, your order is currently being delivered!</p>
+                                    </span>
+                                </li>
+
+                            <?php elseif ($order['STATUS'] == 'Confirmed Delivery') : ?>
+                                <li class="element">
+                                    <p class="status-small"><i class="fa fa-archive" aria-hidden="true"></i></p>
+                                    <span class="btn-floating pulse cyan active-point">
+                                        <p class="description">Delivery is confirmed! Please leave us a feedback!</p>
+                                    </span>
+                                </li>
+
+                            <?php elseif ($order['STATUS'] == 'Delivered & Reviewed') : ?>
+                                <li class="element">
+                                    <p class="status-small"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></p>
+                                    <span class="btn-floating pulse cyan active-point">
+                                        <p class="description">Thank you! We value your feedback!</p>
+                                    </span>
+                                </li>
+                            <?php endif ?>
+                        </div>
+
                         <div class="card-action right-align">
 
                             <?php if ($order['STATUS'] == "Confirmed Delivery") { ?>
-                                <a href="/products/rating_details.php?id=<?php echo $order['PDTID'] . "&order=" . $order['ORDERID']; ?>" class="btn-small brand" style="width: 200px;">Rate & Review</a>
+                                <a href="/products/rating_details.php?id=<?php echo $order['PDTID'] . "&order=" . $order['ORDERID']; ?>" class="btn-small brand" style="width: 250px;">Rate & Review</a>
                             <?php } else if ($order['STATUS'] == "Delivering") { ?>
-                                <a href="my_orders.php?change_status=<?php echo $order['ORDERID']; ?>" class="btn-small brand" style="width: 200px;">Confirm Delivery</a>
+                                <a href="my_orders.php?change_status=<?php echo $order['ORDERID']; ?>" class="btn-small brand" style="width: 250px;">Confirm Delivery</a>
                             <?php } else if ($order['STATUS'] == "Delivered & Reviewed") { ?>
                                 <span class="grey-text">Finished Order</span>
                             <?php } else if ($order['STATUS'] == "Confirmed Payment") { ?>
@@ -163,7 +207,7 @@ mysqli_close($conn);
 
                                         $location = "/template_pay.php?price=$payPrice&qty=$payQty&name=$payName&tid=$tid";
                                         ?>
-                                <a href="<?php echo $location; ?>" class="btn-small brand" style="width: 200px;">Make Payment</a>
+                                <a href="<?php echo $location; ?>" class="btn-small brand" style="width: 250px;">Make Payment</a>
                             <?php } ?>
 
                             <span class="grey-text left"><?php echo htmlspecialchars('Transaction ID: ' . $order['TRANSACTIONID']); ?></span>

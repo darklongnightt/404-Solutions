@@ -38,6 +38,13 @@ if (isset($_SESSION['U_UID'])) {
 		$uid = $_COOKIE['UID'];
 	}
 }
+
+// Checks if search button is pressed
+if (isset($_POST['submit'])) {
+	$search = $_POST['search'];
+	$link = '/products/search.php?Filter=all&sort=default&priceRange=%240.6+-+%2417.91&check=1&searchItem=' . $search . '&submit=';
+	echo "<script type='text/javascript'>window.top.location='$link';</script>";
+}
 ?>
 
 <script>
@@ -92,7 +99,7 @@ if (isset($_SESSION['U_UID'])) {
 				} ?>
 			</strong>
 
-			<ul class="right hide-on-small-and-down">
+			<ul class="right hide-on-med-and-down">
 
 				<?php if (substr($uid, 0, 3) !== 'ANO') { ?>
 					<li class="right">
@@ -132,21 +139,38 @@ if (isset($_SESSION['U_UID'])) {
 		</div>
 	</nav>
 
-
-
-	<ul id="nav-mobile" class="right hide-on-small-and-down sidenav">
-
+	<ul id="nav-mobile" class="sidenav">
 		<?php if (substr($uid, 0, 3) == 'CUS') { ?>
 			<li>
 				<div class="user-view">
 					<div class="background">
 						<img src="/img/avatar-bg1.jpg">
 					</div>
-					<a href="#user"><img class="circle" src="/img/avatar.jfif"></a>
-					<a href="#name"><span class="white-text name"><?php echo htmlspecialchars($_SESSION['U_FIRSTNAME'] . ' ' . $_SESSION['U_LASTNAME']); ?></span></a>
-					<a href="#email"><span class="white-text email"><?php echo htmlspecialchars($_SESSION['U_EMAIL']); ?></span></a>
+
+					<?php if ($_SESSION['U_GENDER'] == 'M') : ?>
+						<a href="/profile.php"><img class="circle" src="/img/male-avatar.jfif"></a>
+					<?php else : ?>
+						<a href="/profile.php"><img class="circle" src="/img/female-avatar.jpg"></a>
+					<?php endif ?>
+
+					<a href="/profile.php"><span class="white-text name"><?php echo htmlspecialchars($_SESSION['U_FIRSTNAME'] . ' ' . $_SESSION['U_LASTNAME']); ?></span></a>
+					<a href="/profile.php"><span class="white-text email"><?php echo htmlspecialchars($_SESSION['U_EMAIL']); ?></span></a>
 				</div>
 			</li>
+
+			<form action="index.php" method="POST" style="margin-bottom: 0%;">
+				<div class="row" style="border-radius: 20px; border-style: solid; color: grey; border-width: thin; background: white; ">
+					<div class="col m9 s9">
+						<input type="text" name="search" placeholder="Search Products" style="width: 120%;">
+					</div>
+
+					<div class="col m3 s3">
+						<button type="submit" name="submit" class="btn white black-text z-depth-0" style="width: 90%;">
+							<i class="material-icons" style="font-size: 26px; margin-top: 5px; margin-left: 5px;">search</i>
+						</button>
+					</div>
+				</div>
+			</form>
 
 			<li>
 				<a href="../cart.php"><i class="material-icons">shopping_cart</i>Cart</a>
@@ -166,15 +190,26 @@ if (isset($_SESSION['U_UID'])) {
 		<?php } else { ?>
 
 			<li>
+				<div class="user-view">
+					<div class="background">
+						<img src="/img/avatar-bg1.jpg">
+					</div>
+
+					<a href="/profile.php"><img class="circle" src="/img/male-avatar.jfif"></a>
+					<a href="/profile.php"><span class="white-text name">Guest</span></a>
+				</div>
+			</li>
+
+			<li>
 				<a href="../cart.php"><i class="material-icons">shopping_cart</i>Cart</a>
 			</li>
 
 			<li>
-				<a href="../authentication/register.php" class="brand-text bold">Register</a>
+				<a href="../authentication/register.php" class="brand-text bold"><i class="material-icons">account_box</i>Register</a>
 			</li>
 
 			<li>
-				<a href="../authentication/login.php" class="brand-text bold">Login</a>
+				<a href="../authentication/login.php" class="brand-text bold"><i class="material-icons">vpn_key</i>Login</a>
 			</li>
 
 		<?php } ?>
