@@ -22,3 +22,12 @@
 .autocomplete-content li .highlight {
   color: red !important;
 }
+
+[type="radio"].with-gap:checked + label:after {
+  background-color: #ffa500 !important;
+}
+
+[type="radio"].with-gap:checked + label:before,
+[type="radio"].with-gap:checked + label:after {
+  border: 2px solid #ffa500 !important;
+}

@@ -135,32 +135,39 @@ if (isset($_POST['submit'])) {
 <!DOCTYPE html>
 <html>
 
-<section class="container grey-text">
-    <h4 class="center">Login</h4>
-    <form action="login.php" class="EditForm" method="POST">
-        <label>Email Address: </label>
-        <input type="text" name="email" value="<?php echo htmlspecialchars($email); ?>">
-        <div class="red-text"><?php echo htmlspecialchars($errors['email']); ?></div>
+<div class="container">
+    <h4 class="center grey-text">Login</h4>
+    <div class="row">
+        <div class="col m8 s12 offset-m2">
+            <form action="login.php" class="EditForm" method="POST" style="width:100%;">
+                <label>Email Address: </label>
+                <input type="text" name="email" value="<?php echo htmlspecialchars($email); ?>">
+                <div class="red-text"><?php echo htmlspecialchars($errors['email']); ?></div>
 
-        <label>Password: </label>
-        <input type="password" name="password">
-        <div class="red-text"><?php echo htmlspecialchars($errors['password']); ?></div>
+                <label>Password: </label>
+                <input type="password" name="password">
+                <div class="red-text"><?php echo htmlspecialchars($errors['password']); ?></div>
 
-        <label class="right"> New member?
-            <u><a href="register.php" class="cyan-text">Register</a></u> </label>
+                <label class="right right hide-on-small-and-down"> New member?
+                    <u><a href="register.php" class="cyan-text">Register</a></u>
+                </label>
 
-        <?php if (array_filter($errors)) : ?>
-            <label class="left"> Forget password?
-                <u><a href="reset_password.php" class="cyan-text">Reset Password</a></u> </label>
-        <?php endif ?>
+                <label class="hide-on-med-and-up"> New member?
+                    <u><a href="register.php" class="cyan-text">Register</a></u>
+                </label>
 
-        <br>
+                <?php if (array_filter($errors)) : ?>
+                    <label class="left"> Forget password?
+                        <u><a href="reset_password.php" class="cyan-text">Reset Password</a></u> </label>
+                <?php endif ?>
 
-        <div class="center">
-            <input type="submit" name="submit" value="Login" class="btn brand z-depth-0">
+                <div class="center">
+                    <input type="submit" name="submit" value="Login" class="btn brand z-depth-0 form-btn">
+                </div>
+            </form>
         </div>
-    </form>
-</section>
+    </div>
+</div>
 
 <?php include("../templates/footer.php"); ?>
 

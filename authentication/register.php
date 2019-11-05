@@ -174,63 +174,68 @@ if (isset($_POST['submit'])) {
 <!DOCTYPE html>
 <html>
 
-<section class="container grey-text">
-    <h4 class="center">Register Account</h4>
+<section class="container">
+    <h4 class="center grey-text">Register Account</h4>
 
-    <form action="register.php" class="EditForm" method="POST">
-        <label>Email Address: </label>
-        <input type="text" name="email" value="<?php echo htmlspecialchars($email); ?>">
-        <div class="red-text"><?php echo htmlspecialchars($errors['email']); ?></div>
+    <div class="row">
+        <div class="col s12 m8 offset-m2">
+            <form action="register.php" class="EditForm" method="POST" style="width:100%;">
+                <label>Email Address: </label>
+                <input type="text" name="email" value="<?php echo htmlspecialchars($email); ?>">
+                <div class="red-text"><?php echo htmlspecialchars($errors['email']); ?></div>
 
-        <label>First Name: </label>
-        <input type="text" name="firstname" value="<?php echo htmlspecialchars($firstname); ?>">
-        <div class="red-text"><?php echo htmlspecialchars($errors['firstname']); ?></div>
+                <label>First Name: </label>
+                <input type="text" name="firstname" value="<?php echo htmlspecialchars($firstname); ?>">
+                <div class="red-text"><?php echo htmlspecialchars($errors['firstname']); ?></div>
 
-        <label>Last Name: </label>
-        <input type="text" name="lastname" value="<?php echo htmlspecialchars($lastname); ?>">
-        <div class="red-text"><?php echo htmlspecialchars($errors['lastname']); ?></div>
+                <label>Last Name: </label>
+                <input type="text" name="lastname" value="<?php echo htmlspecialchars($lastname); ?>">
+                <div class="red-text"><?php echo htmlspecialchars($errors['lastname']); ?></div>
 
-        <label>Gender: </label>
-        <p>
-            <label>
-                <input name="gender" type="radio" value="M" <?php if (isset($gender) && $gender == "M") echo "checked"; ?>>
-                <span>Male</span>
-            </label>
-        </p>
-        <p>
-            <label>
-                <input name="gender" type="radio" value="F" <?php if (isset($gender) && $gender == "F") echo "checked"; ?>>
-                <span>Female</span>
-            </label>
-        </p>
-        <p>
-            <label>
-                <input name="gender" type="radio" value="O" <?php if (isset($gender) && $gender == "O") echo "checked"; ?>>
-                <span>Other</span>
-            </label>
-        </p>
-        <div class="red-text"><?php echo htmlspecialchars($errors['gender']); ?></div>
+                <label>Gender: </label>
+                <p>
+                    <label>
+                        <input name="gender" type="radio" value="M" <?php if (isset($gender) && $gender == "M") echo "checked"; ?>>
+                        <span>Male</span>
+                    </label>
+                </p>
+                <p>
+                    <label>
+                        <input name="gender" type="radio" value="F" <?php if (isset($gender) && $gender == "F") echo "checked"; ?>>
+                        <span>Female</span>
+                    </label>
+                </p>
+                <p>
+                    <label>
+                        <input name="gender" type="radio" value="O" <?php if (isset($gender) && $gender == "O") echo "checked"; ?>>
+                        <span>Other</span>
+                    </label>
+                </p>
+                <div class="red-text"><?php echo htmlspecialchars($errors['gender']); ?></div>
 
-        <label>Birthday: </label>
-        <input type="date" name="dob" min="1900-01-01" max="<?php echo $today ?>" value="<?php echo $dob ?>">
-        <div class="red-text"><?php echo htmlspecialchars($errors['dob']); ?></div>
+                <label>Birthday: </label>
+                <input type="date" name="dob" min="1900-01-01" max="<?php echo $today ?>" value="<?php echo $dob ?>">
+                <div class="red-text"><?php echo htmlspecialchars($errors['dob']); ?></div>
 
-        <label>Phone Number: </label>
-        <input type="text" name="phoneno" value="<?php echo htmlspecialchars($phoneno); ?>">
-        <div class="red-text"><?php echo htmlspecialchars($errors['phoneno']); ?></div>
+                <label>Phone Number: </label>
+                <input type="text" name="phoneno" value="<?php echo htmlspecialchars($phoneno); ?>">
+                <div class="red-text"><?php echo htmlspecialchars($errors['phoneno']); ?></div>
 
-        <label>Password: </label>
-        <input type="password" name="password" value="<?php echo htmlspecialchars($password); ?>">
-        <div class="red-text"><?php echo htmlspecialchars($errors['password']); ?></div>
+                <label>Password: </label>
+                <input type="password" name="password" value="<?php echo htmlspecialchars($password); ?>">
+                <div class="red-text"><?php echo htmlspecialchars($errors['password']); ?></div>
 
-        <label>Confirm Password: </label>
-        <input type="password" name="retypedpassword" value="<?php echo htmlspecialchars($retypedpassword); ?>">
-        <div class="red-text"><?php echo htmlspecialchars($errors['retypedpassword']); ?></div>
+                <label>Confirm Password: </label>
+                <input type="password" name="retypedpassword" value="<?php echo htmlspecialchars($retypedpassword); ?>">
+                <div class="red-text"><?php echo htmlspecialchars($errors['retypedpassword']); ?></div>
 
-        <div class="center">
-            <input type="submit" name="submit" value="register" class="btn brand z-depth-0">
+                <div class="center">
+                    <input type="submit" name="submit" value="register" class="btn brand z-depth-0 form-btn">
+                </div>
+            </form>
         </div>
-    </form>
+    </div>
+
 </section>
 
 <?php include("../templates/footer.php"); ?>

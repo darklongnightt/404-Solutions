@@ -190,7 +190,8 @@ mysqli_close($conn);
 
 <style>
     .main-image {
-        width: auto;
+        margin: 25px;
+        width: 70%;
         max-height: 300px;
     }
 
@@ -213,7 +214,7 @@ mysqli_close($conn);
 <?php if ($product) : ?>
     <div class="container">
         <div class="row">
-            <div class="col s10 m5">
+            <div class="col s12 m5">
                 <div class="card z-depth-0 main-card">
                     <div class="card-content center">
                         <img src="<?php if ($product['IMAGE']) {
@@ -244,7 +245,7 @@ mysqli_close($conn);
                     </div>
                 </div>
             </div>
-            <div class="col s8 m4">
+            <div class="col s12 m4">
                 <div class="card z-depth-0 main-card">
                     <div class="card-content">
                         <h4><?php echo htmlspecialchars($product['PDTNAME']) . ' - ' . htmlspecialchars($product['WEIGHT']); ?></h4>
@@ -261,7 +262,7 @@ mysqli_close($conn);
 
 
             </div>
-            <div class="col s6 m3">
+            <div class="col s12 m3">
                 <div class="card z-depth-0 main-card">
                     <div class="card-content">
                         <h5><img src="/img/price_tag.svg" class="tag-icon"> Price Tag</h5>
@@ -292,14 +293,12 @@ mysqli_close($conn);
                                 <?php } ?>
                             </select>
 
-                            <br>
-
                             <?php if (substr($uid, 0, 3) == 'CUS' || substr($uid, 0, 3) == 'ANO') { ?>
-                                <button type="submit" name="cart" class="btn orange z-depth-0" style="width: 90px;">
-                                    <i class='fa fa-cart-plus' aria-hidden='true'></i> Cart
+                                <button type="submit" name="cart" class="btn orange z-depth-0 action-btn">
+                                    <i class='fa fa-cart-plus' aria-hidden='true'></i>
                                 </button>
-                                <span>&nbsp</span>
-                                <button type="submit" name="favourite" class="btn red z-depth-0" style="width: 90px;">
+
+                                <button type="submit" name="favourite" class="btn red z-depth-0 action-btn">
                                     <i class="fa fa-heart" aria-hidden="true"></i>
                                 </button>
                             <?php } else if (substr($uid, 0, 3) == 'ADM') { ?>
@@ -336,7 +335,7 @@ mysqli_close($conn);
                         break;
                     }
                     ?>
-                <div class="col s3 md2">
+                <div class="col s12 m3">
                     <a href="product_details.php?id=<?php echo $recommendation['PDTID']; ?>">
                         <div class="card z-depth-0 small">
 

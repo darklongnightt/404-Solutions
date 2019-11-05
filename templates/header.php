@@ -40,8 +40,8 @@ if (isset($_SESSION['U_UID'])) {
 }
 
 // Checks if search button is pressed
-if (isset($_POST['submit'])) {
-	$search = $_POST['search'];
+if (isset($_POST['search'])) {
+	$search = $_POST['searchField'];
 	$link = '/products/search.php?Filter=all&sort=default&priceRange=%240.6+-+%2417.91&check=1&searchItem=' . $search . '&submit=';
 	echo "<script type='text/javascript'>window.top.location='$link';</script>";
 }
@@ -161,11 +161,11 @@ if (isset($_POST['submit'])) {
 			<form action="index.php" method="POST" style="margin-bottom: 0%;">
 				<div class="row" style="border-radius: 20px; border-style: solid; color: grey; border-width: thin; background: white; ">
 					<div class="col m9 s9">
-						<input type="text" name="search" placeholder="Search Products" style="width: 120%;">
+						<input type="text" name="searchField" placeholder="Search Products" style="width: 120%;">
 					</div>
 
 					<div class="col m3 s3">
-						<button type="submit" name="submit" class="btn white black-text z-depth-0" style="width: 90%;">
+						<button type="search" name="search" class="btn white black-text z-depth-0" style="width: 90%;">
 							<i class="material-icons" style="font-size: 26px; margin-top: 5px; margin-left: 5px;">search</i>
 						</button>
 					</div>

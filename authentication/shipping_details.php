@@ -57,8 +57,16 @@ if (isset($_POST['submit'])) {
         VALUES('$userId', '$addr1', '$addr2', '$postal1', '$postal2', '$country1', '$country2')";
 
         if (mysqli_query($conn, $sql)) {
-            setcookie('LASTACTION', 'REGISTER', time() + (120), "/");
-            echo "<script type='text/javascript'>window.top.location='/index.php';</script>";
+
+            // Redirect user to payment page if it is the last page
+            if (isset($_SESSION['LASTPAGE'])) {
+                $redirect = $_SESSION['LASTPAGE'];
+                $_SESSION['LASTACTION'] = 'ADDRESS';
+                echo "<script type='text/javascript'>window.top.location='$redirect';</script>";
+            } else {
+                $_SESSION['LASTACTION'] = 'REGISTER';
+                echo "<script type='text/javascript'>window.top.location='/index.php';</script>";
+            }
         } else {
             echo 'Query Error: ' . mysqli_error($conn);
         }
@@ -68,45 +76,49 @@ if (isset($_POST['submit'])) {
 
 <!DOCTYPE HTML>
 <html>
-<section class="container grey-text">
-    <h4 class="center">Shipping Address</h4>
+<section class="container">
+    <h4 class="center grey-text">Shipping Address</h4>
 
-    <form action="shipping_details.php" class="EditForm" method="POST">
-        <label>Main Shipping Address: </label>
-        <input type="text" name="addr1" value="<?php echo htmlspecialchars($addr1); ?>">
-        <div class="red-text"><?php echo htmlspecialchars($errors['addr1']); ?></div>
+    <div class="row">
+        <div class="col s12 m8 offset-m2">
+            <form action="shipping_details.php" class="EditForm" method="POST" style="width:100%;">
+                <label class="brand-text bold">Main Shipping Address: </label>
+                <input type="text" name="addr1" value="<?php echo htmlspecialchars($addr1); ?>">
+                <div class="red-text"><?php echo htmlspecialchars($errors['addr1']); ?></div>
 
-        <label>Postal: </label>
-        <input type="text" name="postal1" value="<?php echo htmlspecialchars($postal1); ?>">
-        <div class="red-text"><?php echo htmlspecialchars($errors['postal1']); ?></div>
+                <label>Postal: </label>
+                <input type="text" name="postal1" value="<?php echo htmlspecialchars($postal1); ?>">
+                <div class="red-text"><?php echo htmlspecialchars($errors['postal1']); ?></div>
 
-        <label>Country: </label>
-        <select class="browser-default" name="country1">
-            <option value="Singapore">Singapore</option>
-            <option value="Malaysia">Malaysia</option>
-        </select>
+                <label>Country: </label>
+                <select class="browser-default" name="country1">
+                    <option value="Singapore">Singapore</option>
+                    <option value="Malaysia">Malaysia</option>
+                </select>
 
-        <div class="divider"></div>
+                <div class="divider" style="margin: 15 0 15 0;"></div>
 
-        <label>Secondary Shipping Address: </label>
-        <input type="text" name="addr2" value="<?php echo htmlspecialchars($addr2); ?>">
+                <label class="brand-text bold">Secondary Shipping Address: </label>
+                <input type="text" name="addr2" value="<?php echo htmlspecialchars($addr2); ?>">
 
-        <label>Postal: </label>
-        <input type="text" name="postal2" value="<?php echo htmlspecialchars($postal2); ?>">
-        <div class="red-text"><?php echo htmlspecialchars($errors['postal2']); ?></div>
+                <label>Postal: </label>
+                <input type="text" name="postal2" value="<?php echo htmlspecialchars($postal2); ?>">
+                <div class="red-text"><?php echo htmlspecialchars($errors['postal2']); ?></div>
 
-        <label>Country: </label>
-        <select class="browser-default" name="country2">
-            <option value="Singapore">Singapore</option>
-            <option value="Malaysia">Malaysia</option>
-        </select>
+                <label>Country: </label>
+                <select class="browser-default" name="country2">
+                    <option value="Singapore">Singapore</option>
+                    <option value="Malaysia">Malaysia</option>
+                </select>
 
-        <div class="center">
-            <input type="submit" name="submit" value="Confirm" class="btn brand z-depth-0">
+                <div class="center">
+                    <input type="submit" name="submit" value="Confirm" class="btn brand z-depth-0 form-btn">
+                </div>
+            </form>
         </div>
-    </form>
-</section>
+    </div>
 
+</section>
 
 <?php include("../templates/footer.php"); ?>
 

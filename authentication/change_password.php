@@ -88,25 +88,31 @@ if (isset($_POST['submit'])) {
 
 <!DOCTYPE HTML>
 <html>
-<div class="container grey-text">
-    <h4 class="center">Change Password</h4>
-    <form class="EditForm" action="change_password.php" method="POST">
-        <label>Old Password: </label>
-        <input type="password" name="oldpassword">
-        <div class="red-text"><?php echo htmlspecialchars($errors['oldpassword']); ?></div>
+<div class="container">
+    <h4 class="center grey-text">Change Password</h4>
 
-        <label>New Password: </label>
-        <input type="password" name="newpassword1">
-        <div class="red-text"><?php echo htmlspecialchars($errors['newpassword1']); ?></div>
+    <div class="row">
+        <div class="col s12 m8 offset-m2">
+            <form class="EditForm" action="change_password.php" method="POST" style="width: 100%;">
+                <label>Old Password: </label>
+                <input type="password" name="oldpassword">
+                <div class="red-text"><?php echo htmlspecialchars($errors['oldpassword']); ?></div>
 
-        <label>Confirm New Password: </label>
-        <input type="password" name="newpassword2">
-        <div class="red-text"><?php echo htmlspecialchars($errors['newpassword2']); ?></div>
-        <br>
-        <div class="center">
-            <input type="submit" name="submit" value="Change Password" class="btn brand z-depth-0">
+                <label>New Password: </label>
+                <input type="password" name="newpassword1">
+                <div class="red-text"><?php echo htmlspecialchars($errors['newpassword1']); ?></div>
+
+                <label>Confirm New Password: </label>
+                <input type="password" name="newpassword2">
+                <div class="red-text"><?php echo htmlspecialchars($errors['newpassword2']); ?></div>
+                <br>
+                <div class="center">
+                    <input type="submit" name="submit" value="Change Password" class="btn brand z-depth-0 form-btn">
+                </div>
+            </form>
+
         </div>
-    </form>
+    </div>
 </div>
 
 <?php include("../templates/footer.php"); ?>

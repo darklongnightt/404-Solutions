@@ -88,21 +88,27 @@ function sendEmail($to, $new_password, $date)
 
 <!DOCTYPE HTML>
 <html>
-<div class="container grey-text">
-    <h4 class="center">Reset Password</h4>
-    <form class="EditForm" action="reset_password.php" method="POST">
-        <label>Email Address:</label>
-        <input type="text" name="email">
-        <div class="red-text"><?php echo htmlspecialchars($errors['email']); ?></div>
+<div class="container">
+    <h4 class="center grey-text">Reset Password</h4>
 
-        <div class="grey-text">Note: An email containing the new password will be sent to your email address.</div>
-        <br>
+    <div class="row">
+        <div class="col s12 m8 offset-m2">
+            <form class="EditForm" action="reset_password.php" method="POST" style="width: 100%">
+                <label>Email Address:</label>
+                <input type="text" name="email">
+                <div class="red-text"><?php echo htmlspecialchars($errors['email']); ?></div>
 
-        <div class="center">
-            <input type="submit" name="submit" value="Reset" class="btn brand z-depth-0">
+                <div class="grey-text">Note: An email containing the new password will be sent to your email address.</div>
+                <br>
+
+                <div class="center">
+                    <input type="submit" name="submit" value="Reset" class="btn brand z-depth-0 form-btn">
+                </div>
+            </form>
         </div>
-    </form>
+    </div>
 </div>
+
 
 <?php include("../templates/footer.php"); ?>
 

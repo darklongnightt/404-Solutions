@@ -83,21 +83,6 @@ $sql = "SELECT DISTINCT CATEGORY FROM product";
 $result = mysqli_query($conn, $sql);
 $categories = mysqli_fetch_all($result, MYSQLI_ASSOC);
 
-// Render toast popups
-if (isset($_COOKIE['LASTACTION']) && substr($uid, 0, 3) != 'ADM') {
-
-    switch ($_COOKIE['LASTACTION']) {
-        case 'LOGOUT':
-            echo "<script>M.toast({html: 'You are logged out!'});</script>";
-            break;
-        case 'REGISTER':
-            echo "<script>M.toast({html: 'You are successfully registered!'});</script>";
-            break;
-    }
-
-    setcookie('LASTACTION', 'NONE', time() + (120), "/");
-}
-
 if (isset($_SESSION['LASTACTION'])) {
     switch ($_SESSION['LASTACTION']) {
         case 'LOGIN':
@@ -127,6 +112,14 @@ if (isset($_SESSION['LASTACTION'])) {
         case 'NEWCOUPON':
             echo "<script>M.toast({html: 'Successfully created new coupon!'});</script>";
             break;
+
+        case 'REGISTER':
+            echo "<script>M.toast({html: 'You are successfully registered!'});</script>";
+            break;
+
+        case 'LOGOUT':
+            echo "<script>M.toast({html: 'You are logged out!'});</script>";
+            break;
     }
 
     $_SESSION['LASTACTION'] = "NONE";
@@ -137,214 +130,214 @@ mysqli_free_result($result);
 mysqli_close($conn);
 ?>
 
-        <head>
-            <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
-        </head>
+    <head>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+    </head>
 
-        <script>
-            $(document).ready(function() {
-                $('.slider').slider({
-                    height: 230
-                });
-
-
-                $('input.autocomplete').autocomplete({
-                    data: {
-                        "BAZAAR": null,
-                        "BEVERAGE": null,
-                        "CONCESSIONAIRES": null,
-                        "HEALTH CARE": null,
-                        "FRESH FOOD": null,
-                        "FROZEN FOOD": null,
-                        "GROCERIES": null,
-                        "HOUSEHOLD CONSUMMABLES": null,
-                        "COSMETICS": null,
-                        "TEXTILE": null,
-                        "TIDBITS": null,
-                        "TOILETRIES": null
-                    }
-                });
+    <script>
+        $(document).ready(function() {
+            $('.slider').slider({
+                height: 230
             });
-        </script>
-
-        <!DOCTYPE HTML>
-        <html>
 
 
-        <div class="container">
+            $('input.autocomplete').autocomplete({
+                data: {
+                    "BAZAAR": null,
+                    "BEVERAGE": null,
+                    "CONCESSIONAIRES": null,
+                    "HEALTH CARE": null,
+                    "FRESH FOOD": null,
+                    "FROZEN FOOD": null,
+                    "GROCERIES": null,
+                    "HOUSEHOLD CONSUMMABLES": null,
+                    "COSMETICS": null,
+                    "TEXTILE": null,
+                    "TIDBITS": null,
+                    "TOILETRIES": null
+                }
+            });
+        });
+    </script>
 
-            <div class="row" style="margin-top: 15px;">
-                <div class="col s12 m12">
-                    <div class="slider">
-                        <ul class="slides">
+    <!DOCTYPE HTML>
+    <html>
 
-                            <?php foreach ($promotions as $promo) {
-                                $expiry = strtotime($promo['DATETO']);
-                                $diffDay = round(($expiry - $now) / (60 * 60 * 24), 0);
-                                ?>
-                                <li>
-                                    <img src="<?php echo $promo['IMAGE']; ?>">
 
-                                    <div class="caption right-align brand-text">
-                                        <h4 class="bold"><?php echo $promo['DISCOUNT'] . '% OFF ' . $promo['CATEGORY']; ?></h4>
-                                        <h6 class="bold"><?php echo $diffDay . ' DAYS LEFT' ?></h6>
-                                    </div>
-                                </li>
+    <div class="container">
+
+        <div class="row" style="margin-top: 15px;">
+            <div class="col s12 m12">
+                <div class="slider">
+                    <ul class="slides">
+
+                        <?php foreach ($promotions as $promo) {
+                            $expiry = strtotime($promo['DATETO']);
+                            $diffDay = round(($expiry - $now) / (60 * 60 * 24), 0);
+                            ?>
+                            <li>
+                                <img src="<?php echo $promo['IMAGE']; ?>">
+
+                                <div class="caption right-align brand-text">
+                                    <h4 class="bold"><?php echo $promo['DISCOUNT'] . '% OFF ' . $promo['CATEGORY']; ?></h4>
+                                    <h6 class="bold"><?php echo $diffDay . ' DAYS LEFT' ?></h6>
+                                </div>
+                            </li>
+                        <?php } ?>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col s12 m8">
+                <div class="card z-depth-0">
+                    <div class="card-content">
+
+                        <h6 class="brand-text bold center">Most Popular Products</h6>
+
+                        <div class="row">
+                            <?php foreach ($top_products as $product) { ?>
+                                <div class="col s4 m2 center">
+
+                                    <a href="/products/product_details.php?id=<?php echo $product['PDTID']; ?>">
+                                        <img src="<?php if ($product['IMAGE']) {
+                                                            echo $product['IMAGE'];
+                                                        } else {
+                                                            echo 'img/product_icon.svg';
+                                                        } ?>" class="top-icon">
+
+                                        <div class="white-text discount-label">
+                                            <?php echo '$' . number_format(htmlspecialchars($product['PDTPRICE']) / 100 * htmlspecialchars(100 - $product['PDTDISCOUNT']), 2, '.', ''); ?>
+                                        </div>
+                                    </a>
+
+                                </div>
+
                             <?php } ?>
-                        </ul>
+                        </div>
+
                     </div>
                 </div>
             </div>
 
-            <div class="row">
-                <div class="col s12 m8">
-                    <div class="card z-depth-0">
-                        <div class="card-content">
-
-                            <h6 class="brand-text bold center">Most Popular Products</h6>
-
-                            <div class="row">
-                                <?php foreach ($top_products as $product) { ?>
-                                    <div class="col s4 m2 center">
-
-                                        <a href="/products/product_details.php?id=<?php echo $product['PDTID']; ?>">
+            <div class="col s12 m4">
+                <div class="card z-depth-0" style="min-height: 356px;">
+                    <div class="card-content center">
+                        <a href="/profile.php">
+                            <h6 class="white-text bold welcome-label z-depth-1"><i class="fa fa-user-o" aria-hidden="true" style="margin-right: 10px;"></i>Welcome, <?php echo $name . '!' ?> </h6>
+                        </a>
+                        <div class="bold center">Recently Viewed</div>
+                        <div class="row">
+                            <?php foreach ($recent_views as $product) { ?>
+                                <div class="col m4 s4 center">
+                                    <a href="/products/product_details.php?id=<?php echo $product['PDTID']; ?>">
+                                        <span class="img-container">
                                             <img src="<?php if ($product['IMAGE']) {
                                                                 echo $product['IMAGE'];
                                                             } else {
                                                                 echo 'img/product_icon.svg';
-                                                            } ?>" class="top-icon">
-
-                                            <div class="white-text discount-label">
-                                                <?php echo '$' . number_format(htmlspecialchars($product['PDTPRICE']) / 100 * htmlspecialchars(100 - $product['PDTDISCOUNT']), 2, '.', ''); ?>
-                                            </div>
-                                        </a>
-
-                                    </div>
-
-                                <?php } ?>
-                            </div>
-
-                        </div>
-                    </div>
-                </div>
-
-                <div class="col s12 m4">
-                    <div class="card z-depth-0" style="min-height: 356px;">
-                        <div class="card-content center">
-                            <a href="/profile.php">
-                                <h6 class="white-text bold welcome-label z-depth-1"><i class="fa fa-user-o" aria-hidden="true" style="margin-right: 10px;"></i>Welcome, <?php echo $name . '!' ?> </h6>
-                            </a>
-                            <div class="bold center">Recently Viewed</div>
-                            <div class="row">
-                                <?php foreach ($recent_views as $product) { ?>
-                                    <div class="col m4 s4 center">
-                                        <a href="/products/product_details.php?id=<?php echo $product['PDTID']; ?>">
-                                            <span class="img-container">
-                                                <img src="<?php if ($product['IMAGE']) {
-                                                                    echo $product['IMAGE'];
-                                                                } else {
-                                                                    echo 'img/product_icon.svg';
-                                                                } ?>" class="recent-icon">
-                                            </span>
-                                        </a>
-                                    </div>
-                                <?php } ?>
-
-                            </div>
-                        </div>
-
-                    </div>
-                </div>
-            </div>
-
-            <div class="row hide-on-med-and-down" style="margin-bottom: 0px;">
-                <form action="index.php" method="POST" style="margin-bottom: 0%;">
-
-                    <div class="input-field search-bar" style="border-radius: 25px; border-style: solid; color: grey; border-width: thin; background: white;">
-                        <input type="text" name="search" placeholder="Search Products" style="margin-left: 15px; width: 92%;">
-                        <button type="submit" name="submit" class="btn white z-depth-0">
-                            <i class="material-icons prefix black-text">search</i>
-                        </button>
-                    </div>
-                </form>
-            </div>
-
-            <div class="row">
-                <h5 class="brand-text bold">&nbsp&nbspShop By Category</h5>
-                <?php foreach ($categories as $category) { ?>
-                    <a href="products/search.php?Filter=<?php echo str_replace(' ', '-', $category['CATEGORY']); ?>&sort=default&priceRange=%240+-+%2410000&check=&searchItem=&submit=Search">
-                        <div class="col s6 m3">
-                            <div class="card z-depth-0 category-card">
-                                <img src="img/category/<?php echo $category['CATEGORY'] . '.jpg'; ?>" class="category-icon">
-
-                                <div class="middle">
-                                    <h5 class="category-text bold"><?php echo $category['CATEGORY']; ?></h5>
-                                </div>
-                            </div>
-                        </div>
-                    </a>
-
-                <?php } ?>
-            </div>
-
-            <div class="row"></div>
-
-            <?php if ($uid && $cluster > 0) { ?>
-                <div class="row">
-                    <h5 class="brand-text bold">&nbsp&nbspRecommended For You (<?php echo $cluster; ?>)</h5>
-                    <?php $count = 0;
-                        foreach ($cluster_recommendations as $recommendation) {
-                            if ($count >= 12) break;
-                            ?>
-                        <div class="col s12 m3">
-                            <a href="/products/product_details.php?id=<?php echo $recommendation['PDTID']; ?>">
-                                <div class="card z-depth-0 small">
-
-                                    <img src="<?php if ($recommendation['IMAGE']) {
-                                                            echo $recommendation['IMAGE'];
-                                                        } else {
-                                                            echo 'img/product_icon.svg';
-                                                        } ?>" class="product-icon circle">
-                                    <div class="card-content center">
-                                        <h6 class="black-text"> <?php echo htmlspecialchars($recommendation['PDTNAME']); ?> <label> <?php echo htmlspecialchars($recommendation['WEIGHT']); ?> </label></h6>
-                                        <?php if ($recommendation['PDTDISCNT'] > 0) { ?>
-
-                                            <label>
-                                                <strike> <?php echo htmlspecialchars('$' . $recommendation['PDTPRICE']); ?> </strike>
-                                            </label>
-                                            &nbsp
-                                            <label class="white-text discount-label">
-                                                <?php echo htmlspecialchars('-' . $recommendation['PDTDISCNT'] . '% OFF'); ?>
-                                            </label>
-
-                                        <?php } ?>
-
-
-                                        <div class="black-text flow-text">
-                                            <?php echo '$' . number_format(htmlspecialchars($recommendation['PDTPRICE']) / 100 * htmlspecialchars(100 - $recommendation['PDTDISCNT']), 2, '.', ''); ?>
-                                        </div>
-
-                            </a>
-
-                            <div class="card-action right-align">
-                                <?php if (substr($uid, 0, 3) == 'CUS' || substr($uid, 0, 3) == 'ANO') { ?>
-                                    <a href="index.php?<?php echo 'cart=' . $recommendation['PDTID']; ?>">
-                                        <div class="red-text"><i class="fa fa-shopping-cart"></i> Cart</div>
+                                                            } ?>" class="recent-icon">
+                                        </span>
                                     </a>
-                                <?php } ?>
+                                </div>
+                            <?php } ?>
+
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+        <div class="row hide-on-med-and-down" style="margin-bottom: 0px;">
+            <form action="index.php" method="POST" style="margin-bottom: 0%;">
+
+                <div class="input-field search-bar" style="border-radius: 25px; border-style: solid; color: grey; border-width: thin; background: white;">
+                    <input type="text" name="searchField" placeholder="Search Products" style="margin-left: 15px; width: 92%;">
+                    <button type="search" name="search" class="btn white z-depth-0">
+                        <i class="material-icons prefix black-text">search</i>
+                    </button>
+                </div>
+            </form>
+        </div>
+
+        <div class="row">
+            <h5 class="brand-text bold">&nbsp&nbspShop By Category</h5>
+            <?php foreach ($categories as $category) { ?>
+                <a href="products/search.php?Filter=<?php echo str_replace(' ', '-', $category['CATEGORY']); ?>&sort=default&priceRange=%240+-+%2410000&check=&searchItem=&submit=Search">
+                    <div class="col s6 m3">
+                        <div class="card z-depth-0 category-card">
+                            <img src="img/category/<?php echo $category['CATEGORY'] . '.jpg'; ?>" class="category-icon">
+
+                            <div class="middle">
+                                <h5 class="category-text bold"><?php echo $category['CATEGORY']; ?></h5>
                             </div>
                         </div>
-                </div>
+                    </div>
+                </a>
+
+            <?php } ?>
         </div>
-    <?php $count++;
-        } ?>
+
+        <div class="row"></div>
+
+        <?php if ($uid && $cluster > 0) { ?>
+            <div class="row">
+                <h5 class="brand-text bold">&nbsp&nbspRecommended For You (<?php echo $cluster; ?>)</h5>
+                <?php $count = 0;
+                    foreach ($cluster_recommendations as $recommendation) {
+                        if ($count >= 12) break;
+                        ?>
+                    <div class="col s12 m3">
+                        <a href="/products/product_details.php?id=<?php echo $recommendation['PDTID']; ?>">
+                            <div class="card z-depth-0 small">
+
+                                <img src="<?php if ($recommendation['IMAGE']) {
+                                                        echo $recommendation['IMAGE'];
+                                                    } else {
+                                                        echo 'img/product_icon.svg';
+                                                    } ?>" class="product-icon circle">
+                                <div class="card-content center">
+                                    <h6 class="black-text"> <?php echo htmlspecialchars($recommendation['PDTNAME']); ?> <label> <?php echo htmlspecialchars($recommendation['WEIGHT']); ?> </label></h6>
+                                    <?php if ($recommendation['PDTDISCNT'] > 0) { ?>
+
+                                        <label>
+                                            <strike> <?php echo htmlspecialchars('$' . $recommendation['PDTPRICE']); ?> </strike>
+                                        </label>
+                                        &nbsp
+                                        <label class="white-text discount-label">
+                                            <?php echo htmlspecialchars('-' . $recommendation['PDTDISCNT'] . '% OFF'); ?>
+                                        </label>
+
+                                    <?php } ?>
 
 
+                                    <div class="black-text flow-text">
+                                        <?php echo '$' . number_format(htmlspecialchars($recommendation['PDTPRICE']) / 100 * htmlspecialchars(100 - $recommendation['PDTDISCNT']), 2, '.', ''); ?>
+                                    </div>
+
+                        </a>
+
+                        <div class="card-action right-align">
+                            <?php if (substr($uid, 0, 3) == 'CUS' || substr($uid, 0, 3) == 'ANO') { ?>
+                                <a href="index.php?<?php echo 'cart=' . $recommendation['PDTID']; ?>">
+                                    <div class="red-text"><i class="fa fa-shopping-cart"></i> Cart</div>
+                                </a>
+                            <?php } ?>
+                        </div>
+                    </div>
+            </div>
     </div>
+<?php $count++;
+    } ?>
+
+
+</div>
 <?php } ?>
 </div>
 <?php include("templates/footer.php"); ?>
 
 </div>
 
-        </html>
+    </html>

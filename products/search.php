@@ -182,8 +182,7 @@ if ($getFilter !== '' && $getSearchItem == '') {
 
 // Get current link
 $link = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ?
-	"https" : "http") . "://" . $_SERVER['HTTP_HOST'] .
-	$_SERVER['REQUEST_URI'];
+"https" : "http") . "://" . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
 $linkCat = (strpos($link, '?') == TRUE) ? '&' : '?';
 
 
