@@ -283,7 +283,7 @@ mysqli_close($conn);
                         <div class="divider"></div>
                         <br>
 
-                        <form action="product_details.php?id=<?php echo $id; ?>" method="POST">
+                        <form action="product_details.php?id=<?php echo $id; ?>" method="POST"  style="margin-bottom: 5px;">
                             <input type="hidden" name="product_id" value="<?php echo $product['PDTID']; ?>" />
 
                             <label>Quantity: </label>
@@ -302,12 +302,18 @@ mysqli_close($conn);
                                     <i class="fa fa-heart" aria-hidden="true"></i>
                                 </button>
                             <?php } else if (substr($uid, 0, 3) == 'ADM') { ?>
-                                <button type="submit" name="delete" class="btn brand z-depth-0" style="width: 195px;">
+
+                                <button type="submit" name="delete" class="btn brand z-depth-0 action-btn">
                                     <i class="fa fa-trash-o" aria-hidden="true"></i> Delete
                                 </button>
                             <?php } ?>
 
                         </form>
+                        <a href="/analysis_report/demand_report.php?pid=<?php echo $id ?>">
+                            <button class="btn brand z-depth-0" style="margin-top: 0px; width: 100%;">
+                                <i class="fa fa-eye" aria-hidden="true"></i> Forecast
+                            </button>
+                        </a>
 
                     </div>
                 </div>

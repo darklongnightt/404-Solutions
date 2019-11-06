@@ -9,9 +9,8 @@ $products = mysqli_fetch_all($result, MYSQLI_ASSOC);
 $n = sizeof($products);
 echo $n;
 
-for ($i = 0; $i < $n; $i++) {
-    $deleteIndex = random_int(0, $n - 3);
-    $pid = $products[$deleteIndex]['PDTID'];
+foreach ($products as $product) {
+    $pid = $product['PDTID'];
     $qty = random_int(44, 344);
     $sql = "UPDATE product SET PDTQTY='$qty' WHERE PDTID = '$pid'";
 

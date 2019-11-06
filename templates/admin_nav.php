@@ -36,6 +36,13 @@
         </a>
         <div class="divider"></div>
 
+        <i class="material-icons black-text">insert_chart</i>
+        <a href="/analysis_report/demand_report.php?pid=BE00001">
+            &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp
+            Demand Forecast
+        </a>
+        <div class="divider"></div>
+
         <i class="material-icons black-text">rate_review</i>
         <a href="/analysis_report/review_analysis.php">
             &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp
