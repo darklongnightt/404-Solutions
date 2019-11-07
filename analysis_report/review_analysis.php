@@ -389,8 +389,9 @@ if ($ratings) {
                                         $dMean /= $catReview['SIZE'];
 
                                         echo '<tr>';
-                                        echo '<td><div class="bold">' . $catReview['CATEGORY'] . '</div>';
-                                        echo '<div class="grey-text">(' . $catReview['SIZE'] . ' Ratings' . ')</div></td>';
+                                        echo '<td> <a href="/products/search.php?Filter=' .  str_replace(' ', '-', $catReview['CATEGORY']) . '&sort=default&priceRange=%240+-+%2410000&check=&searchItem=&submit=Search">';
+                                        echo '<div class="bold">' . $catReview['CATEGORY'] . '</div> </a>';
+                                        echo '<div class="grey-text">(' . $catReview['SIZE'] . ' Ratings' . ')</div></td> ';
 
                                         echo '<td>';
                                         echo '<div class="bold" style="font-size: 30; margin-bottom: 15px;">' . round($mean, 1) . '<span class="grey-text" style="font-size: 20;">/ 5</span></div>';

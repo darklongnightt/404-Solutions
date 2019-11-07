@@ -2,6 +2,14 @@
 include("../config/db_connect.php");
 include('../templates/header.php');
 
+// Check for toast message
+if (isset($_SESSION['LASTACTION'])) {
+    if ($_SESSION['LASTACTION'] == 'UPDATESTOCK') {
+        echo "<script>M.toast({html: 'Successfully updated product stock!'});</script>";
+    }
+    $_SESSION['LASTACTION'] = 'NONE';
+}
+
 // Get upcoming forecast values 
 $month = $predictedQty = '';
 if (isset($_POST['forecast'])) {
@@ -173,7 +181,13 @@ if (isset($_POST['qtybutton'])) {
 
         $sql = "UPDATE product SET PDTQTY = '$updateqty' WHERE PDTID = '$pdtid'";
         if (mysqli_query($conn, $sql)) {
-            header("Location: inventory_management.php");
+            // Get current link
+            $link = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ?
+                "https" : "http") . "://" . $_SERVER['HTTP_HOST'] .
+                $_SERVER['REQUEST_URI'];
+
+            $_SESSION['LASTACTION'] = 'UPDATESTOCK';
+            echo "<script type='text/javascript'>window.top.location='$link';</script>";
         } else {
             echo 'Query Error: ' . mysqli_error($conn);
         }
@@ -266,7 +280,7 @@ mysqli_close($conn);
                 <div class="card-content">
 
                     <form action="inventory_management.php" method="POST" style="margin-bottom: 5px;">
-                        <h5><i class="fa fa-eye" aria-hidden="true"></i> Set Threshold = Forecasted Quantity</h5>
+                        <h5><i class="fa fa-bar-chart" aria-hidden="true"></i> Set Threshold = Forecasted Quantity</h5>
                         <select class="browser-default" name="forecast">
                             <option value="" disabled selected>Select Month</option>
                             <?php foreach ($pickDates as $date) { ?>
@@ -321,7 +335,7 @@ mysqli_close($conn);
                                     <div>
                                         <?php echo $prediction[0]; ?>
                                     </div>
-                                    <div class="flow-text" style="margin: 10 0 0 50;">
+                                    <div class="flow-text blue-text" style="margin: 10 0 0 50;">
                                         <?php echo $prediction[1]; ?>
                                     </div>
                                 <?php } ?>
