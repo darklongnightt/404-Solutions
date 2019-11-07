@@ -190,9 +190,9 @@ mysqli_close($conn);
 
 <style>
     .main-image {
-        margin: 25px;
+        margin: 15px;
         width: 70%;
-        max-height: 300px;
+        max-height: 270px;
     }
 
     .main-card {

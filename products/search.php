@@ -14,7 +14,7 @@ if (isset($_SESSION['LASTACTION'])) {
 }
 
 // Store previously selected variables
-$rangeCheck = $getSearchItem = $getSort = $getFilter = '';
+$rangeCheck = $getSearchItem = $getSort = $getFilter = $rFilter = $ext = '';
 $limit = TRUE;
 
 // Pagination for all results
@@ -126,6 +126,7 @@ if (!$limit) {
 // Pagination for results
 include('../templates/pagination_query.php');
 $query .= "\nLIMIT $startingLimit , $resultsPerPage";
+
 // Getting data from table: product as associative array
 $result = mysqli_query($conn, $query);
 $productList = mysqli_fetch_all($result, MYSQLI_ASSOC);
@@ -182,7 +183,7 @@ if ($getFilter !== '' && $getSearchItem == '') {
 
 // Get current link
 $link = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ?
-"https" : "http") . "://" . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
+	"https" : "http") . "://" . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
 $linkCat = (strpos($link, '?') == TRUE) ? '&' : '?';
 
 

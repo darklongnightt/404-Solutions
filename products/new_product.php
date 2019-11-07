@@ -29,9 +29,6 @@ if (isset($_POST['submit'])) {
 		$errors['pdtname'] = 'Product name is required!';
 	} else {
 		$pdtname = $_POST['pdtname'];
-		if (!preg_match('/^[a-zA-Z0-9\s]+$/', $pdtname)) {
-			$errors['pdtname'] = 'Product name must be letters, numbers and spaces only!';
-		}
 	}
 
 	if (empty($_POST['desc'])) {

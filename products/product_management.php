@@ -11,13 +11,12 @@ if (isset($_SESSION['LASTACTION'])) {
 }
 
 // Store previously selected variables
-$rangeCheck = $getSearchItem = $getSearchR = $getSort = $getFilter = '';
+$rangeCheck = $getSearchItem = $getSort = $getFilter = $rFilter = $ext = '';
 $limit = TRUE;
 
 // Pagination for all results
 $currDir = "product_management.php";
-$query = 'SELECT * FROM product';
-include('../templates/pagination_query.php');
+$query = 'SELECT *, ROUND(PDTPRICE/ 100 * (100 - PDTDISCNT),2) AS NETPRICE FROM product';
 
 // Get all product categories for filtering
 $getCat = "SELECT DISTINCT CATEGORY FROM product";
@@ -25,23 +24,23 @@ $catResult = mysqli_query($conn, $getCat);
 $filterCat = mysqli_fetch_all($catResult, MYSQLI_ASSOC);
 
 // Get min and max product price for range slider default
-$getCatRange = "SELECT MIN(PDTPRICE) AS MINPRICE, MAX(PDTPRICE) AS MAXPRICE FROM product";
+$getCatRange = "SELECT ROUND(MIN(PDTPRICE/ 100 * (100 - PDTDISCNT)),2) AS MINPRICE, ROUND(MAX(PDTPRICE/ 100 * (100 - PDTDISCNT)),2) AS MAXPRICE FROM product";
 $result = mysqli_query($conn, $getCatRange);
 $defaultRange = mysqli_fetch_assoc($result);
-$minRange = $catMin = (float) $defaultRange['MINPRICE'];
-$maxRange = $catMax = (float) $defaultRange['MAXPRICE'];
+$minRange = $catMin = round($defaultRange['MINPRICE'], 2);
+$maxRange = $catMax = round($defaultRange['MAXPRICE'], 2);
 
-// Getting data from table: product as associative array
-$query = "SELECT * FROM product";
-
-if (isset($_GET['search'])) {
+if (isset($_GET['submit'])) {
+    // Get user's selection for sort, replace - with space for sql filter by category
     $getFilter = $_GET['Filter'];
+    $rFilter = str_replace('-', ' ', $getFilter);
     $getSort = $_GET['sort'];
+
     // Get price range
     $getPriceR = str_replace('$', '', $_GET['priceRange']);
     $price = explode('-', $getPriceR);
-    $minRange = (float) $price[0];
-    $maxRange = (float) $price[1];
+    $minRange = round($price[0], 2);
+    $maxRange = round($price[1], 2);
 
     //Get search
     $getSearchItem = $_GET['searchItem'];
@@ -57,14 +56,13 @@ if (isset($_GET['search'])) {
         $query .= ' WHERE PDTNAME LIKE "%' . $getSearchItem .
             '%" OR CATEGORY LIKE "%' . $getSearchItem .
             '%" OR BRAND LIKE "%' . $getSearchItem .
-            '%" OR PDTID LIKE "%' . $getSearchItem . '%" AND';
+            '%" OR PDTID LIKE "%' . $getSearchItem . '%"';
 
         $getCatRange .= ' WHERE PDTNAME LIKE "%' . $getSearchItem .
             '%" OR CATEGORY LIKE "%' . $getSearchItem .
             '%" OR BRAND LIKE "%' . $getSearchItem .
             '%" OR PDTID LIKE "%' . $getSearchItem . '%"';
-    } else
-        $query .= ' WHERE';
+    }
 
     // If user uses filter function
     if ($getFilter != "all") {
@@ -72,17 +70,19 @@ if (isset($_GET['search'])) {
         if ($getSearchItem != null) {
             // Price range by category
             $getCatRange .= ' AND CATEGORY = "' . $rFilter . '"';
-        } else
+            $query .= ' AND CATEGORY = "' . $rFilter . '"';
+        } else {
             // Price range by category
             $getCatRange .= ' WHERE CATEGORY = "' . $rFilter . '"';
-        $query .= ' CATEGORY = "' . $rFilter . '" AND';
+            $query .= ' WHERE CATEGORY = "' . $rFilter . '"';
+        }
     }
 
     // Get price range for specific category
-    $result = mysqli_query($conn, $getCatRange);
-    $catPriceRange = mysqli_fetch_assoc($result);
-    $catMin = (float) $catPriceRange['MINPRICE'];
-    $catMax = (float) $catPriceRange['MAXPRICE'];
+    $catResult = mysqli_query($conn, $getCatRange);
+    $catPriceRange = mysqli_fetch_assoc($catResult);
+    $catMin = round($catPriceRange['MINPRICE'], 2);
+    $catMax = round($catPriceRange['MAXPRICE'], 2);
 
     // If user uses range
     if ($rangeCheck == 1) {
@@ -98,13 +98,13 @@ if (isset($_GET['search'])) {
         $minRange = $catMin;
         $maxRange = $catMax;
     }
-    $query .= ' PDTPRICE >="' . $minRange . '" AND PDTPRICE <= "' . $maxRange . '"';
+
+    $query .= ' HAVING NETPRICE BETWEEN ' . $minRange . ' AND ' . $maxRange;
 
     // If user use sort function
     if ($getSort != "default") {
-        $query .= ' ORDER BY ' . $getSort;
+        $query .= ' ORDER BY NETPRICE ASC'; // . $getSort;
     }
-
     // If user did not use sort function
     else {
         $query .= ' ORDER BY CREATED_AT DESC';
@@ -119,6 +119,7 @@ if (isset($_GET['search'])) {
 if (!$limit) {
     $startingLimit = 0;
 }
+
 // Pagination for results
 include('../templates/pagination_query.php');
 $query .= "\nLIMIT $startingLimit , $resultsPerPage";
@@ -149,9 +150,6 @@ if (isset($_POST['submit'])) {
         $errors['pdtName'] = 'Product name is required!';
     } else {
         $pdtName = mysqli_real_escape_string($conn, $_POST['pdtName']);
-        if (!preg_match('/^[a-zA-Z0-9\s]+$/', $pdtName)) {
-            $errors['pdtName'] = 'Product name must be letters, numbers and spaces only!';
-        }
     }
 
     if (empty($_POST['pdtDescription'])) {
@@ -313,7 +311,7 @@ mysqli_close($conn);
 
         <h6 class="grey-text"> Search </h6>
         <input type="search" name="searchItem" <?php if ($getSearchItem != '') echo " value = '" . $getSearchItem . "'"; ?>>
-        <button type="submit" name="search" class="btn brand z-depth-0 btn-small" style="width: 230px;">Search</button>
+        <button type="submit" name="submit" class="btn brand z-depth-0 btn-small" style="width: 230px;">Search</button>
     </form>
 </div>
 
