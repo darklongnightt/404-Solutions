@@ -308,7 +308,7 @@ mysqli_close($conn);
                                 </button>
 
                                 <a href="/analysis_report/demand_report.php?pid=<?php echo $id ?>">
-                                    <button class="btn brand z-depth-0" style="margin-top: 0px; width: 100%;">
+                                    <button class="btn brand z-depth-0 action-btn">
                                         <i class="fa fa-eye" aria-hidden="true"></i> Forecast
                                     </button>
                                 </a>
