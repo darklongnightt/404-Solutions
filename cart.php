@@ -7,10 +7,6 @@ if (isset($_SESSION['LASTACTION'])) {
         case 'REMOVECART':
             echo "<script>M.toast({html: 'Successfully removed from cart!'});</script>";
             break;
-
-        case 'DISCOUNT':
-            echo "<script>M.toast({html: 'Successfully applied discount!'});</script>";
-            break;
     }
 
     $_SESSION['LASTACTION'] = "NONE";
@@ -24,7 +20,7 @@ include('templates/pagination_query.php');
 
 $totalPrice = $totalDiscount = $netPrice = $appliedDiscount = 0;
 $sumSubTotal = $sumSavings = $sumTotal = $totalQty = 0;
-$transactionId = $couponcode = '';
+$transactionId = $couponcode = $description = '';
 $errors = array('discountcode' => '');
 $coupon = array();
 
@@ -60,25 +56,43 @@ if (isset($_POST['applydiscount'])) {
 }
 
 if (isset($_GET['discount'])) {
-    // Getting data from table: coupon
+    // Getting data from table: coupon AND promotion
     $couponcode = $_GET['discount'];
+
     $sql = "SELECT * FROM coupon WHERE USERID='$uid' AND COUPONCODE='$couponcode'";
     $result = mysqli_query($conn, $sql);
     $coupon = mysqli_fetch_assoc($result);
 
+    $sql = "SELECT * FROM promotion WHERE PROMOCODE='$couponcode'";
+    $result = mysqli_query($conn, $sql);
+    $promotion = mysqli_fetch_assoc($result);
+
     // Check if coupon exists or is already claimed
-    if (mysqli_num_rows($result) < 1) {
+    if (!$coupon && !$promotion) {
         $errors['discountcode'] = "Invalid code entered!";
-    }
+    } else if ($coupon) {
 
-    if ($coupon['CLAIMED'] == 'TRUE') {
-        $errors['discountcode'] = "Sorry, this coupon is already claimed!";
-    }
+        if ($coupon['CLAIMED'] == 'TRUE') {
+            $errors['discountcode'] = "Sorry, this coupon is already claimed!";
+        }
 
-    // If error free, apply coupon to cart
-    if (!array_filter($errors)) {
-        $appliedDiscount = $coupon['DISCOUNT'];
-        $_SESSION['LASTACTION'] = 'DISCOUNT';
+        // If error free, apply coupon to cart
+        if (!array_filter($errors)) {
+            $appliedDiscount = $coupon['DISCOUNT'];
+            $description = $coupon['DESCRIPTION'];
+            echo "<script>M.toast({html: 'Successfully applied discount!'});</script>";
+
+        }
+    } else if ($promotion) { 
+
+        // If error free, apply coupon to cart
+        if (!array_filter($errors)) {
+            $appliedDiscount = $promotion['DISCOUNT'];
+            $description = $promotion['DESCRIPTION'];
+            echo "<script>M.toast({html: 'Successfully applied discount!'});</script>";
+
+        }
+
     }
 }
 
@@ -269,7 +283,7 @@ mysqli_close($conn);
 
                         <?php if ($appliedDiscount > 0) { ?>
                             <div class="red-text">
-                                <?php echo '"' . htmlspecialchars($coupon['DESCRIPTION']) . '" - ' . $appliedDiscount . '% applied!'; ?>
+                                <?php echo '"' . htmlspecialchars($description) . '" - ' . $appliedDiscount . '% applied!'; ?>
                             </div>
                         <?php } ?>
                         <div class="divider"></div>
