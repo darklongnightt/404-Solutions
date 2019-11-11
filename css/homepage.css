@@ -8,9 +8,6 @@
 .top-icon {
   max-width: 75px;
   max-height: 75px;
-  margin-top: 15px;
-  margin-bottom: 15px;
-  position: relative;
 }
 
 .welcome-label {
@@ -44,11 +41,10 @@ img {
 }
 
 .img-container {
-  width: 100px;
-  min-height: 100px;
-  max-height: auto;
-  float: left;
-  text-align: center;
+  height: 75px;
+  margin-top: 15px;
+  margin-bottom: 15px;
+  position: relative;
 }
 
 .popular {
@@ -100,4 +96,12 @@ img {
 
 .card:hover .middle {
   opacity: 1;
+}
+
+.product-img {
+  width: 80%;
+  max-height: 150px;
+  margin-left: 20px;
+  display: block;
+  position: relative;
 }

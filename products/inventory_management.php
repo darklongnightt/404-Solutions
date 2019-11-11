@@ -36,6 +36,10 @@ if (isset($_POST['forecast'])) {
             }
         }
 
+        if ($predictedQty < 1) {
+            $predictedQty = 1;
+        }
+
         // Update product forecast and threshold
         $forecast = $month . '|' . $predictedQty;
         $sql = "UPDATE product SET THRESHOLD='$predictedQty', FORECAST='$forecast' WHERE PDTID='$pid'";
@@ -151,13 +155,13 @@ if (isset($_GET['submit'])) {
     }
     // If user did not use sort function
     else {
-        $query .= ' ORDER BY CREATED_AT DESC';
+        $query .= ' ORDER BY PDTQTY/THRESHOLD';
     }
 
     $ext = "&Filter=$rFilter&sort=$getSort&priceRange=$minRange-$maxRange&check=$rangeCheck&searchItem=$getSearchItem&submit=Search";
     $getFilter = str_replace(' ', '-', $rFilter);
 } else {
-    $query .= ' ORDER BY CREATED_AT DESC';
+    $query .= ' ORDER BY PDTQTY/THRESHOLD';
 }
 
 if (!$limit) {
@@ -186,7 +190,7 @@ if (isset($_POST['qtybutton'])) {
                 "https" : "http") . "://" . $_SERVER['HTTP_HOST'] .
                 $_SERVER['REQUEST_URI'];
 
-            $_SESSION['LASTACTION'] = 'UPDATESTOCK';
+            $_SESSION['LASTACTION'] = 'UPDATESTOCK';            
             echo "<script type='text/javascript'>window.top.location='$link';</script>";
         } else {
             echo 'Query Error: ' . mysqli_error($conn);
@@ -222,7 +226,7 @@ mysqli_close($conn);
         <br>
         <h6 class="grey-text">Sort</h6>
         <select class="browser-default" name="sort">
-            <option value="default" <?php if ($getSort == '') echo 'selected' ?>>Default</option>
+            <option value="default" <?php if ($getSort == '') echo 'selected' ?>>Default - Low Stock</option>
             <option value="NETPRICE DESC" <?php if ($getSort == 'NETPRICE DESC') echo 'selected' ?>>Price - High to Low </option>
             <option value="NETPRICE ASC" <?php if ($getSort == 'NETPRICE ASC') echo 'selected' ?>>Price - Low to High</option>
             <option value="PDTDISCNT ASC" <?php if ($getSort == 'PDTDISCNT ASC') echo 'selected' ?>>Discount - Low to High</option>
@@ -319,7 +323,8 @@ mysqli_close($conn);
 
                                 <div class="title black-text"><?php echo htmlspecialchars($product['PDTNAME'] . ' - ' . $product['WEIGHT']); ?></div>
                                 <?php if ($product['PDTQTY'] <= $product['THRESHOLD']) { ?>
-                                    <div class="red-text bold">Available: <span class="flow-text"><?php echo $product['PDTQTY']; ?></span></div>
+                                    <div class="red-text bold">Low Stock: <span class="flow-text"><?php echo $product['PDTQTY']; ?> </span></div>
+
                                 <?php } else { ?>
                                     <div class="black-text">Available: <span class="flow-text"><?php echo $product['PDTQTY']; ?></span></div>
                                 <?php } ?>
@@ -335,14 +340,18 @@ mysqli_close($conn);
                                     <div>
                                         <?php echo $prediction[0]; ?>
                                     </div>
-                                    <div class="flow-text blue-text" style="margin: 10 0 0 50;">
-                                        <?php echo $prediction[1]; ?>
-                                    </div>
+
+                                    <a href="/analysis_report/demand_report.php?pid=<?php echo $product['PDTID']; ?>">
+                                        <div class="flow-text blue-text" style="margin: 10 0 0 50;">
+                                            <?php echo $prediction[1]; ?>
+                                        </div>
+                                    </a>
+
                                 <?php } ?>
                             </div>
 
                             <div class="col m4 s4">
-                                <form method="POST" action="inventory_management.php">
+                                <form method="POST">
                                     <label>Update Quantity: </label>
                                     <input type="number" name="updateqty" value="<?php echo htmlspecialchars($product['PDTQTY']); ?>">
                                     <input type="hidden" name="updateid" value="<?php echo $product['PDTID']; ?>" />

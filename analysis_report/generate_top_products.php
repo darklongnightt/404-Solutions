@@ -54,9 +54,14 @@ mysqli_close($conn);
 <html>
 <h4 class="grey-text center">Most Popular Products</h4>
 <div class="container center">
+    <a href="generate_top_products.php?generate=true">
+        <button name="submit" class="btn-floating btn-large waves-effect waves-light brand z-depth-0" style="top: 35px;">
+            <i class="fa fa-refresh" aria-hidden="true"></i>
+        </button>
+    </a>
     <?php if ($products) : ?>
         <div class="row">
-            <div class="col m11 s22">
+            <div class="col m12 s20">
                 <div class="card z-depth-0">
                     <div class="card-content">
                         <table class="striped responsive-table">
@@ -107,11 +112,6 @@ mysqli_close($conn);
     <?php else : ?>
         <div>No Top Products Generated!</div>
     <?php endif ?>
-
-    <a href="generate_top_products.php?generate=true">
-        <button name="submit" class=" btn brand z-depth-0">Refresh Top Products</button>
-    </a>
-
 </div>
 
 <?php include("../templates/footer.php"); ?>

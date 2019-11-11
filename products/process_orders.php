@@ -2,6 +2,19 @@
 include("../templates/header.php");
 include("../config/db_connect.php");
 
+// Check that deliver all button is pressed
+if (isset($_GET['deliver'])) {
+    if ($_GET['deliver'] == "all") {
+        $sql = "UPDATE orders SET STATUS='Delivering' WHERE STATUS='Confirmed Payment'";
+        if (mysqli_query($conn, $sql)) {
+            $_SESSION['LASTACTION'] = "DELIVERALL";
+            echo "<script type='text/javascript'>window.top.location='/products/process_orders.php;</script>";
+        } else {
+            echo "Query Error: " . mysqli_error($conn);
+        }
+    }
+}
+
 // Check that submit button is pressed
 if (isset($_POST['submit'])) {
     // Get order id and set status to 'Delivering'
@@ -17,6 +30,8 @@ if (isset($_POST['submit'])) {
 if (isset($_SESSION['LASTACTION'])) {
     if ($_SESSION['LASTACTION'] == "DELIVER") {
         echo "<script>M.toast({html: 'Order sent for delivery!'});</script>";
+    } else if ($_SESSION['LASTACTION'] == "DELIVERALL") {
+        echo "<script>M.toast({html: 'All orders sent for delivery!'});</script>";
     }
 
     $_SESSION['LASTACTION'] = "NONE";
@@ -42,8 +57,24 @@ mysqli_close($conn);
 
 <body>
     <div class="container">
-        <h4 class="center grey-text">Process Orders</h4>
+        <h4 class="center grey-text">Orders Pending Delivery</h4>
         <?php if ($orders) : ?>
+
+            <div class="row">
+                <div class="col s10 m10 offset-m1">
+                    <div class="card z-depth-0">
+                        <div class="card-content">
+                            <h5><i class="fa fa-truck" aria-hidden="true"></i> Deliver All</h5>
+                            <a href="/products/process_orders.php?deliver=all">
+                                <button class="btn z-depth-0 brand center" style="margin-top: 15px; width: 20%;">
+                                    Apply
+                                </button>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
             <div class="row">
                 <div class="col s20 m10 offset-m1">
                     <ul class="collection">
@@ -84,14 +115,11 @@ mysqli_close($conn);
                 </div>
             </div>
         <?php else : ?>
-            <div class="center">
-                <img src="../img/empty_cart.png" class="empty-cart">
+            <div class="center big-icon">
+                <i class="fa fa-truck" aria-hidden="true"></i>
             </div>
 
-            <br>
-            <br>
-            <br>
-            <h6 class="center">No orders to process!</h6>
+            <h6 class="center">No orders pending delivery!</h6>
             <a href="/products/inventory_management.php">
                 <div class="center">
                     <button class="btn brand z-depth-0 empty-cart-btn">Manage Inventory</button>

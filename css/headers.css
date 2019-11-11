@@ -53,6 +53,10 @@ nav i.material-icons {
   width: 250px;
 }
 
+.big-icon {
+  font-size: 250px;
+}
+
 
 /* For desktop: */
 .col-1 {width: 8.33%;}

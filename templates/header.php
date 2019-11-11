@@ -187,6 +187,27 @@ if (isset($_POST['search'])) {
 			<li>
 				<a href="../authentication/logout.php" class="brand-text bold"> <i class="material-icons">exit_to_app</i>Logout</a>
 			</li>
+		<?php } else if (substr($uid, 0, 3) == 'ADM' || substr($uid, 0, 3) == 'ANL') { ?>
+			<li>
+				<div class="user-view">
+					<div class="background">
+						<img src="/img/avatar-bg.png">
+					</div>
+
+					<?php if ($_SESSION['U_GENDER'] == 'M') : ?>
+						<a href="/profile.php"><img class="circle" src="/img/male-avatar.jfif"></a>
+					<?php else : ?>
+						<a href="/profile.php"><img class="circle" src="/img/female-avatar.jpg"></a>
+					<?php endif ?>
+
+					<a href="/profile.php"><span class="brand-text name"><?php echo htmlspecialchars($_SESSION['U_FIRSTNAME'] . ' ' . $_SESSION['U_LASTNAME']); ?></span></a>
+					<a href="/profile.php"><span class="brand-text email"><?php echo htmlspecialchars($_SESSION['U_EMAIL']); ?></span></a>
+				</div>
+			</li>
+
+			<li>
+				<a href="../authentication/logout.php" class="brand-text bold"> <i class="material-icons">exit_to_app</i>Logout</a>
+			</li>
 		<?php } else { ?>
 
 			<li>

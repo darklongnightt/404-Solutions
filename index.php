@@ -201,11 +201,13 @@ mysqli_close($conn);
                                 <div class="col s4 m2 center">
 
                                     <a href="/products/product_details.php?id=<?php echo $product['PDTID']; ?>">
-                                        <img src="<?php if ($product['IMAGE']) {
-                                                            echo $product['IMAGE'];
-                                                        } else {
-                                                            echo 'img/product_icon.svg';
-                                                        } ?>" class="top-icon">
+                                        <div class="img-container">
+                                            <img src="<?php if ($product['IMAGE']) {
+                                                                echo $product['IMAGE'];
+                                                            } else {
+                                                                echo 'img/product_icon.svg';
+                                                            } ?>" class="top-icon">
+                                        </div>
 
                                         <div class="white-text discount-label">
                                             <?php echo '$' . number_format(htmlspecialchars($product['PDTPRICE']) / 100 * htmlspecialchars(100 - $product['PDTDISCOUNT']), 2, '.', ''); ?>
@@ -298,7 +300,10 @@ mysqli_close($conn);
                                                     } else {
                                                         echo 'img/product_icon.svg';
                                                     } ?>" class="product-icon circle">
+
                                 <div class="card-content center">
+
+
                                     <h6 class="black-text"> <?php echo htmlspecialchars($recommendation['PDTNAME']); ?> <label> <?php echo htmlspecialchars($recommendation['WEIGHT']); ?> </label></h6>
                                     <?php if ($recommendation['PDTDISCNT'] > 0) { ?>
 
@@ -319,13 +324,13 @@ mysqli_close($conn);
 
                         </a>
 
-                        <div class="card-action right-align">
-                            <?php if (substr($uid, 0, 3) == 'CUS' || substr($uid, 0, 3) == 'ANO') { ?>
+                        <?php if (substr($uid, 0, 3) == 'CUS' || substr($uid, 0, 3) == 'ANO') { ?>
+                            <div class="card-action right-align">
                                 <a href="index.php?<?php echo 'cart=' . $recommendation['PDTID']; ?>">
                                     <div class="red-text"><i class="fa fa-shopping-cart"></i> Cart</div>
                                 </a>
-                            <?php } ?>
-                        </div>
+                            </div>
+                        <?php } ?>
                     </div>
             </div>
     </div>

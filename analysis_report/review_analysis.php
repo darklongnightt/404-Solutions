@@ -2,12 +2,19 @@
 include("../config/db_connect.php");
 include("../templates/header.php");
 
+// Checks if search comment is clicked
+$commentFilter = '';
+if (isset($_POST['submit'])) {
+    if (isset($_POST['comment'])) {
+        $commentFilter = $_POST['comment'];
+    }
+}
 
 // Retrieve product categories
 $sql = "SELECT DISTINCT CATEGORY FROM review";
 $result = mysqli_query($conn, $sql);
 $categories = mysqli_fetch_all($result, MYSQLI_ASSOC);
-$categoryReviews = array();
+$categoryReviews = $comments = array();
 
 // Retrieve product reviews from each category
 foreach ($categories as $cat) {
@@ -22,7 +29,8 @@ foreach ($categories as $cat) {
 }
 
 // Fetch all reviews
-$sql = "SELECT * FROM review";
+$sql = "SELECT * FROM review JOIN customer ON review.USERID = customer.USERID 
+ORDER BY review.CREATED_AT DESC";
 $result = mysqli_query($conn, $sql);
 $ratings = mysqli_fetch_all($result, MYSQLI_ASSOC);
 
@@ -61,6 +69,15 @@ if ($ratings) {
         $categoryReviews[$cat]['DRATINGS'][$d] += 1;
         $categoryReviews[$cat]['TOTAL'] += $score;
         $categoryReviews[$cat]['SIZE'] += 1;
+
+        // Check if comment contains a keyword
+        if ($commentFilter) {
+            $comment = $rating['COMMENT'];
+            if (strpos(strtolower($comment), strtolower($commentFilter)) !== false) {
+                $rating['SCORE'] = $score;
+                array_push($comments, $rating);
+            }
+        }
 
         ++$index;
     }
@@ -436,6 +453,64 @@ if ($ratings) {
                 </div>
             </div>
         </div>
+
+        <div class="row">
+            <div class="col m12 s12">
+                <div class="card z-depth-0">
+                    <div class="card-content">
+                        <h5>Search Comments</h5>
+
+                        <form action="/analysis_report/review_analysis.php" method="POST" style="margin-bottom: 0%;">
+                            <div class="row" style="border-radius: 20px; border-style: solid; color: grey; border-width: thin; background: white; ">
+                                <div class="col m11 s11">
+                                    <input type="text" name="comment" placeholder="Search Comments" style="width: 103%;">
+                                </div>
+
+                                <div class="col m1 s1">
+                                    <button type="submit" name="submit" class="btn white black-text z-depth-0" style="width: 90%;">
+                                        <i class="material-icons" style="font-size: 26px; margin-top: 5px; margin-left: 5px;">search</i>
+                                    </button>
+                                </div>
+                            </div>
+                        </form>
+
+
+                        <?php if ($comments) : ?>
+
+                            <table class="striped responsive-table">
+                                <tbody>
+                                    <?php
+                                            foreach ($comments as $rating) {
+                                                $custScore = $rating['SCORE'];
+
+                                                echo '<tr style="height: 120px;">';
+                                                echo '<td class="center">';
+                                                for ($i = 1; $i <= 5; $i++) {
+                                                    if ($i <= $custScore) {
+                                                        echo '<i class="fa fa-star star" aria-hidden="true"></i>';
+                                                    } else if ($i <= $custScore + 0.5) {
+                                                        echo '<i class="fa fa-star-half-o star" aria-hidden="true"></i>';
+                                                    } else if ($i > $custScore) {
+                                                        echo '<i class="fa fa-star-o star" aria-hidden="true"></i>';
+                                                    }
+                                                }
+                                                echo '<div>by ' . $rating['FIRSTNAME'] . '</div>';
+                                                echo '<div><i class="material-icons" style="margin-top:5px;">verified_user</i></div></td>';
+                                                echo '<td>' . $rating['COMMENT'];
+                                                echo '<a href="/products/product_reviews.php?id=' . $rating['PDTID'] . '">' . '<div class="grey-text" style="font-size: 14px; margin-top: 5px;">' . $rating['PDTID'] . '</div></a>';
+                                                echo '<div class="grey-text" style="font-size: 14px; margin-top: 5px;">' . date('d-M-Y H:i', strtotime($rating['CREATED_AT'])) . '</div></td>';
+                                                echo '</tr>';
+                                            }
+                                            ?>
+                                </tbody>
+                            </table>
+                        <?php endif ?>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+
 
 
     </div>

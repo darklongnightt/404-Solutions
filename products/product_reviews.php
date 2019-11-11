@@ -321,7 +321,7 @@ if (isset($_GET['id'])) {
         </div>
 
         <div class="row">
-            <div class="col m12 s24">
+            <div class="col m12 s12">
                 <div class="card z-depth-0">
                     <div class="card-content">
                         <h5 class="left bold"> Product Reviews </h5>
