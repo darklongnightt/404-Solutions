@@ -81,18 +81,15 @@ if (isset($_GET['discount'])) {
             $appliedDiscount = $coupon['DISCOUNT'];
             $description = $coupon['DESCRIPTION'];
             echo "<script>M.toast({html: 'Successfully applied discount!'});</script>";
-
         }
-    } else if ($promotion) { 
+    } else if ($promotion) {
 
         // If error free, apply coupon to cart
         if (!array_filter($errors)) {
             $appliedDiscount = $promotion['DISCOUNT'];
             $description = $promotion['DESCRIPTION'];
             echo "<script>M.toast({html: 'Successfully applied discount!'});</script>";
-
         }
-
     }
 }
 
@@ -129,7 +126,7 @@ if (isset($_POST['checkout']) && $cartList) {
             $netPrice = mysqli_real_escape_string($conn, round($totalPrice - $totalDiscount, 2));;
             $pdtId = mysqli_real_escape_string($conn, $product['PDTID']);
             $orderQty = mysqli_real_escape_string($conn, $product['CARTQTY']);
-            $deliveryDate = mysqli_real_escape_string($conn, date('Y-m-d h:i:sa', strtotime(date('Y-m-d h:i:sa') . ' + 5 days')));
+            $deliveryDate = mysqli_real_escape_string($conn, date('Y-m-d h:i:s', strtotime(date('Y-m-d h:i:s') . ' + 5 days')));
             $payType = mysqli_real_escape_string($conn, $_POST['payment']);
 
             // Compute variables needed in paypal page
@@ -160,7 +157,7 @@ if (isset($_POST['checkout']) && $cartList) {
         }
 
         // Update coupon to be claimed
-        if ($appliedDiscount > 0) {
+        if ($coupon) {
             $couponid = $coupon['COUPONID'];
             $sql = "UPDATE coupon SET CLAIMED='TRUE' WHERE COUPONID = '$couponid'";
             if (!mysqli_query($conn, $sql)) {
@@ -252,13 +249,9 @@ mysqli_close($conn);
                         include("templates/pagination_output.php");
                     } else { ?>
 
-                    <div class="center">
-                        <img src="/img/empty_cart.png" class="empty-cart">
+                    <div class="center big-icon">
+                        <i class="fa fa-shopping-cart" aria-hidden="true"></i>
                     </div>
-
-                    <br>
-                    <br>
-                    <br>
                     <h6 class="center">Your shopping cart is empty!</h6>
                     <a href="/products/search.php">
                         <div class="center">

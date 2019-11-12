@@ -116,7 +116,7 @@ if (isset($_POST['submit'])) {
         if (mysqli_query($conn, $sql)) {
             $sql = "INSERT INTO salt(SALT, EMAIL) VALUES('$salt', '$email')";
             if (mysqli_query($conn, $sql)) {
-                // Successfully registered user into db, admin and analyst does not require shipping address
+                // Successfully registered user into db, staff does not require shipping address
                 mysqli_free_result($result);
                 mysqli_close($conn);
 
@@ -138,8 +138,8 @@ if (isset($_POST['submit'])) {
 <!DOCTYPE html>
 <html>
 
-<section class="container grey-text">
-    <h4 class="center">Register Staff Account</h4>
+<section class="container">
+    <h4 class="center grey-text">Register Staff Account</h4>
 
     <form action="create_account.php" class="EditForm" method="POST">
         <label>Email Address: </label>
@@ -207,7 +207,7 @@ if (isset($_POST['submit'])) {
         <div class="red-text"><?php echo htmlspecialchars($errors['retypedpassword']); ?></div>
 
         <div class="center">
-            <input type="submit" name="submit" value="register" class="btn brand z-depth-0">
+            <input type="submit" name="submit" value="register" class="btn brand z-depth-0 action-btn">
         </div>
     </form>
 </section>

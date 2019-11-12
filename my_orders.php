@@ -217,13 +217,9 @@ mysqli_close($conn);
             <?php }
                 include("templates/pagination_output.php");
             } else { ?>
-            <div class="center">
-                <img src="img/empty_cart.png" class="empty-cart">
+            <div class="center big-icon">
+                <i class="fa fa-shopping-cart" aria-hidden="true"></i>
             </div>
-
-            <br>
-            <br>
-            <br>
             <h6 class="center">Your order history is empty!</h6>
             <a href="/products/search.php">
                 <div class="center">

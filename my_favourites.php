@@ -114,13 +114,10 @@ mysqli_close($conn);
             <?php }
                 include("templates/pagination_output.php");
             } else { ?>
-            <div class="center">
-                <img src="img/empty_fave.png" class="center empty-cart">
+            <div class="center big-icon">
+                <i class="fa fa-heart-o" aria-hidden="true"></i>
             </div>
 
-            <br>
-            <br>
-            <br>
             <h6 class="center">Your favourite list is empty!</h6>
             <a href="/products/search.php">
                 <div class="center">

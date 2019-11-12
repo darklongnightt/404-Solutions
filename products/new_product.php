@@ -6,6 +6,11 @@ include("../storage_connect.php");
 $pdtname = $desc = $brand = $category = $pdtqty = $pdtprice = $cstprice = $discount = $checkResult = $pdtid = $weight = $url = $fileName = $tmpFilePath = '';
 $errors = array('pdtname' => '', 'weight' => '', 'desc' => '', 'brand' => '', 'category' => '', 'pdtqty' => '', 'pdtprice' => '', 'cstprice' => '', 'discount' => '', 'image' => '');
 
+// Fetch all distinct categories
+$sql = "SELECT DISTINCT(CATEGORY) FROM product";
+$result = mysqli_query($conn, $sql);
+$categories = mysqli_fetch_all($result, MYSQLI_ASSOC);
+
 //Checks if button of name="submit" is clicked
 if (isset($_POST['submit'])) {
 
@@ -147,8 +152,8 @@ if (isset($_POST['submit'])) {
 	}
 </script>
 
-<section class="container grey-text">
-	<h4 class="center">New Product</h4>
+<section class="container">
+	<h4 class="center grey-text">New Product</h4>
 	<form action="new_product.php" enctype="multipart/form-data" class="EditForm" method="POST">
 
 		<div class="center">
@@ -157,6 +162,21 @@ if (isset($_POST['submit'])) {
 		</div>
 		<div class="red-text center"><?php echo htmlspecialchars($errors['image']); ?></div>
 		<br>
+
+		<label>Product Category: </label>
+		<select class="browser-default" name="category">
+			<?php
+
+			foreach ($categories as $cat) {
+				echo "<option value=" . $cat['CATEGORY'];
+				if ($category == $cat['CATEGORY']) {
+					echo " selected";
+				}
+				echo ">" . $cat['CATEGORY'] . "</option>";
+			}
+			?>
+		</select>
+		<div class="red-text"><?php echo htmlspecialchars($errors['category']); ?></div>
 
 		<label>Product Name: </label>
 		<input type="text" name="pdtname" value="<?php echo htmlspecialchars($pdtname); ?>">
@@ -174,28 +194,24 @@ if (isset($_POST['submit'])) {
 		<input type="text" name="brand" value="<?php echo htmlspecialchars($brand); ?>">
 		<div class="red-text"><?php echo htmlspecialchars($errors['brand']); ?></div>
 
-		<label>Category: </label>
-		<input type="text" name="category" value="<?php echo htmlspecialchars($category); ?>">
-		<div class="red-text"><?php echo htmlspecialchars($errors['category']); ?></div>
-
 		<label>Quantity Available: </label>
 		<input type="number" name="pdtqty" value="<?php echo htmlspecialchars($pdtqty); ?>">
 		<div class="red-text"><?php echo htmlspecialchars($errors['pdtqty']); ?></div>
 
-		<label>Selling Price: </label>
+		<label>Selling Price (SGD): </label>
 		<input type="number" name="pdtprice" min="0" value="<?php echo htmlspecialchars($pdtprice); ?>" step=".01">
 		<div class="red-text"><?php echo htmlspecialchars($errors['pdtprice']); ?></div>
 
-		<label>Cost Price: </label>
+		<label>Cost Price (SGD): </label>
 		<input type="number" name="cstprice" min="0" value="<?php echo htmlspecialchars($cstprice); ?>" step=".01">
 		<div class="red-text"><?php echo htmlspecialchars($errors['cstprice']); ?></div>
 
-		<label>Discount: </label>
+		<label>Discount (%): </label>
 		<input type="number" name="discount" min="0" max="99" value="<?php echo htmlspecialchars($discount); ?>" step="1">
 		<div class="red-text"><?php echo htmlspecialchars($errors['discount']); ?></div>
 
 		<div class="center">
-			<input type="submit" name="submit" type="submit" class="btn brand z-depth-0">
+			<input type="submit" name="submit" type="submit" class="btn brand z-depth-0 action-btn">
 		</div>
 	</form>
 </section>

@@ -309,8 +309,8 @@ mysqli_close($conn);
 							?>
 
 						<input type="hidden" name="url" value="<?php echo $product['IMAGE']; ?>">
-						<a href="<?php echo $link  . $linkCat .  'delete=' . $product['PDTID'] . '&file=' . $fileName; ?>">
-							<div class="red-text"><i class="fa fa-trash-alt"></i> DELETE</div>
+						<a href="<?php echo $link  . $linkCat .  'delete=' . $product['PDTID'] . '&file=' . $fileName; ?>" class="red-text">
+							<i class="fa fa-trash-o" aria-hidden="true"></i> DELETE
 						</a>
 					<?php } ?>
 

@@ -234,13 +234,13 @@ mysqli_close($conn);
                             <?php foreach ($recent_views as $product) { ?>
                                 <div class="col m4 s4 center">
                                     <a href="/products/product_details.php?id=<?php echo $product['PDTID']; ?>">
-                                        <span class="img-container">
+                                        <div class="img-container">
                                             <img src="<?php if ($product['IMAGE']) {
                                                                 echo $product['IMAGE'];
                                                             } else {
                                                                 echo 'img/product_icon.svg';
-                                                            } ?>" class="recent-icon">
-                                        </span>
+                                                            } ?>" class="top-icon">
+                                        </div>
                                     </a>
                                 </div>
                             <?php } ?>

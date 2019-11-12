@@ -21,12 +21,22 @@ function updateRecentView($uid, $pid, $conn)
     if ($checkUnique < 1) {
         $sql = "SELECT * FROM recent_views WHERE USERID='$uid'";
         $result = mysqli_query($conn, $sql);
+        $recent = mysqli_fetch_all($result, MYSQLI_ASSOC);
         $num = mysqli_num_rows($result);
 
         // Only keeps top 6 rows per customer by either insert or update
         if ($num > 5) {
+            // Get the minimum date
+            $min = date('Y-m-d h:i:sa');
+            foreach ($recent as $view) {
+                $date = $view['VIEWED_AT'];
+                if (strtotime($date) < strtotime($min)) {
+                    $min = $date;
+                }
+            }
+            
             $sql = "UPDATE recent_views SET VIEWED_AT=CURRENT_TIMESTAMP, PDTID='$pid' 
-                WHERE USERID='$uid' AND VIEWED_AT=(SELECT MIN(VIEWED_AT) FROM recent_views WHERE USERID='$uid');";
+            WHERE USERID='$uid' AND VIEWED_AT = '$min'";
         } else {
             $sql = "INSERT INTO recent_views(USERID, PDTID) VALUES('$uid', '$pid')";
         }

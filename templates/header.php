@@ -24,6 +24,7 @@
 </head>
 
 <?php
+date_default_timezone_set("Singapore");
 session_start();
 $uid = '';
 if (isset($_SESSION['U_UID'])) {

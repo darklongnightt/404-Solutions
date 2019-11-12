@@ -39,11 +39,11 @@ if (isset($_SESSION['LASTACTION'])) {
 
 // Pagination for all results
 $currDir = "process_orders.php";
-$query = "SELECT * FROM orders JOIN product on ORDERS.PDTID = product.PDTID WHERE STATUS='Confirmed Payment'";
+$query = "SELECT * FROM orders WHERE STATUS='Confirmed Payment'";
 include('../templates/pagination_query.php');
 
 // Retrieve orders that are confirmed payment
-$sql = "SELECT * FROM orders JOIN product on ORDERS.PDTID = product.PDTID WHERE STATUS='Confirmed Payment'
+$sql = "SELECT * FROM orders JOIN product on orders.PDTID = product.PDTID WHERE STATUS='Confirmed Payment'
 ORDER BY PCHASEDATE DESC LIMIT $startingLimit, $resultsPerPage";
 $result = mysqli_query($conn, $sql);
 $orders = mysqli_fetch_all($result, MYSQLI_ASSOC);
