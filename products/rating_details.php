@@ -186,7 +186,7 @@ mysqli_close($conn);
 				<input type="hidden" name="productrating" id="productrating" value="0">
 				<input type="hidden" name="delirating" id="delirating" value="0">
 				<input type="hidden" name="srating" id="srating" value="0">
-				<input type="submit" name="submit" type="submit" class="btn brand z-depth-0">
+				<input type="submit" name="submit" type="submit" class="btn-small brand z-depth-0 action-btn">
 			</div>
 		</form>
 	</div>

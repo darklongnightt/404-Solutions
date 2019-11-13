@@ -55,7 +55,7 @@ mysqli_close($conn);
 <h4 class="grey-text center">Most Popular Products</h4>
 <div class="container center">
     <a href="generate_top_products.php?generate=true">
-        <button name="submit" class="btn-floating btn-large waves-effect waves-light brand z-depth-0" style="top: 35px;">
+        <button name="submit" class="btn-floating btn-large waves-effect waves-light red lighten-1" style="top: 35px;">
             <i class="fa fa-refresh" aria-hidden="true"></i>
         </button>
     </a>

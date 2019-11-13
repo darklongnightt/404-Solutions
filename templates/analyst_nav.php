@@ -3,13 +3,13 @@
 </li>
 
 <li>
-    <a href="../analysis/future_sales.php" class="brand-text bold">Sales Analysis</a>
+    <a href="../analysis/demand_forecast.php" class="brand-text bold">Demand Forecast</a>
 </li>
 
 <li>
-    <a href="../analysis/demographics_analysis.php" class="brand-text bold">Demographics</a>
+    <a href="../analysis/demographics_analysis.php" class="brand-text bold">Customer Clustering</a>
 </li>
 
 <li>
-    <a href="../analysis/satisfaction_analysis.php" class="brand-text bold">Satisfaction Analysis</a>
+    <a href="../analysis/revenue_forecast.php" class="brand-text bold">Revenue Forecast</a>
 </li>
