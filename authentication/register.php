@@ -119,6 +119,7 @@ if (isset($_POST['submit'])) {
                 $_SESSION['U_DOB'] = $dob;
                 $_SESSION['U_INITIALS'] = $firstname[0] . $lastname[0];
                 $_SESSION['U_CLUSTER'] = 0;
+                $_SESSION['SERVERSECRET'] = uniqid();
 
                 // Update cart from cookies
                 $ano = $_COOKIE['UID'];

@@ -2,35 +2,15 @@
 include("../config/db_connect.php");
 include("../templates/header.php");
 
-// Checks if search comment is clicked
-$commentFilter = '';
-if (isset($_POST['submit'])) {
-    if (isset($_POST['comment'])) {
-        $commentFilter = $_POST['comment'];
-    }
-}
-
-// Retrieve product categories
-$sql = "SELECT DISTINCT CATEGORY FROM review";
-$result = mysqli_query($conn, $sql);
-$categories = mysqli_fetch_all($result, MYSQLI_ASSOC);
-$categoryReviews = $comments = array();
-
-// Retrieve product reviews from each category
-foreach ($categories as $cat) {
-    // Init variables for associative array for each category
-    // Structure: $categoryReviews['BAZAAR']['PRATING'][1] 
-    // returns freq of 1 star PRODUCT ratings for BAZAAR CATEGORY
-    $pBar =  array_fill(1, 5, 0);
-    $sBar = array_fill(1, 5, 0);
-    $dBar = array_fill(1, 5, 0);
-    $data = array('CATEGORY' => $cat['CATEGORY'], 'PRATINGS' => $pBar, 'SRATINGS' => $sBar, 'DRATINGS' => $dBar, 'TOTAL' => 0, 'SIZE' => 0);
-    $categoryReviews[$cat['CATEGORY']] = $data;
+// Check for filtered category
+$category = '';
+if (isset($_GET['category'])) {
+    $category = $_GET['category'];
 }
 
 // Fetch all reviews
 $sql = "SELECT * FROM review JOIN customer ON review.USERID = customer.USERID 
-ORDER BY review.CREATED_AT DESC";
+WHERE review.CATEGORY = '$category' ORDER BY review.CREATED_AT DESC";
 $result = mysqli_query($conn, $sql);
 $ratings = mysqli_fetch_all($result, MYSQLI_ASSOC);
 
@@ -46,7 +26,6 @@ $dBar = array_fill(1, 5, 0);
 if ($ratings) {
     $index = 0;
     foreach ($ratings as $rating) {
-        $cat = $rating['CATEGORY'];
         $s = $rating['SRATING'];
         $d = $rating['DRATING'];
         $p = $rating['PRATING'];
@@ -62,22 +41,6 @@ if ($ratings) {
         $score = ($rating['PRATING'] + $rating['SRATING'] + $rating['DRATING']) / 3;
         $ratings[$index]['SCORE'] = $score;
         $overall += $score;
-
-        // Update frequency of each category -> rating type -> rating freq
-        $categoryReviews[$cat]['SRATINGS'][$s] += 1;
-        $categoryReviews[$cat]['PRATINGS'][$p] += 1;
-        $categoryReviews[$cat]['DRATINGS'][$d] += 1;
-        $categoryReviews[$cat]['TOTAL'] += $score;
-        $categoryReviews[$cat]['SIZE'] += 1;
-
-        // Check if comment contains a keyword
-        if ($commentFilter) {
-            $comment = $rating['COMMENT'];
-            if (strpos(strtolower($comment), strtolower($commentFilter)) !== false) {
-                $rating['SCORE'] = $score;
-                array_push($comments, $rating);
-            }
-        }
 
         ++$index;
     }
@@ -251,7 +214,7 @@ if ($ratings) {
                 <div class="card z-depth-0">
                     <div class="card-content center overall-card">
 
-                        <h5 class="bold">Storewide Ratings Analysis </h5>
+                        <h5 class="bold"><?php echo $category; ?></h5>
                         <div class="bold" style="font-size: 30;"><?php echo round($overall, 1); ?> <span class="grey-text" style="font-size: 20;">/ 5</span></div>
 
                         <?php
@@ -375,137 +338,38 @@ if ($ratings) {
         </div>
 
         <div class="row">
-            <div class="col m12 s24">
-                <div class="card z-depth-0">
-                    <div class="card-content">
-
-                        <table class="highlight responsive-table centered">
-                            <thead>
-                                <tr>
-                                    <th>Product Category</th>
-                                    <th>Overall Rating</th>
-                                    <th>Statistics</th>
-                                    <th>Satisfaction</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <?php
-                                    foreach ($categoryReviews as $catReview) {
-                                        // Get overall mean
-                                        $mean = $catReview['TOTAL'] / $catReview['SIZE'];
-                                        $pMean = $sMean = $dMean = 0;
-
-                                        // Get mean for each rating type
-                                        for ($i = 1; $i <= 5; $i++) {
-                                            $pMean += $catReview['PRATINGS'][$i] * $i;
-                                            $sMean += $catReview['SRATINGS'][$i] * $i;
-                                            $dMean += $catReview['DRATINGS'][$i] * $i;
-                                        }
-                                        $pMean /= $catReview['SIZE'];
-                                        $sMean /= $catReview['SIZE'];
-                                        $dMean /= $catReview['SIZE'];
-
-                                        echo '<tr>';
-                                        echo '<td> <a href="/analysis_report/category_analysis.php?category=' . $catReview['CATEGORY'] . '">';
-                                        echo '<div class="bold">' . $catReview['CATEGORY'] . '</div> </a>';
-                                        echo '<div class="grey-text">(' . $catReview['SIZE'] . ' Ratings' . ')</div></td> ';
-
-                                        echo '<td>';
-                                        echo '<div class="bold" style="font-size: 30; margin-bottom: 15px;">' . round($mean, 1) . '<span class="grey-text" style="font-size: 20;">/ 5</span></div>';
-                                        for ($i = 1; $i <= 5; $i++) {
-                                            if ($i <= $mean) {
-                                                echo '<i class="fa fa-star star" aria-hidden="true"></i>';
-                                            } else if ($i <= $mean + 0.5) {
-                                                echo '<i class="fa fa-star-half-o star" aria-hidden="true"></i>';
-                                            } else if ($i > $mean) {
-                                                echo '<i class="fa fa-star-o star" aria-hidden="true"></i>';
-                                            }
-                                        }
-                                        echo '</td>';
-
-                                        echo '<td>';
-                                        echo '<div><span style="width: 75px; display: inline-block;">Product:</span> <span class="bold" style="font-size: 23;">'
-                                            . number_format($pMean, 1, '.', '') .
-                                            '</spanProduct:> <span class="grey-text" style="font-size: 15;">/ 5</span> </div>';
-
-                                        echo '<div><span style="width: 75px; display: inline-block;">Delivery:</span> <span class="bold" style="font-size: 23;">' . number_format($dMean, 1, '.', '') . '</span> <span class="grey-text" style="font-size: 15;">/ 5</span> </div>';
-                                        echo '<div><span style="width: 75px; display: inline-block;">Service:</span> <span class="bold" style="font-size: 23;">' . number_format($sMean, 1, '.', '') . '</span> <span class="grey-text" style="font-size: 15;">/ 5</span> </div>';
-                                        echo '</td>';
-
-                                        echo '<td>';
-                                        if ($mean >= 3.5) :
-                                            echo '<h3 class="bold green-text"><i class="fa fa-smile-o" aria-hidden="true"></i></h3>';
-                                        elseif ($mean < 3.5 && $mean >= 2.5) :
-                                            echo '<h3 class="bold grey-text"><i class="fa fa-meh-o" aria-hidden="true"></i></h3>';
-                                        else :
-                                            echo '<h3 class="bold red-text"><i class="fa fa-frown-o" aria-hidden="true"></i></h3>';
-                                        endif;
-
-                                        echo '</td>';
-                                        echo '</tr>';
-                                    }
-                                    ?>
-
-                            </tbody>
-                        </table>
-
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div class="row">
             <div class="col m12 s12">
                 <div class="card z-depth-0">
                     <div class="card-content">
-                        <h5>Search Comments</h5>
+                        <h5>Comments</h5>
 
-                        <form action="/analysis_report/review_analysis.php" method="POST" style="margin-bottom: 0%;">
-                            <div class="row" style="border-radius: 20px; border-style: solid; color: grey; border-width: thin; background: white; ">
-                                <div class="col m11 s11">
-                                    <input type="text" name="comment" placeholder="Search Comments" style="width: 103%;">
-                                </div>
+                        <table class="striped responsive-table">
+                            <tbody>
+                                <?php
+                                    foreach ($ratings as $rating) {
+                                        $custScore = $rating['SCORE'];
 
-                                <div class="col m1 s1">
-                                    <button type="submit" name="submit" class="btn white black-text z-depth-0" style="width: 90%;">
-                                        <i class="material-icons" style="font-size: 26px; margin-top: 5px; margin-left: 5px;">search</i>
-                                    </button>
-                                </div>
-                            </div>
-                        </form>
-
-
-                        <?php if ($comments) : ?>
-
-                            <table class="striped responsive-table">
-                                <tbody>
-                                    <?php
-                                            foreach ($comments as $rating) {
-                                                $custScore = $rating['SCORE'];
-
-                                                echo '<tr style="height: 120px;">';
-                                                echo '<td class="center">';
-                                                for ($i = 1; $i <= 5; $i++) {
-                                                    if ($i <= $custScore) {
-                                                        echo '<i class="fa fa-star star" aria-hidden="true"></i>';
-                                                    } else if ($i <= $custScore + 0.5) {
-                                                        echo '<i class="fa fa-star-half-o star" aria-hidden="true"></i>';
-                                                    } else if ($i > $custScore) {
-                                                        echo '<i class="fa fa-star-o star" aria-hidden="true"></i>';
-                                                    }
-                                                }
-                                                echo '<div>by ' . $rating['FIRSTNAME'] . '</div>';
-                                                echo '<div><i class="material-icons" style="margin-top:5px;">verified_user</i></div></td>';
-                                                echo '<td>' . $rating['COMMENT'];
-                                                echo '<a href="/products/product_reviews.php?id=' . $rating['PDTID'] . '">' . '<div class="grey-text" style="font-size: 14px; margin-top: 5px;">' . $rating['PDTID'] . '</div></a>';
-                                                echo '<div class="grey-text" style="font-size: 14px; margin-top: 5px;">' . date('d-M-Y H:i', strtotime($rating['CREATED_AT'])) . '</div></td>';
-                                                echo '</tr>';
+                                        echo '<tr style="height: 120px;">';
+                                        echo '<td class="center">';
+                                        for ($i = 1; $i <= 5; $i++) {
+                                            if ($i <= $custScore) {
+                                                echo '<i class="fa fa-star star" aria-hidden="true"></i>';
+                                            } else if ($i <= $custScore + 0.5) {
+                                                echo '<i class="fa fa-star-half-o star" aria-hidden="true"></i>';
+                                            } else if ($i > $custScore) {
+                                                echo '<i class="fa fa-star-o star" aria-hidden="true"></i>';
                                             }
-                                            ?>
-                                </tbody>
-                            </table>
-                        <?php endif ?>
-
+                                        }
+                                        echo '<div>by ' . $rating['FIRSTNAME'] . '</div>';
+                                        echo '<div><i class="material-icons" style="margin-top:5px;">verified_user</i></div></td>';
+                                        echo '<td>' . $rating['COMMENT'];
+                                        echo '<a href="/products/product_reviews.php?id=' . $rating['PDTID'] . '">' . '<div class="grey-text" style="font-size: 14px; margin-top: 5px;">' . $rating['PDTID'] . '</div></a>';
+                                        echo '<div class="grey-text" style="font-size: 14px; margin-top: 5px;">' . date('d-M-Y H:i', strtotime($rating['CREATED_AT'])) . '</div></td>';
+                                        echo '</tr>';
+                                    }
+                                    ?>
+                            </tbody>
+                        </table>
                     </div>
                 </div>
             </div>

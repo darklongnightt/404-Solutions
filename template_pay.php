@@ -3,6 +3,7 @@ include("config/db_connect.php");
 include("templates/header.php");
 include_once 'paypal/config.php';
 
+// Checks on message notification to display
 if (isset($_SESSION['LASTACTION'])) {
   if ($_SESSION['LASTACTION'] == 'ADDRESS') {
     echo "<script>M.toast({html: 'Successfully created shipping gaddress!'});</script>";
@@ -13,7 +14,7 @@ if (isset($_SESSION['LASTACTION'])) {
 }
 
 $totalPrice = $totalQty = 0;
-$totalName = $tid = '';
+$totalName = $tid = $token = $error = '';
 
 // Checks if payment var in url is set
 if (isset($_GET['price'])) {
@@ -30,6 +31,39 @@ if (isset($_GET['name'])) {
 
 if (isset($_GET['tid'])) {
   $tid = $_GET['tid'];
+}
+
+if (isset($_GET['token'])) {
+  $token = $_GET['token'];
+}
+
+// Check that pay button is pressed
+if (isset($_POST['submit'])) {
+  // Specify paypal store id
+  $query = array();
+  $query['cmd'] = '_xclick';
+  $query['business'] = PAYPAL_ID;
+
+  // Specify item details
+  $query['item_name'] = $totalName;
+  $query['amount'] = $totalPrice;
+  $query['item_number'] = $totalQty;
+  $query['charset'] = "utf-8";
+  $query['currency_code'] = PAYPAL_CURRENCY;
+
+  // Specify URLs
+  $query['notify_url'] = PAYPAL_NOTIFY_URL;
+  $query['rm'] = 2;
+  $query['return'] = 'http://localhost:8090/paypal/success.php?tid=' . $tid;
+  $query['cancel_return'] = PAYPAL_CANCEL_URL;
+
+  // Security validation: rebuild hash from the query for integrity check
+  $rebuiltToken = hash('sha256', $query['item_name'] . $query['amount'] . $query['item_number'] . $_SESSION['SERVERSECRET']);
+  if ($rebuiltToken == $token) {
+    echo "<script type='text/javascript'>window.top.location='" . PAYPAL_URL . "?" . http_build_query($query) . "';</script>";
+  } else { 
+    $error = "Warning: Malicious attempt to alter item details has been detected!";
+  }
 }
 
 // Retrieve customer address
@@ -66,7 +100,7 @@ if (mysqli_num_rows($result) < 1) {
 
   <div class="row">
     <div class="col s12 m8 offset-m2">
-      <form action="<?php echo PAYPAL_URL; ?>" class="EditForm" method="post" style="width: 100%;">
+      <form class="EditForm" method="post" style="width: 100%;">
 
         <label class="brand-text bold">Shipping Address: </label>
         <input disabled value="<?php echo htmlspecialchars($address['ADDRESS1']); ?>" id="disabled" type="text" class="validate">
@@ -75,26 +109,11 @@ if (mysqli_num_rows($result) < 1) {
         <label>Country: </label>
         <input disabled value="<?php echo htmlspecialchars($address['COUNTRY1']); ?>" id="disabled" type="text" class="validate">
 
-        <input type="hidden" name="business" value="<?php echo PAYPAL_ID; ?>">
-        <input type="hidden" name="cmd" value="_xclick">
+        <div class="red-text center"><?php echo $error; ?></div>
 
-        <!-- Specify details about the item that buyers will purchase. -->
-        <input type="hidden" name="item_name" value="<?php echo $totalName; ?>">
-        <input type="hidden" name="item_number" value="<?php echo $totalQty; ?>">
-        <input type="hidden" name="amount" value="<?php echo $totalPrice; ?>">
-        <input type="hidden" name="charset" value="utf-8">
-        <input type="hidden" name="currency_code" value="<?php echo PAYPAL_CURRENCY; ?>">
-
-        <!-- Specify URLs -->
-        <input type="hidden" name="notify_url" value="<?php echo PAYPAL_NOTIFY_URL; ?>">
-        <input type="hidden" name="rm" value="2">
-        <input type="hidden" name="return" value="http://localhost:8090/paypal/success.php?tid=<?php echo $tid; ?>">
-        <input type="hidden" name="cancel_return" value="<?php echo PAYPAL_CANCEL_URL; ?>">
-
-        <div class="center">
-          <input type="image" name="submit" style="width: 150px; margin-top: 15px;" src="https://www.paypalobjects.com/webstatic/en_US/i/btn/png/btn_buynow_107x26.png">
-        </div>
-
+        <button type="submit" name="submit" class="btn-small action-btn brand z-depth-0">
+          Pay now
+        </button>
       </form>
     </div>
   </div>

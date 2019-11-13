@@ -61,6 +61,8 @@ if (isset($_POST['submit'])) {
             // Redirect user to payment page if it is the last page
             if (isset($_SESSION['LASTPAGE'])) {
                 $redirect = $_SESSION['LASTPAGE'];
+                unset($_SESSION['LASTPAGE']);
+                
                 $_SESSION['LASTACTION'] = 'ADDRESS';
                 echo "<script type='text/javascript'>window.top.location='$redirect';</script>";
             } else {

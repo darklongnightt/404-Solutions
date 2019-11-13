@@ -7,7 +7,9 @@ $uid = mysqli_real_escape_string($conn, $_SESSION['U_UID']);
 
 $currDir = "paypal/success.php";
 
-// If transaction data is available in the URL 
+// Get transaction data from returning url
+$payment_gross = $item_number = $tid = $txn_id = $payment_gross = $currency_code = $payment_status = '';
+
 if (!empty($_GET['tid']) && !empty($_GET['item_number']) && !empty($_GET['tx']) && !empty($_GET['amt']) && !empty($_GET['cc']) && !empty($_GET['st'])) {
 	// Get transaction information from URL 
 	$item_number = $_GET['item_number'];
@@ -20,7 +22,6 @@ if (!empty($_GET['tid']) && !empty($_GET['item_number']) && !empty($_GET['tx']) 
 
 
 if (!empty($_GET['tid'])) {
-
 	// Change status of an order entry to 'Confirmed Payment'
 	$status = 'Confirmed Payment';
 	$sql = "UPDATE orders SET STATUS = '$status' WHERE TRANSACTIONID = '$tid'";

@@ -7,6 +7,14 @@ if (isset($_SESSION['LASTACTION'])) {
         case 'REMOVECART':
             echo "<script>M.toast({html: 'Successfully removed from cart!'});</script>";
             break;
+
+        case 'LOGIN':
+            echo "<script>M.toast({html: 'You are successfully logged in!'});</script>";
+            break;
+
+        case 'ADDRESS':
+            echo "<script>M.toast({html: 'You are successfully registered!'});</script>";
+            break;
     }
 
     $_SESSION['LASTACTION'] = "NONE";
@@ -20,7 +28,7 @@ include('templates/pagination_query.php');
 
 $totalPrice = $totalDiscount = $netPrice = $appliedDiscount = 0;
 $sumSubTotal = $sumSavings = $sumTotal = $totalQty = 0;
-$transactionId = $couponcode = $description = '';
+$transactionId = $couponcode = $description = $couponCategory = '';
 $errors = array('discountcode' => '');
 $coupon = array();
 
@@ -80,6 +88,7 @@ if (isset($_GET['discount'])) {
         if (!array_filter($errors)) {
             $appliedDiscount = $coupon['DISCOUNT'];
             $description = $coupon['DESCRIPTION'];
+            $couponCategory = 'ALL';
             echo "<script>M.toast({html: 'Successfully applied discount!'});</script>";
         }
     } else if ($promotion) {
@@ -88,6 +97,7 @@ if (isset($_GET['discount'])) {
         if (!array_filter($errors)) {
             $appliedDiscount = $promotion['DISCOUNT'];
             $description = $promotion['DESCRIPTION'];
+            $couponCategory = $promotion['CATEGORY'];
             echo "<script>M.toast({html: 'Successfully applied discount!'});</script>";
         }
     }
@@ -169,9 +179,14 @@ if (isset($_POST['checkout']) && $cartList) {
         // Product name, quantity, sum price
         $payName = substr_replace($payName, "", -2);
         $payPrice = number_format($payPrice, 2, '.', '');
-        $location = "/template_pay.php?price=$payPrice&qty=$payQty&name=$payName&tid=$transactionId";
+
+        // Calculate hash for payment integrity check using server secret
+        $token = hash('sha256', $payName . $payPrice . $payQty . $_SESSION['SERVERSECRET']);
+
+        $location = "/template_pay.php?price=$payPrice&qty=$payQty&name=$payName&tid=$transactionId&token=$token";
         echo "<script type='text/javascript'>window.top.location='$location';</script>";
     } else {
+        $_SESSION['LASTPAGE'] = '/cart.php';
         echo "<script type='text/javascript'>window.top.location='/authentication/login.php';</script>";
     }
 }
@@ -196,7 +211,7 @@ mysqli_close($conn);
 
                         $totalPrice = $product['PDTPRICE'] * $product['CARTQTY'];
 
-                        if ($appliedDiscount > 0) {
+                        if ($appliedDiscount > 0 && ($couponCategory == 'ALL' || $couponCategory == $product['CATEGORY'])) {
                             $totalDiscount = round($totalPrice / 100 * $appliedDiscount, 2);
                         } else {
                             $totalDiscount = round($totalPrice / 100 * $product['PDTDISCNT'], 2);
@@ -276,7 +291,7 @@ mysqli_close($conn);
 
                         <?php if ($appliedDiscount > 0) { ?>
                             <div class="red-text">
-                                <?php echo '"' . htmlspecialchars($description) . '" - ' . $appliedDiscount . '% applied!'; ?>
+                                <?php echo '"' . htmlspecialchars($description) . '" applied! <br>' . $appliedDiscount . '% OFF ' . $couponCategory; ?>
                             </div>
                         <?php } ?>
                         <div class="divider"></div>

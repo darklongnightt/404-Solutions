@@ -65,6 +65,7 @@ if (isset($_POST['submit'])) {
                 $_SESSION['U_DOB'] = $customer['DOB'];
                 $_SESSION['U_INITIALS'] = $customer['FIRSTNAME'][0] . $customer['LASTNAME'][0];
                 $_SESSION['U_CLUSTER'] = $customer['CLUSTER'];
+                $_SESSION['SERVERSECRET'] = uniqid();
 
                 if (substr($_SESSION['U_UID'], 0, 3) == "CUS") {
                     // Update cart from cookies
@@ -100,10 +101,18 @@ if (isset($_POST['submit'])) {
                     // Delete guest items from cart
                     $sql = "DELETE FROM cart WHERE USERID='$ano'";
                     if (mysqli_query($conn, $sql)) {
-
                         $_SESSION["LASTACTION"] = "LOGIN";
+
+                        // Redirect user to change password page or cart/homepage
                         if ($customer['CHANGEPW'] == 'FALSE') {
-                            echo "<script type='text/javascript'>window.top.location='/index.php';</script>";
+
+                            if (isset($_SESSION['LASTPAGE'])) {
+                                $link = $_SESSION['LASTPAGE'];
+                                unset($_SESSION['LASTPAGE']);
+                                echo "<script type='text/javascript'>window.top.location='$link';</script>";
+                            } else {
+                                echo "<script type='text/javascript'>window.top.location='/index.php';</script>";
+                            }
                         } else {
                             echo "<script type='text/javascript'>window.top.location='change_password.php';</script>";
                         }

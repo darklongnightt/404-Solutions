@@ -190,7 +190,7 @@ if (isset($_POST['qtybutton'])) {
                 "https" : "http") . "://" . $_SERVER['HTTP_HOST'] .
                 $_SERVER['REQUEST_URI'];
 
-            $_SESSION['LASTACTION'] = 'UPDATESTOCK';            
+            $_SESSION['LASTACTION'] = 'UPDATESTOCK';
             echo "<script type='text/javascript'>window.top.location='$link';</script>";
         } else {
             echo 'Query Error: ' . mysqli_error($conn);
@@ -292,9 +292,19 @@ mysqli_close($conn);
                             <?php } ?>
                         </select>
 
-                        <button type="submit" name="setforecast" value="submit" class="btn z-depth-0 brand center" style="margin-top: 15px; width: 20%;">
+                        <div class="progress" style="display: none;" id="bar">
+                            <div class="indeterminate"></div>
+                        </div>
+
+                        <button type="submit" name="setforecast" value="submit" class="btn z-depth-0 brand center" style="margin-top: 15px; width: 20%;" onclick="toggleLoad()">
                             Apply
                         </button>
+
+                        <script>
+                            function toggleLoad() {
+                                document.getElementById('bar').style.display = 'block';
+                            }
+                        </script>
                     </form>
 
                 </div>

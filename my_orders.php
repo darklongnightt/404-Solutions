@@ -205,7 +205,9 @@ mysqli_close($conn);
                                         $payQty = $order['ORDERQTY'];
                                         $tid = $order['TRANSACTIONID'];
 
-                                        $location = "/template_pay.php?price=$payPrice&qty=$payQty&name=$payName&tid=$tid";
+                                        // Calculate hash for payment integrity check using server secret
+                                        $token = hash('sha256', $payName . $payPrice . $payQty . $_SESSION['SERVERSECRET']);
+                                        $location = "/template_pay.php?price=$payPrice&qty=$payQty&name=$payName&tid=$tid&token=$token";
                                         ?>
                                 <a href="<?php echo $location; ?>" class="btn-small brand" style="width: 250px;">Make Payment</a>
                             <?php } ?>
