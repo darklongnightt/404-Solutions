@@ -61,22 +61,7 @@ mysqli_close($conn);
         <?php if ($orders) : ?>
 
             <div class="row">
-                <div class="col s10 m10 offset-m1">
-                    <div class="card z-depth-0">
-                        <div class="card-content">
-                            <h5><i class="fa fa-truck" aria-hidden="true"></i> Deliver All</h5>
-                            <a href="/products/process_orders.php?deliver=all">
-                                <button class="btn z-depth-0 brand center" style="margin-top: 15px; width: 20%;">
-                                    Apply
-                                </button>
-                            </a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="row">
-                <div class="col s20 m10 offset-m1">
+                <div class="col s8 m8 offset-m1">
                     <ul class="collection">
                         <?php foreach ($orders as $order) { ?>
                             <li class="collection-item avatar">
@@ -112,6 +97,19 @@ mysqli_close($conn);
                     <?php
                         include("../templates/pagination_output.php");
                         ?>
+                </div>
+
+                <div class="col s3 m3">
+                    <div class="card z-depth-0">
+                        <div class="card-content">
+                            <h5><i class="fa fa-truck" aria-hidden="true"></i> Deliver All</h5>
+                            <a href="/products/process_orders.php?deliver=all">
+                                <button class="btn z-depth-0 brand center" style="margin-top: 15px; width: 100%;">
+                                    Apply
+                                </button>
+                            </a>
+                        </div>
+                    </div>
                 </div>
             </div>
         <?php else : ?>
