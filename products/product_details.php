@@ -1,6 +1,7 @@
 <?php
 include("../config/db_connect.php");
 include('../templates/header.php');
+
 if (substr($uid, 0, 3) == 'ADM')
     include('../storage_connect.php');
 

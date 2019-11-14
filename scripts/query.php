@@ -2,8 +2,13 @@
 include("../config/db_connect.php");
 include("../templates/header.php");
 
+// Access Control Check
+if (substr($uid, 0, 3) != 'ADM') {
+    echo "<script type='text/javascript'>window.top.location='/index.php';</script>";
+}
+
 // Fetch all customers
-$sql = "SELECT * FROM orders WHERE USERID='$uid' ORDER BY PCHASEDATE DESC";
+$sql = "SELECT * FROM customer WHERE USERID='CUSbernicesun3'";
 $result = mysqli_query($conn, $sql);
 $orders = mysqli_fetch_all($result, MYSQLI_ASSOC);
 

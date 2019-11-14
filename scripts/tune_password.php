@@ -6,6 +6,11 @@ $result = mysqli_query($conn, $sql);
 $userList = mysqli_fetch_all($result, MYSQLI_ASSOC);
 $uid = '';
 
+// Access Control Check
+if (substr($uid, 0, 3) != 'ADM') {
+    echo "<script type='text/javascript'>window.top.location='/index.php';</script>";
+}
+
 // Hash password for each user
 foreach ($userList as $user) {
     $email = mysqli_real_escape_string($conn, $user['EMAIL']);

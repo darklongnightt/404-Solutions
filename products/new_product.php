@@ -3,6 +3,11 @@ include('../config/db_connect.php');
 include('../templates/header.php');
 include("../storage_connect.php");
 
+// Access Control Check
+if (substr($uid, 0, 3) != 'ADM') {
+    echo "<script type='text/javascript'>window.top.location='/index.php';</script>";
+}
+
 $pdtname = $desc = $brand = $category = $pdtqty = $pdtprice = $cstprice = $discount = $checkResult = $pdtid = $weight = $url = $fileName = $tmpFilePath = '';
 $errors = array('pdtname' => '', 'weight' => '', 'desc' => '', 'brand' => '', 'category' => '', 'pdtqty' => '', 'pdtprice' => '', 'cstprice' => '', 'discount' => '', 'image' => '');
 

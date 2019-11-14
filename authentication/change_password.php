@@ -29,6 +29,14 @@ if (isset($_POST['submit'])) {
         $errors['newpassword1'] = "New password is required!";
     } else {
         $newpassword1 = mysqli_real_escape_string($conn, $_POST['newpassword1']);
+
+        // Password enforcement policy
+        $letters = preg_match('@[a-zA-Z]@', $newpassword1);
+        $numbers = preg_match('@[0-9]@', $newpassword1);
+
+        if (!$letters || !$numbers || strlen($newpassword1) < 6) {
+            $errors['newpassword1'] = 'Password length must be at least 6 characters long and be a mixture of numeric and alphabetic characters!';
+        }
     }
 
     if (empty($_POST['newpassword2'])) {

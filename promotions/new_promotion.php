@@ -3,6 +3,11 @@ include('../config/db_connect.php');
 include('../templates/header.php');
 include('../storage_connect.php');
 
+// Access Control Check
+if (substr($uid, 0, 3) != 'ADM') {
+    echo "<script type='text/javascript'>window.top.location='/index.php';</script>";
+}
+
 $desc = $expiry = $category = $promocode = '';
 $discount = 0;
 $today = date('Y-m-d');
@@ -120,8 +125,8 @@ if (isset($_POST['submit'])) {
     }
 </script>
 
-<section class="container grey-text">
-    <h4 class="center">New Promotion</h4>
+<section class="container">
+    <h4 class="center grey-text">New Promotion</h4>
     <form action="new_promotion.php" enctype="multipart/form-data" class="EditForm" method="POST">
 
         <div class="center">

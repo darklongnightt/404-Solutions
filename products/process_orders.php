@@ -2,6 +2,11 @@
 include("../templates/header.php");
 include("../config/db_connect.php");
 
+// Access Control Check
+if (substr($uid, 0, 3) != 'ADM') {
+    echo "<script type='text/javascript'>window.top.location='/index.php';</script>";
+}
+
 // Check that deliver all button is pressed
 if (isset($_GET['deliver'])) {
     if ($_GET['deliver'] == "all") {

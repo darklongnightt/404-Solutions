@@ -2,6 +2,11 @@
 include("../config/db_connect.php");
 include("../templates/header.php");
 
+// Access Control Check
+if (substr($uid, 0, 3) != 'ADM') {
+    echo "<script type='text/javascript'>window.top.location='/index.php';</script>";
+}
+
 // Checks if search comment is clicked
 $commentFilter = '';
 if (isset($_POST['submit'])) {

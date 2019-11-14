@@ -2,6 +2,11 @@
 include('../config/db_connect.php');
 include('../templates/header.php');
 
+// Access Control Check
+if (substr($uid, 0, 3) != 'ADM') {
+    echo "<script type='text/javascript'>window.top.location='/index.php';</script>";
+}
+
 $couponcode = $desc = $expiry = '';
 $discount = 0;
 $today = date('Y-m-d');
@@ -64,8 +69,8 @@ if (isset($_POST['submit'])) {
 <!DOCTYPE html>
 <html>
 
-<section class="container grey-text">
-    <h4 class="center">New Coupon</h4>
+<section class="container">
+    <h4 class="center grey-text">New Coupon</h4>
     <form action="new_coupon.php" class="EditForm" method="POST">
 
         <label>Coupon Description: </label>

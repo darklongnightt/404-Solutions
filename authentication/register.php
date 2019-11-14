@@ -63,7 +63,14 @@ if (isset($_POST['submit'])) {
     if (empty($_POST['password'])) {
         $errors['password'] = 'Password is required!';
     } else {
+        // Password enforcement policy
         $password = $_POST['password'];
+        $letters = preg_match('@[a-zA-Z]@', $password);
+        $numbers = preg_match('@[0-9]@', $password);
+
+        if (!$letters || !$numbers || strlen($password) < 6) {
+            $errors['password'] = 'Password length must be at least 6 characters long and be a mixture of numeric and alphabetic characters!';
+        }
     }
 
     if (empty($_POST['retypedpassword'])) {

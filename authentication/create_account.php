@@ -2,6 +2,11 @@
 include('../config/db_connect.php');
 include('../templates/header.php');
 
+// Access Control Check
+if (substr($uid, 0, 3) != 'ADM') {
+    echo "<script type='text/javascript'>window.top.location='/index.php';</script>";
+}
+
 $password = $retypedpassword = $hashedpassword = $firstname = $lastname = $dob = $email = $gender = $userid = $phoneno = $type = '';
 $errors = array('password' => '', 'retypedpassword' => '', 'firstname' => '', 'lastname' => '', 'dob' => '', 'email' => '', 'gender' => '', 'phoneno' => '', 'type' => '');
 $today = date('Y-m-d');
@@ -70,6 +75,15 @@ if (isset($_POST['submit'])) {
         $errors['password'] = 'Password is required!';
     } else {
         $password = $_POST['password'];
+
+        // Password enforcement policy
+        $password = $_POST['password'];
+        $letters = preg_match('@[a-zA-Z]@', $password);
+        $numbers = preg_match('@[0-9]@', $password);
+
+        if (!$letters || !$numbers || strlen($password) < 6) {
+            $errors['password'] = 'Password length must be at least 6 characters long and be a mixture of numeric and alphabetic characters!';
+        }
     }
 
     if (empty($_POST['retypedpassword'])) {
