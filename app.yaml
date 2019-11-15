@@ -1,12 +1,15 @@
 runtime: php
-env: standard
+env: flex
 runtime_config:
     document_root: .
 env_variables:
     APP_LOG: errorlog
-    GOOGLE_STORAGE_BUCKET: "gs://super-data-fyp.appspot.com"
+    GOOGLE_STORAGE_BUCKET: "super-data-fyp.appspot.com"
     MYSQL_USER: "root"
-    MYSQL_PASSWORD: "superdata"
+    MYSQL_PASSWORD: "superdata123"
     MYSQL_DSN: "mysql:dbname=testdb;unix_socket=/cloudsql/try-phpappeng:asia-southeast1:testsql"
 beta_settings:
     cloud_sql_instances: "super-data-fyp:asia-southeast1:super-data"
+automatic_scaling:
+  max_num_instances: 1
+  minTotalInstances: 1

@@ -41,8 +41,6 @@ if (isset($_SESSION['U_UID'])) {
 	}
 }
 
-echo $uid;
-
 // Checks if search button is pressed
 if (isset($_POST['search'])) {
 	$search = $_POST['searchField'];
