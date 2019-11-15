@@ -116,13 +116,13 @@ if (isset($_SESSION['LASTACTION'])) {
         case 'REGISTER':
             echo "<script>M.toast({html: 'You are successfully registered!'});</script>";
             break;
-
-        case 'LOGOUT':
-            echo "<script>M.toast({html: 'You are logged out!'});</script>";
-            break;
     }
 
     $_SESSION['LASTACTION'] = "NONE";
+}
+
+if (isset($_GET['logout'])) {
+    echo "<script>M.toast({html: 'You are logged out!'});</script>";
 }
 
 // Free memory of result and close connection
@@ -270,7 +270,7 @@ mysqli_close($conn);
                 <a href="products/search.php?Filter=<?php echo str_replace(' ', '-', $category['CATEGORY']); ?>&sort=default&priceRange=%240+-+%2410000&check=&searchItem=&submit=Search">
                     <div class="col s6 m3">
                         <div class="card z-depth-0 category-card">
-                            <img src="img/category/<?php echo $category['CATEGORY'] . '.jpg'; ?>" class="category-icon">
+                            <img src="https://storage.cloud.google.com/super-data-fyp.appspot.com/category/<?php echo $category['CATEGORY']; ?>.jpg?cloudshell=false;" class="category-icon">
 
                             <div class="middle">
                                 <h5 class="category-text bold"><?php echo $category['CATEGORY']; ?></h5>

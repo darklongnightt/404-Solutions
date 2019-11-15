@@ -1,5 +1,6 @@
 <?php
 session_start();
+$_SESSION = array();
 session_unset();
-$_SESSION['LASTACTION'] = 'LOGOUT';
-echo "<script type='text/javascript'>window.top.location='/index.php';</script>";
+session_destroy();
+echo "<script type='text/javascript'>window.top.location='/index.php?logout=true';</script>";

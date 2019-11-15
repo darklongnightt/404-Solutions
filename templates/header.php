@@ -25,8 +25,14 @@
 
 <?php
 date_default_timezone_set("Singapore");
-session_start();
+$s = session_start();
+
 $uid = '';
+if (!$s) {
+	echo "Error: Session failed to start!";
+}
+
+
 if (isset($_SESSION['U_UID'])) {
 	$uid = $_SESSION['U_UID'];
 } else {
@@ -39,6 +45,8 @@ if (isset($_SESSION['U_UID'])) {
 		$uid = $_COOKIE['UID'];
 	}
 }
+
+echo $uid;
 
 // Checks if search button is pressed
 if (isset($_POST['search'])) {
