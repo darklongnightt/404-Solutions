@@ -25,13 +25,8 @@
 
 <?php
 date_default_timezone_set("Singapore");
-$s = session_start();
-
+session_start();
 $uid = '';
-if (!$s) {
-	echo "Error: Session failed to start!";
-}
-
 
 if (isset($_SESSION['U_UID'])) {
 	$uid = $_SESSION['U_UID'];
