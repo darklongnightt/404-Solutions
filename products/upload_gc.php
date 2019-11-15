@@ -24,8 +24,6 @@ if ($_FILES) {
         echo "Error: " . $_FILES["uploaded_files"]["error"] . "<br />";
     } else {
         for ($i = 0; $i < count($_FILES['uploaded_files']['name']); $i++) {
-
-            echo "Starting process file.. <br>";
             // Get the file name and temp file path
             $fileName = $_FILES['uploaded_files']['name'][$i];
             $tmpFilePath = $_FILES['uploaded_files']['tmp_name'][$i];
@@ -35,17 +33,8 @@ if ($_FILES) {
                 echo "Error: " . $_FILES["uploaded_files"]["error"] . "<br />";
             }
 
-            echo "Moving file.. <br>";
-            // Resizing image to 300 x 300
-            $pic_type = strtolower(strrchr($fileName, "."));
-            $pic_name = "../temp/temp$pic_type";
-            move_uploaded_file($tmpFilePath, $pic_name);
-            if (true !== ($pic_error = @image_resize($pic_name, $tmpFilePath, 300, 300))) {
-                echo "Resized file.. <br>";
-                $tmpFilePath = $pic_name;
-            }
-
-            echo "Uploading " . $fileName . ', ' . $tmpFilePath . ' to ' . $bucketName . '<br>' ;
+            // Resize image
+            $pic_error = @image_resize($tmpFilePath, $tmpFilePath, 300, 300);
 
             // Upload to google cloud storage
             upload_object($bucketName, $fileName, $tmpFilePath);
@@ -53,8 +42,6 @@ if ($_FILES) {
             // Create url for the uploaded image
             $url = "https://storage.cloud.google.com/" . $bucketName . "/" . $fileName . "?cloudshell=false";
             $url = mysqli_real_escape_string($conn, $url);
-
-            echo "Done upload.. <br>";
 
             // Update product image url in database
             $sql = "UPDATE product SET IMAGE='$url' WHERE PDTID='$pdtid';";

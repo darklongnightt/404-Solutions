@@ -12,4 +12,3 @@ beta_settings:
     cloud_sql_instances: "super-data-fyp:asia-southeast1:super-data"
 automatic_scaling:
   max_num_instances: 1
-  minTotalInstances: 1

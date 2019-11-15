@@ -111,12 +111,7 @@ if (isset($_POST['submit'])) {
 		} while (!$unique);
 
 		// Resizing image to 300 x 300
-		$pic_type = strtolower(strrchr($fileName, "."));
-		$pic_name = "../temp/temp$pic_type";
-		move_uploaded_file($tmpFilePath, $pic_name);
-		if (true !== ($pic_error = @image_resize($pic_name, $tmpFilePath, 300, 300))) {
-			$tmpFilePath = $pic_name;
-		}
+		$pic_error = @image_resize($tmpFilePath, $tmpFilePath, 300, 300);
 
 		// Upload to google cloud storage
 		upload_object($bucketName, $fileName, $tmpFilePath);
