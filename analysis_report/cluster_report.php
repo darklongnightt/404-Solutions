@@ -1,9 +1,7 @@
 <?php
-require_once 'google/appengine/api/mail/Message.php';
-use google\appengine\api\mail\Message;
-
 include("../config/db_connect.php");
 include("../templates/header.php");
+use google\appengine\api\mail\Message;
 
 // Access Control Check
 if (substr($uid, 0, 3) != 'ADM') {
@@ -177,7 +175,7 @@ function sendEmail($to, $discount, $expiry, $title, $code)
 
     // Using google mail API
     try {
-        $mail = new Message();
+        $mail = new \google\appengine\api\mail\Message();
         echo '1';
 
         $mail->setSender('super.data.fyp@gmail.com');
