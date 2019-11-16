@@ -92,7 +92,6 @@ mysqli_close($conn);
                                 <div class="green-text"> <?php echo ' ' . strtoupper($order['STATUS']); ?></div>
                                 <div class="grey-text"><?php echo htmlspecialchars($order['BRAND']) . ' | ' . htmlspecialchars($order['CATEGORY']); ?></div>
 
-
                                 <span class="grey-text"><?php echo htmlspecialchars($order['TRANSACTIONID']); ?></span>
 
                             </li>

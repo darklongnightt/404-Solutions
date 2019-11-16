@@ -66,6 +66,7 @@ if (isset($_POST['submit'])) {
                 $_SESSION['U_INITIALS'] = $customer['FIRSTNAME'][0] . $customer['LASTNAME'][0];
                 $_SESSION['U_CLUSTER'] = $customer['CLUSTER'];
                 $_SESSION['SERVERSECRET'] = uniqid();
+                $_SESSION['BADATTEMPTS'] = 0;
 
                 if (substr($_SESSION['U_UID'], 0, 3) == "CUS") {
                     // Update cart from cookies

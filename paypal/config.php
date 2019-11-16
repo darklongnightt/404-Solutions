@@ -3,9 +3,9 @@
 define('PAYPAL_ID', 'sb-szic6332813@business.example.com');
 define('PAYPAL_SANDBOX', TRUE); //TRUE or FALSE 
 
-define('PAYPAL_RETURN_URL', 'http://localhost:8090/paypal/success.php');
-define('PAYPAL_CANCEL_URL', 'http://localhost:8090/paypal/cancel.php');
-define('PAYPAL_NOTIFY_URL', 'http://localhost:8090/paypal/ipn.php');
+define('PAYPAL_RETURN_URL', 'https://super-data-fyp.appspot.com/paypal/success.php');
+define('PAYPAL_CANCEL_URL', 'https://super-data-fyp.appspot.com/paypal/cancel.php');
+define('PAYPAL_NOTIFY_URL', 'https://super-data-fyp.appspot.com/paypal/ipn.php');
 define('PAYPAL_CURRENCY', 'SGD');
 
 // Change not required 

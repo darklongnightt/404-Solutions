@@ -1,6 +1,7 @@
 <?php
 include("../config/db_connect.php");
 include("../templates/header.php");
+use \google\appengine\api\mail\Message;
 
 // Access Control Check
 if (substr($uid, 0, 3) != 'ADM') {
@@ -170,7 +171,15 @@ function sendEmail($to, $discount, $expiry, $title, $code)
     $headers .= "Content-type:text/html;charset=UTF-8" . "\r\n";
     $headers .= 'From: <super.data.fyp@gmail.com>' . "\r\n";
 
-    mail($to, $subject, $message, $headers);
+    // Using google mail API
+    $mail = new Message();
+    $mail->setSender('super.data.fyp@gmail.com');
+    $mail->addTo($to);
+    $mail->setSubject($subject);
+    $mail->setTextBody($message);
+    $mail->send();
+
+    //mail($to, $subject, $message, $headers);
 }
 ?>
 

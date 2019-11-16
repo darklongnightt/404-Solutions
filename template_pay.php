@@ -54,15 +54,22 @@ if (isset($_POST['submit'])) {
   // Specify URLs
   $query['notify_url'] = PAYPAL_NOTIFY_URL;
   $query['rm'] = 2;
-  $query['return'] = 'http://localhost:8090/paypal/success.php?tid=' . $tid;
+  $query['return'] = 'https://super-data-fyp.appspot.com/paypal/success.php?tid=' . $tid;
   $query['cancel_return'] = PAYPAL_CANCEL_URL;
 
   // Security validation: rebuild hash from the query for integrity check
   $rebuiltToken = hash('sha256', $query['item_name'] . $query['amount'] . $query['item_number'] . $_SESSION['SERVERSECRET']);
   if ($rebuiltToken == $token) {
     echo "<script type='text/javascript'>window.top.location='" . PAYPAL_URL . "?" . http_build_query($query) . "';</script>";
-  } else { 
+  } else {
+    // Warn user on on attemp to later item price
     $error = "Warning: Malicious attempt to alter item details has been detected!";
+    $_SESSION['BADATTEMPTS'] += 1;
+
+    // Log user out if attempts more than 3 tries, preventing bruteforce for session server secret
+    if ($_SESSION['BADATTEMPTS'] > 3) {
+      echo "<script type='text/javascript'>window.top.location='/authentication/logout.php';</script>";
+    }
   }
 }
 

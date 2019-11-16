@@ -270,7 +270,7 @@ mysqli_close($conn);
                 <a href="products/search.php?Filter=<?php echo str_replace(' ', '-', $category['CATEGORY']); ?>&sort=default&priceRange=%240+-+%2410000&check=&searchItem=&submit=Search">
                     <div class="col s6 m3">
                         <div class="card z-depth-0 category-card">
-                            <img src="https://storage.cloud.google.com/super-data-fyp.appspot.com/category/<?php echo $category['CATEGORY']; ?>.jpg?cloudshell=false;" class="category-icon">
+                            <img src="https://storage.googleapis.com/super-data-fyp.appspot.com/category/<?php echo $category['CATEGORY']; ?>.jpg" class="category-icon">
 
                             <div class="middle">
                                 <h5 class="category-text bold"><?php echo $category['CATEGORY']; ?></h5>

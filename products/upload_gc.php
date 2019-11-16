@@ -40,7 +40,7 @@ if ($_FILES) {
             upload_object($bucketName, $fileName, $tmpFilePath);
 
             // Create url for the uploaded image
-            $url = "https://storage.cloud.google.com/" . $bucketName . "/" . $fileName . "?cloudshell=false";
+            $url = "https://storage.googleapis.com/" . $bucketName . "/" . $fileName;
             $url = mysqli_real_escape_string($conn, $url);
 
             // Update product image url in database
