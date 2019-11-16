@@ -2,6 +2,7 @@
 include("../config/db_connect.php");
 include("../templates/header.php");
 
+require_once 'google/appengine/api/mail/Message.php';
 use \google\appengine\api\mail\Message;
 
 // Access Control Check
