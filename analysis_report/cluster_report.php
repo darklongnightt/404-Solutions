@@ -106,6 +106,7 @@ if (isset($_POST['submit'])) {
 
     // Sends email to customers in the cluster
     $count = sizeof($cus_list);
+    echo 'Sending Email Now.. <br>';
     sendEmail($email_list, $coupon_use['DISCOUNT'], $coupon_use['EXPIRY'], $coupon_use['DESCRIPTION'], $coupon_use['COUPONCODE']);
     echo "<script>M.toast({html: 'Successfully sent coupon to $count users!'});</script>";
 }
@@ -176,11 +177,23 @@ function sendEmail($to, $discount, $expiry, $title, $code)
     // Using google mail API
     try {
         $mail = new Message();
+        echo '1';
+
         $mail->setSender('super.data.fyp@gmail.com');
+        echo '2';
+
         $mail->addTo($to);
+        echo '3';
+
         $mail->setSubject($subject);
-        $mail->setTextBody($message);
+        echo '4';
+
+        $mail->setHtmlBody($message);
+        echo '5';
+
         $mail->send();
+        echo 'Mail Sent!';
+
     } catch (InvalidArgumentException $e) {
         echo 'Mail Error: ' . $e;
     }
