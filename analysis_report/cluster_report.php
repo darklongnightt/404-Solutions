@@ -1,9 +1,9 @@
 <?php
+require_once 'google/appengine/api/mail/Message.php';
+use google\appengine\api\mail\Message;
+
 include("../config/db_connect.php");
 include("../templates/header.php");
-
-require_once 'google/appengine/api/mail/Message.php';
-use \google\appengine\api\mail\Message;
 
 // Access Control Check
 if (substr($uid, 0, 3) != 'ADM') {
