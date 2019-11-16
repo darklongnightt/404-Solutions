@@ -1,6 +1,7 @@
 <?php
 include("../config/db_connect.php");
 include("../templates/header.php");
+
 use \google\appengine\api\mail\Message;
 
 // Access Control Check
@@ -15,7 +16,7 @@ $cluster_list = mysqli_fetch_all($result, MYSQLI_ASSOC);
 
 // Get the latest clustering result
 $curr_cluster = $cluster_list[0];
-$age = $gender = $transactions = $total_spendings = $last_purchase = $coupon_use = array();
+$age = $gender = $transactions = $total_spendings = $last_purchase = $coupon_use = $email_list = array();
 $size = $cluster = 1;
 $coupon_desc = $cluster_emails = $couponcode = '';
 
@@ -76,6 +77,7 @@ if (isset($_POST['submit'])) {
 
     foreach ($cus_list as $customer) {
         $cluster_emails .= $customer['EMAIL'] . ', ';
+        array_push($email_list, $customer['EMAIL']);
     }
     $cluster_emails = substr_replace($cluster_emails, "", -2);
 
@@ -104,7 +106,7 @@ if (isset($_POST['submit'])) {
 
     // Sends email to customers in the cluster
     $count = sizeof($cus_list);
-    sendEmail($cluster_emails, $coupon_use['DISCOUNT'], $coupon_use['EXPIRY'], $coupon_use['DESCRIPTION'], $coupon_use['COUPONCODE']);
+    sendEmail($email_list, $coupon_use['DISCOUNT'], $coupon_use['EXPIRY'], $coupon_use['DESCRIPTION'], $coupon_use['COUPONCODE']);
     echo "<script>M.toast({html: 'Successfully sent coupon to $count users!'});</script>";
 }
 
@@ -172,12 +174,16 @@ function sendEmail($to, $discount, $expiry, $title, $code)
     $headers .= 'From: <super.data.fyp@gmail.com>' . "\r\n";
 
     // Using google mail API
-    $mail = new Message();
-    $mail->setSender('super.data.fyp@gmail.com');
-    $mail->addTo($to);
-    $mail->setSubject($subject);
-    $mail->setTextBody($message);
-    $mail->send();
+    try {
+        $mail = new Message();
+        $mail->setSender('super.data.fyp@gmail.com');
+        $mail->addTo($to);
+        $mail->setSubject($subject);
+        $mail->setTextBody($message);
+        $mail->send();
+    } catch (InvalidArgumentException $e) {
+        echo 'Mail Error: ' . $e;
+    }
 
     //mail($to, $subject, $message, $headers);
 }

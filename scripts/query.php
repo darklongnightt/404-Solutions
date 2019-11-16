@@ -8,7 +8,7 @@ if (substr($uid, 0, 3) != 'ADM') {
 }
 
 // Fetch all customers
-$sql = "SELECT * FROM demand_forecast";
+$sql = "SELECT * FROM orders WHERE PDTID='PDT5dcba60884987'";
 $result = mysqli_query($conn, $sql);
 $orders = mysqli_fetch_all($result, MYSQLI_ASSOC);
 

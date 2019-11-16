@@ -13,6 +13,11 @@ if (isset($_SESSION['LASTACTION'])) {
 	$_SESSION['LASTACTION'] = 'NONE';
 }
 
+// Get current link
+$link = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ?
+	"https" : "http") . "://" . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
+$linkCat = (strpos($link, '?') == TRUE) ? '&' : '?';
+
 // Store previously selected variables
 $rangeCheck = $getSearchItem = $getSort = $getFilter = $rFilter = $ext = '';
 $limit = TRUE;
@@ -168,6 +173,8 @@ if (isset($_GET['delete'])) {
 	// Checks if query is successful
 	if (mysqli_query($conn, $sql)) {
 		$_SESSION['LASTACTION'] = 'DELETEPDT';
+	
+		echo "<script type='text/javascript'>window.top.location='$link';</script>";
 	} else {
 		echo 'Query Error' . mysqli_error($conn);
 	}
@@ -180,12 +187,6 @@ if ($getFilter !== '' && $getSearchItem == '') {
 	if ($getFilter !== 'all')
 		$title = str_replace('-', ' ', $getFilter);
 }
-
-// Get current link
-$link = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ?
-	"https" : "http") . "://" . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
-$linkCat = (strpos($link, '?') == TRUE) ? '&' : '?';
-
 
 // Free memory of result and close connection
 mysqli_free_result($result);
