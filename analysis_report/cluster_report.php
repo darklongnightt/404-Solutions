@@ -175,7 +175,6 @@ function sendEmail($to, $discount, $expiry, $title, $code)
     // Max limit of mailjet of 50 mails per call
     if (sizeof($to) > 50) {
         $to = array_splice($to, 0, 48);
-        print_r($to);
     }
 
     // Send email using mailjet api
