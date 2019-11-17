@@ -5,7 +5,7 @@ include("../storage_connect.php");
 
 // Access Control Check
 if (substr($uid, 0, 3) != 'ADM') {
-    echo "<script type='text/javascript'>window.top.location='/index.php';</script>";
+	echo "<script type='text/javascript'>window.top.location='/index.php';</script>";
 }
 
 $pdtname = $desc = $brand = $category = $pdtqty = $pdtprice = $cstprice = $discount = $checkResult = $pdtid = $weight = $url = $fileName = $tmpFilePath = '';
@@ -117,7 +117,7 @@ if (isset($_POST['submit'])) {
 		upload_object($bucketName, $fileName, $tmpFilePath);
 
 		// Create url for the uploaded image
-		$url = "https://storage.googleapis.com/" . $bucketName . "/" . $fileName;
+		$url = "https://storage.googleapis.com/" . $bucketName . "/" . $fileName . "?cloudshell=false";
 		$url = mysqli_real_escape_string($conn, $url);
 
 		// Inserts data to db and redirects user to homepage
