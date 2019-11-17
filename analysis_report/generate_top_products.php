@@ -69,7 +69,7 @@ mysqli_close($conn);
             <div class="col m12 s20">
                 <div class="card z-depth-0">
                     <div class="card-content">
-                        <table class="striped responsive-table">
+                        <table class="responsive-table">
                             <thead>
                                 <tr>
                                     <?php
@@ -91,7 +91,9 @@ mysqli_close($conn);
                                     for ($i = 1; $i <= sizeof($products); $i++) {
                                         echo '<tr>';
                                         echo '<td>' . $i . '</td>';
-                                        echo '<td><img src="' . $products[$i - 1]['IMAGE'] . '" class="product-icon center"></td>';
+                                        echo '<td> <a href="/products/product_details.php?id=' . $products[$i - 1]['PDTID'] . '">
+                                        <img src="' . $products[$i - 1]['IMAGE'] . '" class="product-icon center">
+                                        </a></td>';
 
                                         echo '<td>' . $products[$i - 1]['PDTNAME'] . '</td>';
 

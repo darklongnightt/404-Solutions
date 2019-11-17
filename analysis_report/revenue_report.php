@@ -194,7 +194,7 @@ mysqli_close($conn);
                 <div class="card z-depth-0">
                     <div class="card-content">
                         <h5 class="center bold blue-text">Past Revenue</h5>
-                        <table class="responsive-table centered highlight">
+                        <table class="responsive-table centered highlight striped">
                             <thead>
                                 <tr>
                                     <th>Date</th>
