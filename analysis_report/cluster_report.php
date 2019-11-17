@@ -1,7 +1,10 @@
 <?php
 include("../config/db_connect.php");
 include("../templates/header.php");
-use google\appengine\api\mail\Message;
+
+# Includes the autoloader for libraries installed with composer
+require __DIR__ . "/vendor/autoload.php";
+use \google\appengine\api\mail\Message;
 
 // Access Control Check
 if (substr($uid, 0, 3) != 'ADM') {
