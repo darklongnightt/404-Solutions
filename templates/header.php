@@ -91,11 +91,11 @@ if (isset($_POST['search'])) {
 		<div class="container">
 			<strong>
 				<?php if (substr($uid, 0, 3) == 'ANL') {
-					echo '<a href="../index.php" class="brand-logo brand-text">
+					echo '<a href="/index.php" class="brand-logo brand-text">
 							Super<span class="red-text">D</span>ata
 							</a>';
 				} else {
-					echo '<a href="../index.php" class="brand-logo brand-text">
+					echo '<a href="/index.php" class="brand-logo brand-text">
 							Super<span class="red-text">D</span>ata
 							</a>';
 				} ?>
@@ -105,7 +105,7 @@ if (isset($_POST['search'])) {
 
 				<?php if (substr($uid, 0, 3) !== 'ANO') { ?>
 					<li class="right">
-						<a href="../index.php" class="btn btn-floating red"><?php echo $_SESSION['U_INITIALS'] ?></a>
+						<a href="../profile.php" class="btn btn-floating red"><?php echo $_SESSION['U_INITIALS'] ?></a>
 					</li>
 
 					<li class="right">
