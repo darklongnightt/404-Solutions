@@ -173,7 +173,7 @@ if (isset($_GET['delete'])) {
 	// Checks if query is successful
 	if (mysqli_query($conn, $sql)) {
 		$_SESSION['LASTACTION'] = 'DELETEPDT';
-	
+
 		echo "<script type='text/javascript'>window.top.location='$link';</script>";
 	} else {
 		echo 'Query Error' . mysqli_error($conn);
@@ -195,138 +195,152 @@ mysqli_close($conn);
 
 <!DOCTYPE html>
 <html>
-<h4 class="center grey-text"><?php echo $title; ?></h4>
 
-<div class="sidebar sidebar-padding">
-	<form id="sfform" name="sfform" method="get" action="search.php">
-		<h6 class="grey-text">Category</h6>
-		<select class="browser-default" name="Filter">
-			<option value="all">All</option>
-			<?php
+<div class="row">
+	<div class="col m3">
+		<div class="sidebar sidebar-padding hide-on-small-and-down" style="padding-top: 75px;">
+			<form id="sfform" name="sfform" method="get" action="search.php">
+				<h6 class="grey-text">Category</h6>
+				<select class="browser-default" name="Filter">
+					<option value="all">All</option>
+					<?php
 
-			foreach ($filterCat as $filtered) {
-				echo "<option value=" . str_replace(' ', '-', $filtered['CATEGORY']);
-				if ($getFilter == str_replace(' ', '-', $filtered['CATEGORY'])) {
-					echo " selected";
-				}
-				echo ">" . $filtered['CATEGORY'] . "</option>";
-			}
-			?>
-		</select>
-		<br>
-		<h6 class="grey-text">Sort</h6>
-		<select class="browser-default" name="sort">
-			<option value="default" <?php if ($getSort == '') echo 'selected' ?>>Default</option>
-			<option value="NETPRICE DESC" <?php if ($getSort == 'NETPRICE DESC') echo 'selected' ?>>Price - High to Low </option>
-			<option value="NETPRICE ASC" <?php if ($getSort == 'NETPRICE ASC') echo 'selected' ?>>Price - Low to High</option>
-			<option value="PDTDISCNT ASC" <?php if ($getSort == 'PDTDISCNT ASC') echo 'selected' ?>>Discount - Low to High</option>
-			<option value="PDTDISCNT DESC" <?php if ($getSort == 'PDTDISCNT DESC') echo 'selected' ?>>Discount - High to Low</option>
-			<option value="PDTQTY DESC" <?php if ($getSort == 'PDTQTY DESC') echo 'selected' ?>>Quantity - High to Low </option>
-			<option value="PDTQTY ASC" <?php if ($getSort == 'PDTQTY ASC') echo 'selected' ?>>Quantity - Low to High</option>
-		</select>
-		<br>
-		<h6 class="grey-text">Price Range</h6>
-		<input type="text" name="priceRange" id="range" readonly>
-		<div id="pRange"></div>
-		<script>
-			var priceMin = <?php echo json_encode($catMin); ?>;
-			var priceMax = <?php echo json_encode($catMax); ?>;
-			var postMin = <?php echo json_encode($minRange); ?>;
-			var postMax = <?php echo json_encode($maxRange); ?>;
-			var rangeCheck = <?php echo json_encode($rangeCheck); ?>;
-
-			//if user click on range slider
-			function clicked() {
-				document.getElementById('testrange').value = 1;
-			}
-			document.getElementById('pRange').addEventListener("mousedown", clicked);
-
-			$(function() {
-				$("#pRange").slider({
-					range: true,
-					min: priceMin,
-					max: priceMax,
-					values: [postMin, postMax],
-					slide: function(event, ui) {
-						$("#range").val("$" + ui.values[0] + " - $" + ui.values[1]);
+					foreach ($filterCat as $filtered) {
+						echo "<option value=" . str_replace(' ', '-', $filtered['CATEGORY']);
+						if ($getFilter == str_replace(' ', '-', $filtered['CATEGORY'])) {
+							echo " selected";
+						}
+						echo ">" . $filtered['CATEGORY'] . "</option>";
 					}
-				});
+					?>
+				</select>
+				<br>
+				<h6 class="grey-text">Sort</h6>
+				<select class="browser-default" name="sort">
+					<option value="default" <?php if ($getSort == '') echo 'selected' ?>>Default</option>
+					<option value="NETPRICE DESC" <?php if ($getSort == 'NETPRICE DESC') echo 'selected' ?>>Price - High to Low </option>
+					<option value="NETPRICE ASC" <?php if ($getSort == 'NETPRICE ASC') echo 'selected' ?>>Price - Low to High</option>
+					<option value="PDTDISCNT ASC" <?php if ($getSort == 'PDTDISCNT ASC') echo 'selected' ?>>Discount - Low to High</option>
+					<option value="PDTDISCNT DESC" <?php if ($getSort == 'PDTDISCNT DESC') echo 'selected' ?>>Discount - High to Low</option>
+					<option value="PDTQTY DESC" <?php if ($getSort == 'PDTQTY DESC') echo 'selected' ?>>Quantity - High to Low </option>
+					<option value="PDTQTY ASC" <?php if ($getSort == 'PDTQTY ASC') echo 'selected' ?>>Quantity - Low to High</option>
+				</select>
+				<br>
+				<h6 class="grey-text">Price Range</h6>
+				<input type="text" name="priceRange" id="range" readonly>
+				<div id="pRange"></div>
+				<script>
+					var priceMin = <?php echo json_encode($catMin); ?>;
+					var priceMax = <?php echo json_encode($catMax); ?>;
+					var postMin = <?php echo json_encode($minRange); ?>;
+					var postMax = <?php echo json_encode($maxRange); ?>;
+					var rangeCheck = <?php echo json_encode($rangeCheck); ?>;
 
-				$("#range").val("$" + $("#pRange").slider("values", 0) +
-					" - $" + $("#pRange").slider("values", 1));
-			});
-		</script>
-		<input type="text" name="check" id="testrange" <?php if ($rangeCheck != '') echo " value = '" . $rangeCheck . "'"; ?> hidden>
-		<br>
+					//if user click on range slider
+					function clicked() {
+						document.getElementById('testrange').value = 1;
+					}
+					document.getElementById('pRange').addEventListener("mousedown", clicked);
 
-		<h6 class="grey-text"> Search </h6>
-		<input type="search" name="searchItem" <?php if ($getSearchItem != '') echo " value = '" . $getSearchItem . "'"; ?>>
-		<button type="submit" name="submit" class="btn brand z-depth-0 btn-small" style="width: 230px;">Search</button>
+					$(function() {
+						$("#pRange").slider({
+							range: true,
+							min: priceMin,
+							max: priceMax,
+							values: [postMin, postMax],
+							slide: function(event, ui) {
+								$("#range").val("$" + ui.values[0] + " - $" + ui.values[1]);
+							}
+						});
 
-	</form>
-</div>
+						$("#range").val("$" + $("#pRange").slider("values", 0) +
+							" - $" + $("#pRange").slider("values", 1));
+					});
+				</script>
+				<input type="text" name="check" id="testrange" <?php if ($rangeCheck != '') echo " value = '" . $rangeCheck . "'"; ?> hidden>
+				<br>
 
-<div class="container" style="margin-left: 300px;">
-	<div class="row">
-		<?php foreach ($productList as $product) { ?>
+				<h6 class="grey-text"> Search </h6>
+				<input type="search" name="searchItem" <?php if ($getSearchItem != '') echo " value = '" . $getSearchItem . "'"; ?>>
+				<button type="submit" name="submit" class="btn brand z-depth-0 btn-small" style="width: 230px;">Search</button>
 
-			<div class="col s12 m4">
-				<a href="product_details.php?id=<?php echo $product['PDTID']; ?>">
-					<div class="card z-depth-0 small">
+			</form>
+		</div>
+	</div>
 
-						<img src="<?php if ($product['IMAGE']) {
-											echo $product['IMAGE'];
-										} else {
-											echo 'img/product_icon.svg';
-										} ?>" class="product-icon circle">
-						<div class="card-content center">
-							<h6 class="black-text"> <?php echo htmlspecialchars($product['PDTNAME']); ?> <label> <?php echo htmlspecialchars($product['WEIGHT']); ?> </label></h6>
+	<div class="col m8">
+		<h4 class="grey-text center"><?php echo $title; ?></h4>
 
-							<label> <?php echo htmlspecialchars($product['BRAND']); ?> </label>
-							<br>
+		<div class="row center">
+			<?php foreach ($productList as $product) { ?>
 
-							<?php if ($product['PDTDISCNT'] > 0) { ?>
-								<label>
-									<strike> <?php echo htmlspecialchars('$' . $product['PDTPRICE']); ?> </strike>
-								</label>
-								&nbsp
-								<label class="white-text discount-label">
-									<?php echo htmlspecialchars('-' . $product['PDTDISCNT'] . '% OFF'); ?>
-								</label>
+				<div class="col s12 m4">
+					<a href="product_details.php?id=<?php echo $product['PDTID']; ?>">
+						<div class="card z-depth-0 small">
 
-							<?php } ?>
+							<img src="<?php if ($product['IMAGE']) {
+												echo $product['IMAGE'];
+											} else {
+												echo 'img/product_icon.svg';
+											} ?>" class="product-icon circle">
+							<div class="card-content center">
+								<h6 class="black-text"> <?php echo htmlspecialchars($product['PDTNAME']); ?> <label> <?php echo htmlspecialchars($product['WEIGHT']); ?> </label></h6>
 
-							<div class="black-text flow-text"><?php echo '$' . number_format(htmlspecialchars($product['PDTPRICE']) / 100 * htmlspecialchars(100 - $product['PDTDISCNT']), 2, '.', ''); ?></div>
-				</a>
-				<div class="card-action right-align">
+								<label> <?php echo htmlspecialchars($product['BRAND']); ?> </label>
+								<br>
 
-					<?php if (substr($uid, 0, 3) == 'CUS' || substr($uid, 0, 3) == 'ANO') { ?>
-						<a href="<?php echo $link . $linkCat . 'cart=' . $product['PDTID']; ?>">
-							<div class="red-text"><i class="fa fa-shopping-cart"></i> Add to Cart</div>
-						</a>
-					<?php } else if (substr($uid, 0, 3) == 'ADM') {
-							$fileName = explode("/", $product['IMAGE'])[4];
-							$fileName = explode("?", $fileName)[0];
-							?>
+								<?php if ($product['PDTDISCNT'] > 0) { ?>
+									<label>
+										<strike> <?php echo htmlspecialchars('$' . $product['PDTPRICE']); ?> </strike>
+									</label>
+									&nbsp
+									<label class="white-text discount-label">
+										<?php echo htmlspecialchars('-' . $product['PDTDISCNT'] . '% OFF'); ?>
+									</label>
 
-						<input type="hidden" name="url" value="<?php echo $product['IMAGE']; ?>">
-						<a href="<?php echo $link  . $linkCat .  'delete=' . $product['PDTID'] . '&file=' . $fileName; ?>" class="red-text">
-							<i class="fa fa-trash-o" aria-hidden="true"></i> DELETE
-						</a>
-					<?php } ?>
+								<?php } ?>
+
+								<div class="black-text flow-text"><?php echo '$' . number_format(htmlspecialchars($product['PDTPRICE']) / 100 * htmlspecialchars(100 - $product['PDTDISCNT']), 2, '.', ''); ?></div>
+					</a>
+					<div class="card-action right-align">
+
+						<?php if (substr($uid, 0, 3) == 'CUS' || substr($uid, 0, 3) == 'ANO') { ?>
+							<a href="<?php echo $link . $linkCat . 'cart=' . $product['PDTID']; ?>">
+								<div class="red-text"><i class="fa fa-shopping-cart"></i> Add to Cart</div>
+							</a>
+						<?php } else if (substr($uid, 0, 3) == 'ADM') {
+								$fileName = explode("/", $product['IMAGE'])[4];
+								$fileName = explode("?", $fileName)[0];
+								?>
+
+							<input type="hidden" name="url" value="<?php echo $product['IMAGE']; ?>">
+							<a href="<?php echo $link  . $linkCat .  'delete=' . $product['PDTID'] . '&file=' . $fileName; ?>" class="red-text">
+								<i class="fa fa-trash-o" aria-hidden="true"></i> DELETE
+							</a>
+						<?php } ?>
+
+					</div>
 
 				</div>
+		</div>
 
-			</div>
+
 	</div>
-</div>
 <?php } ?>
-</div>
 
+</div>
 <?php
 include("../templates/pagination_output_search.php");
 include("../templates/footer.php");
 ?>
+
+
+</div>
+
+
+
+
+
 </div>
 
 </html>

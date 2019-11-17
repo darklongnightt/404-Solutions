@@ -105,7 +105,7 @@ if (isset($_POST['search'])) {
 
 				<?php if (substr($uid, 0, 3) !== 'ANO') { ?>
 					<li class="right">
-						<a href="../profile.php" class="btn btn-floating red"><?php echo $_SESSION['U_INITIALS'] ?></a>
+						<a href="../index.php" class="btn btn-floating red"><?php echo $_SESSION['U_INITIALS'] ?></a>
 					</li>
 
 					<li class="right">
@@ -150,17 +150,17 @@ if (isset($_POST['search'])) {
 					</div>
 
 					<?php if ($_SESSION['U_GENDER'] == 'M') : ?>
-						<a href="/profile.php"><img class="circle" src="/img/male-avatar.jfif"></a>
+						<a href="/index.php"><img class="circle" src="/img/male-avatar.jfif"></a>
 					<?php else : ?>
-						<a href="/profile.php"><img class="circle" src="/img/female-avatar.jpg"></a>
+						<a href="/index.php"><img class="circle" src="/img/female-avatar.jpg"></a>
 					<?php endif ?>
 
-					<a href="/profile.php"><span class="white-text name"><?php echo htmlspecialchars($_SESSION['U_FIRSTNAME'] . ' ' . $_SESSION['U_LASTNAME']); ?></span></a>
-					<a href="/profile.php"><span class="white-text email"><?php echo htmlspecialchars($_SESSION['U_EMAIL']); ?></span></a>
+					<a href="/index.php"><span class="brand-text name"><?php echo htmlspecialchars($_SESSION['U_FIRSTNAME'] . ' ' . $_SESSION['U_LASTNAME']); ?></span></a>
+					<a href="/index.php"><span class="brand-text email"><?php echo htmlspecialchars($_SESSION['U_EMAIL']); ?></span></a>
 				</div>
 			</li>
 
-			<form action="index.php" method="POST" style="margin-bottom: 0%;">
+			<form method="POST" style="margin-bottom: 0%;">
 				<div class="row" style="border-radius: 20px; border-style: solid; color: grey; border-width: thin; background: white; ">
 					<div class="col m9 s9">
 						<input type="text" name="searchField" placeholder="Search Products" style="width: 120%;">
@@ -197,13 +197,13 @@ if (isset($_POST['search'])) {
 					</div>
 
 					<?php if ($_SESSION['U_GENDER'] == 'M') : ?>
-						<a href="/profile.php"><img class="circle" src="/img/male-avatar.jfif"></a>
+						<a href="/index.php"><img class="circle" src="/img/male-avatar.jfif"></a>
 					<?php else : ?>
-						<a href="/profile.php"><img class="circle" src="/img/female-avatar.jpg"></a>
+						<a href="/index.php"><img class="circle" src="/img/female-avatar.jpg"></a>
 					<?php endif ?>
 
-					<a href="/profile.php"><span class="brand-text name"><?php echo htmlspecialchars($_SESSION['U_FIRSTNAME'] . ' ' . $_SESSION['U_LASTNAME']); ?></span></a>
-					<a href="/profile.php"><span class="brand-text email"><?php echo htmlspecialchars($_SESSION['U_EMAIL']); ?></span></a>
+					<a href="/index.php"><span class="brand-text name"><?php echo htmlspecialchars($_SESSION['U_FIRSTNAME'] . ' ' . $_SESSION['U_LASTNAME']); ?></span></a>
+					<a href="/index.php"><span class="brand-text email"><?php echo htmlspecialchars($_SESSION['U_EMAIL']); ?></span></a>
 				</div>
 			</li>
 
@@ -218,10 +218,24 @@ if (isset($_POST['search'])) {
 						<img src="/img/avatar-bg1.jpg">
 					</div>
 
-					<a href="/profile.php"><img class="circle" src="/img/male-avatar.jfif"></a>
-					<a href="/profile.php"><span class="white-text name">Guest</span></a>
+					<a href="/index.php"><img class="circle" src="/img/male-avatar.jfif"></a>
+					<a href="/index.php"><span class="black-text name">Guest</span></a>
 				</div>
 			</li>
+
+			<form method="POST" style="margin-bottom: 0%;">
+				<div class="row" style="border-radius: 20px; border-style: solid; color: grey; border-width: thin; background: white; ">
+					<div class="col m9 s9">
+						<input type="text" name="searchField" placeholder="Search Products" style="width: 120%;">
+					</div>
+
+					<div class="col m3 s3">
+						<button type="search" name="search" class="btn white black-text z-depth-0" style="width: 90%;">
+							<i class="material-icons" style="font-size: 26px; margin-top: 5px; margin-left: 5px;">search</i>
+						</button>
+					</div>
+				</div>
+			</form>
 
 			<li>
 				<a href="../cart.php"><i class="material-icons">shopping_cart</i>Cart</a>
