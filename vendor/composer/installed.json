@@ -683,6 +683,58 @@
         ]
     },
     {
+        "name": "mailjet/mailjet-apiv3-php",
+        "version": "v1.4.1",
+        "version_normalized": "1.4.1.0",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/mailjet/mailjet-apiv3-php.git",
+            "reference": "9d89b9a424a9631bff8e499cbbe34058481e8102"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/mailjet/mailjet-apiv3-php/zipball/9d89b9a424a9631bff8e499cbbe34058481e8102",
+            "reference": "9d89b9a424a9631bff8e499cbbe34058481e8102",
+            "shasum": ""
+        },
+        "require": {
+            "guzzlehttp/guzzle": "~6.0|~5.3",
+            "php": ">=5.4.0"
+        },
+        "require-dev": {
+            "php-coveralls/php-coveralls": "^1.0",
+            "phpunit/phpunit": "^4.8"
+        },
+        "time": "2018-10-31T13:24:45+00:00",
+        "type": "library",
+        "installation-source": "dist",
+        "autoload": {
+            "psr-0": {
+                "Mailjet": "src/"
+            }
+        },
+        "notification-url": "https://packagist.org/downloads/",
+        "license": [
+            "MIT"
+        ],
+        "authors": [
+            {
+                "name": "Mailjet",
+                "email": "dev@mailjet.com",
+                "homepage": "https://dev.mailjet.com"
+            }
+        ],
+        "description": "PHP wrapper for the Mailjet API",
+        "homepage": "https://github.com/mailjet/mailjet-apiv3-php/",
+        "keywords": [
+            "Mailjet",
+            "api",
+            "email",
+            "php",
+            "v3"
+        ]
+    },
+    {
         "name": "monolog/monolog",
         "version": "1.25.1",
         "version_normalized": "1.25.1.0",

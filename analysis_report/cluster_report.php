@@ -2,6 +2,10 @@
 include("../config/db_connect.php");
 include("../templates/header.php");
 
+// Loading mailjet API
+require '../vendor/autoload.php';
+use \Mailjet\Resources;
+
 // Access Control Check
 if (substr($uid, 0, 3) != 'ADM') {
     echo "<script type='text/javascript'>window.top.location='/index.php';</script>";
@@ -73,12 +77,6 @@ if (isset($_POST['submit'])) {
     $result = mysqli_query($conn, $sql);
     $cus_list = mysqli_fetch_all($result, MYSQLI_ASSOC);
 
-    foreach ($cus_list as $customer) {
-        $cluster_emails .= $customer['EMAIL'] . ', ';
-        array_push($email_list, $customer['EMAIL']);
-    }
-    $cluster_emails = substr_replace($cluster_emails, "", -2);
-
     // Get coupon to use
     foreach ($coupons as $coupon) {
         if ($coupon['DESCRIPTION'] == $coupon_use) {
@@ -87,12 +85,20 @@ if (isset($_POST['submit'])) {
         }
     }
 
+    // Init list of emails for email
+    $recipents = [];
+
     // Inserts new coupon into db for each customer selected
     foreach ($cus_list as $customer) {
         $userid = $customer['USERID'];
         $desc = $coupon_use['DESCRIPTION'];
         $discount = $coupon_use['DISCOUNT'];
         $expiry = $coupon_use['EXPIRY'];
+
+        $recipents[] = [
+            'Email' => $customer['EMAIL'],
+            'Name' => $customer['FIRSTNAME']
+        ];
 
         // Insert new coupon
         $sql = "INSERT INTO coupon(COUPONCODE, DESCRIPTION, DISCOUNT, USERID, EXPIRY) 
@@ -104,8 +110,7 @@ if (isset($_POST['submit'])) {
 
     // Sends email to customers in the cluster
     $count = sizeof($cus_list);
-    echo 'Sending Email Now.. <br>';
-    sendEmail($cluster_emails, $coupon_use['DISCOUNT'], $coupon_use['EXPIRY'], $coupon_use['DESCRIPTION'], $coupon_use['COUPONCODE']);
+    sendEmail($recipents, $coupon_use['DISCOUNT'], $coupon_use['EXPIRY'], $coupon_use['DESCRIPTION'], $coupon_use['COUPONCODE']);
     echo "<script>M.toast({html: 'Successfully sent coupon to $count users!'});</script>";
 }
 
@@ -167,36 +172,41 @@ function sendEmail($to, $discount, $expiry, $title, $code)
 </body>
 </html>';
 
-    // Always set content-type when sending HTML email
-    $headers = "MIME-Version: 1.0" . "\r\n";
-    $headers .= "Content-type:text/html;charset=UTF-8" . "\r\n";
-    $headers .= 'From: <super.data.fyp@gmail.com>' . "\r\n";
+    // Max limit of mailjet of 50 mails per call
+    if (sizeof($to) > 50) {
+        $to = array_splice($to, 0, 48);
+        print_r($to);
+    }
 
-    // // Using google mail API
-    // try {
-    //     $mail = new \google\appengine\api\mail\Message();
-    //     echo '1';
+    // Send email using mailjet api
+    $mj = new \Mailjet\Client('b8fdff92aeab5a577441b2fb7e7f0d7e', 'dc5524ab4f2698ceaa1ba8109e0555a2', true, ['version' => 'v3.1']);
+    $body = [
+        'Messages' => [
+            [
+                'From' => [
+                    'Email' => "super.data.fyp@gmail.com",
+                    'Name' => "SuperData Marketing"
+                ],
+                'To' => $to,
+                'Cc' => [
+                    [
+                        'Email' => "toki.1243@gmail.com",
+                        'Name' => "Xavier"
+                    ],
+                    [
+                        'Email' => "super.data.fyp@gmail.com",
+                        'Name' => "SuperData Marketing"
+                    ]
+                ],
+                'Subject' => $subject,
+                'TextPart' => "SuperData",
+                'HTMLPart' => $message
+            ]
+        ]
+    ];
 
-    //     $mail->setSender('super.data.fyp@gmail.com');
-    //     echo '2';
-
-    //     $mail->addTo($to);
-    //     echo '3';
-
-    //     $mail->setSubject($subject);
-    //     echo '4';
-
-    //     $mail->setHtmlBody($message);
-    //     echo '5';
-
-    //     $mail->send();
-    //     echo 'Mail Sent!';
-
-    // } catch (InvalidArgumentException $e) {
-    //     echo 'Mail Error: ' . $e;
-    // }
-
-    mail($to, $subject, $message, $headers);
+    $response = $mj->post(Resources::$Email, ['body' => $body]);
+    return $response;
 }
 ?>
 

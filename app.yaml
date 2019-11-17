@@ -3,6 +3,7 @@ env: flex
 runtime_config:
     document_root: .
 env_variables:
+    EMAIL_API_KEY: b8fdff92aeab5a577441b2fb7e7f0d7e
     APP_LOG: errorlog
     GOOGLE_STORAGE_BUCKET: "super-data-fyp.appspot.com"
     MYSQL_USER: "root"

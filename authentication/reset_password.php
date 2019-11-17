@@ -2,6 +2,11 @@
 include("../config/db_connect.php");
 include("../templates/header.php");
 
+// Loading mailjet API
+require '../vendor/autoload.php';
+
+use \Mailjet\Resources;
+
 $email = '';
 $errors = array('email' => '');
 
@@ -76,12 +81,30 @@ function sendEmail($to, $new_password, $date)
 </body>
 </html>';
 
-    // Always set content-type when sending HTML email
-    $headers = "MIME-Version: 1.0" . "\r\n";
-    $headers .= "Content-type:text/html;charset=UTF-8" . "\r\n";
-    $headers .= 'From: <super.data.fyp@gmail.com>' . "\r\n";
+    // Send email using mailjet api
+    $mj = new \Mailjet\Client('b8fdff92aeab5a577441b2fb7e7f0d7e', 'dc5524ab4f2698ceaa1ba8109e0555a2', true, ['version' => 'v3.1']);
+    $body = [
+        'Messages' => [
+            [
+                'From' => [
+                    'Email' => "super.data.fyp@gmail.com",
+                    'Name' => "SuperData Security"
+                ],
+                'To' => [
+                    [
+                        'Email' => $to,
+                        'Name' => "User"
+                    ]
+                ],
+                'Subject' => $subject,
+                'TextPart' => "SuperData",
+                'HTMLPart' => $message
+            ]
+        ]
+    ];
 
-    mail($to, $subject, $message, $headers);
+    $response = $mj->post(Resources::$Email, ['body' => $body]);
+    return $response;
 }
 
 ?>

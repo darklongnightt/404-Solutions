@@ -395,10 +395,10 @@ if (isset($_POST['changePass'])) {
 
 					<label>New Password: </label>
 					<input type="password" name="newpassword1">
-					<div class="red-text"><?php echo htmlspecialchars($errors['newpassword1']); ?></div>
 
 					<label>Confirm New Password: </label>
 					<input type="password" name="newpassword2">
+					<div class="red-text"><?php echo htmlspecialchars($errors['newpassword1']); ?></div>
 					<div class="red-text"><?php echo htmlspecialchars($errors['newpassword2']); ?></div>
 					<br>
 					<div class="center">

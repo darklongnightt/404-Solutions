@@ -4,6 +4,7 @@
     },
     "require": {
       "google/cloud": "^0.72.0",
-      "google/cloud-storage": "^1.6"
+      "google/cloud-storage": "^1.6",
+        "mailjet/mailjet-apiv3-php": "^1.4"
     }
   }
