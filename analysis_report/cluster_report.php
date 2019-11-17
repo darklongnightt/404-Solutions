@@ -2,10 +2,6 @@
 include("../config/db_connect.php");
 include("../templates/header.php");
 
-# Includes the autoloader for libraries installed with composer
-require __DIR__ . "/vendor/autoload.php";
-use \google\appengine\api\mail\Message;
-
 // Access Control Check
 if (substr($uid, 0, 3) != 'ADM') {
     echo "<script type='text/javascript'>window.top.location='/index.php';</script>";
@@ -109,7 +105,7 @@ if (isset($_POST['submit'])) {
     // Sends email to customers in the cluster
     $count = sizeof($cus_list);
     echo 'Sending Email Now.. <br>';
-    sendEmail($email_list, $coupon_use['DISCOUNT'], $coupon_use['EXPIRY'], $coupon_use['DESCRIPTION'], $coupon_use['COUPONCODE']);
+    sendEmail($cluster_emails, $coupon_use['DISCOUNT'], $coupon_use['EXPIRY'], $coupon_use['DESCRIPTION'], $coupon_use['COUPONCODE']);
     echo "<script>M.toast({html: 'Successfully sent coupon to $count users!'});</script>";
 }
 
@@ -176,31 +172,31 @@ function sendEmail($to, $discount, $expiry, $title, $code)
     $headers .= "Content-type:text/html;charset=UTF-8" . "\r\n";
     $headers .= 'From: <super.data.fyp@gmail.com>' . "\r\n";
 
-    // Using google mail API
-    try {
-        $mail = new \google\appengine\api\mail\Message();
-        echo '1';
+    // // Using google mail API
+    // try {
+    //     $mail = new \google\appengine\api\mail\Message();
+    //     echo '1';
 
-        $mail->setSender('super.data.fyp@gmail.com');
-        echo '2';
+    //     $mail->setSender('super.data.fyp@gmail.com');
+    //     echo '2';
 
-        $mail->addTo($to);
-        echo '3';
+    //     $mail->addTo($to);
+    //     echo '3';
 
-        $mail->setSubject($subject);
-        echo '4';
+    //     $mail->setSubject($subject);
+    //     echo '4';
 
-        $mail->setHtmlBody($message);
-        echo '5';
+    //     $mail->setHtmlBody($message);
+    //     echo '5';
 
-        $mail->send();
-        echo 'Mail Sent!';
+    //     $mail->send();
+    //     echo 'Mail Sent!';
 
-    } catch (InvalidArgumentException $e) {
-        echo 'Mail Error: ' . $e;
-    }
+    // } catch (InvalidArgumentException $e) {
+    //     echo 'Mail Error: ' . $e;
+    // }
 
-    //mail($to, $subject, $message, $headers);
+    mail($to, $subject, $message, $headers);
 }
 ?>
 
