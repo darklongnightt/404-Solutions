@@ -33,6 +33,9 @@ $predicted_profits = array();
 $timesteps = explode('|', $revenue['TIMESTEP']);
 $profits = explode('|', $revenue['REVENUE']);
 
+$earliest = $timesteps[1];
+$totalProfits = 0;
+
 // Set values for graph
 $dataPoints = array();
 $dataPoints1 = array();
@@ -58,6 +61,7 @@ for ($i = 0; $i < sizeof($timesteps); $i++) {
         } else {
             array_push($past_timesteps, $formatted);
             array_push($past_profits, $profits[$i]);
+            $totalProfits += $profits[$i];
 
             // Set values for graph
             array_push($dataPoints, $data);
@@ -169,6 +173,12 @@ mysqli_close($conn);
                         <li style="list-style-type: initial; margin-left: 15px">Transactional Date Time</li>
                     </ul>
 
+                    <div class="divider"></div>
+
+                    <h6 class="bold brand-text">Total Profits</h6>
+                    <div class="grey-text"><?php echo $earliest . ' - ' . date('M-Y', strtotime("-1 months"));?></div>
+                    <div class="flow-text red-text bold">$<?php echo number_format($totalProfits, 2, '.', ','); ?></div>
+
                 </div>
             </div>
         </div>
@@ -177,7 +187,7 @@ mysqli_close($conn);
     <?php if ($revenue) : ?>
 
         <div class="row">
-            <div class="col m12 s24">
+            <div class="col m12 s12">
                 <div class="card center">
                     <div class="card-content">
 
@@ -194,7 +204,7 @@ mysqli_close($conn);
                 <div class="card z-depth-0">
                     <div class="card-content">
                         <h5 class="center bold blue-text">Past Revenue</h5>
-                        <table class="responsive-table centered highlight striped">
+                        <table class="responsive-table centered highlight">
                             <thead>
                                 <tr>
                                     <th>Date</th>

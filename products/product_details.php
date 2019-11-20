@@ -35,7 +35,7 @@ function updateRecentView($uid, $pid, $conn)
                     $min = $date;
                 }
             }
-            
+
             $sql = "UPDATE recent_views SET VIEWED_AT=CURRENT_TIMESTAMP, PDTID='$pid' 
             WHERE USERID='$uid' AND VIEWED_AT = '$min'";
         } else {
@@ -318,10 +318,8 @@ mysqli_close($conn);
                                     <i class="fa fa-trash-o" aria-hidden="true"></i> Delete
                                 </button>
 
-                                <a href="/analysis_report/demand_report.php?pid=<?php echo $id ?>">
-                                    <button class="btn brand z-depth-0 action-btn">
-                                        <i class="fa fa-eye" aria-hidden="true"></i> Forecast
-                                    </button>
+                                <a href="/analysis_report/demand_report.php?pid=<?php echo $id ?>" class="btn brand z-depth-0 action-btn">
+                                    <i class="fa fa-eye" aria-hidden="true"></i> Forecast
                                 </a>
                             <?php } ?>
 
