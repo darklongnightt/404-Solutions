@@ -166,10 +166,9 @@ if (isset($_POST['submit'])) {
                     <u><a href="register.php" class="cyan-text">Register</a></u>
                 </label>
 
-                <?php if (array_filter($errors)) : ?>
-                    <label class="left"> Forget password?
-                        <u><a href="reset_password.php" class="cyan-text">Reset Password</a></u> </label>
-                <?php endif ?>
+                <label class="left"> Forget password?
+                    <u><a href="reset_password.php" class="cyan-text">Reset Password</a></u>
+                </label>
 
                 <div class="center">
                     <input type="submit" name="submit" value="Login" class="btn brand z-depth-0 form-btn">

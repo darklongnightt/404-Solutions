@@ -27,7 +27,8 @@ $errors = array(
 );
 $oldpassword = $newpassword1 = $newpassword2 = '';
 $dob = $fname = $lname = $email = $contactno = '';
-$country1 = $address1 = $postal1 = $country2 = $address2 = $postal2 = '';
+$country1 = $address1  = $country2 = $address2  = '';
+$postal1 = $postal2 = NULL;
 $address = $address2 = array();
 
 //Personal details of this customer
@@ -129,12 +130,16 @@ if (isset($_POST['updateAdd'])) {
 		}
 	}
 
-	if (!empty($_POST['postal2'])) {
-		$postal2 = mysqli_real_escape_string($conn, $_POST['postal2']);
-		if (!preg_match('/^[0-9]+$/', $postal2)) {
-			$errors['postal2'] = 'Postal code must be in numbers only!';
-		}
-	}
+	// If address 2 is full
+    if (!empty($_POST['address2']) && !empty($_POST['postal2']) && !empty($_POST['country2'])) {
+        $address2 = $_POST['address2'];
+        $postal2 = $_POST['postal2'];
+        $country2 = $_POST['country2'];
+
+        if (!preg_match('/^[0-9]+$/', $postal2)) {
+            $errors['postal2'] = 'Postal code must be in numbers only!';
+        }
+    }
 
 	if (!array_filter($errors)) {
 

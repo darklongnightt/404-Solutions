@@ -2,7 +2,8 @@
 include("../config/db_connect.php");
 include("../templates/header.php");
 
-$country1 = $country2 = $addr1 = $addr2 = $postal1 = $postal2 = '';
+$country1 = $country2 = $addr1 = $addr2 = '';
+$postal1 = $postal2 = NULL;
 $errors = array('addr1' => '', 'postal1' => '', 'postal2' => '');
 
 // If redirect to register page if user is not logged in
@@ -31,8 +32,8 @@ if (isset($_POST['submit'])) {
         $country1 = $_POST['country1'];
     }
 
-    // If address 2 is not empty, register rest of the address 2
-    if (!empty($_POST['addr2'])) {
+    // If address 2 is full
+    if (!empty($_POST['addr2']) && !empty($_POST['postal2']) && !empty($_POST['country2'])) {
         $addr2 = $_POST['addr2'];
         $postal2 = $_POST['postal2'];
         $country2 = $_POST['country2'];
@@ -41,7 +42,6 @@ if (isset($_POST['submit'])) {
             $errors['postal2'] = 'Postal code must be in numbers only!';
         }
     }
-
 
     // Checks if form is error free
     if (!array_filter($errors)) {
@@ -54,7 +54,8 @@ if (isset($_POST['submit'])) {
 
         // Insert into address table
         $sql = "INSERT INTO address(USERID, ADDRESS1, ADDRESS2, POSTALCD1, POSTALCD2, COUNTRY1, COUNTRY2)
-        VALUES('$userId', '$addr1', '$addr2', '$postal1', '$postal2', '$country1', '$country2')";
+                VALUES('$userId', '$addr1', '$addr2', '$postal1', '$postal2', '$country1', '$country2')";
+
 
         if (mysqli_query($conn, $sql)) {
 
@@ -62,7 +63,7 @@ if (isset($_POST['submit'])) {
             if (isset($_SESSION['LASTPAGE'])) {
                 $redirect = $_SESSION['LASTPAGE'];
                 unset($_SESSION['LASTPAGE']);
-                
+
                 $_SESSION['LASTACTION'] = 'ADDRESS';
                 echo "<script type='text/javascript'>window.top.location='$redirect';</script>";
             } else {
