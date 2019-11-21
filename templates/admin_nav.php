@@ -18,7 +18,7 @@
         <i class="material-icons black-text">pie_chart</i>
         <a href="/analysis_report/cluster_report.php">
             &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp
-            Customer Demographic Profiling
+            Customer Clustering Analysis
         </a>
         <div class="divider"></div>
 

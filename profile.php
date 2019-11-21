@@ -27,8 +27,7 @@ $errors = array(
 );
 $oldpassword = $newpassword1 = $newpassword2 = '';
 $dob = $fname = $lname = $email = $contactno = '';
-$country1 = $address1  = $country2 = $address2  = '';
-$postal1 = $postal2 = 0;
+$country1 = $address1  = $country2 = $address2  = $postal1 = $postal2 = '';
 $address = $address2 = array();
 
 //Personal details of this customer

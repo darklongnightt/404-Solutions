@@ -8,11 +8,16 @@ if (substr($uid, 0, 3) != 'ADM') {
 }
 
 // Fetch all customers
-$sql = "SELECT * FROM orders WHERE PDTID='PDT5dcba60884987'";
+$sql = "ALTER TABLE address MODIFY COLUMN POSTALCD2 VARCHAR (16);";
 $result = mysqli_query($conn, $sql);
-$orders = mysqli_fetch_all($result, MYSQLI_ASSOC);
+if($result) {
+    echo 'yes';
+} else {
+    echo 'no';
+}
+//$orders = mysqli_fetch_all($result, MYSQLI_ASSOC);
 
-print_r($orders);
+//print_r($orders);
 
 mysqli_free_result($result);
 mysqli_close($conn);

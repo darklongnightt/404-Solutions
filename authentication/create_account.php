@@ -181,12 +181,6 @@ if (isset($_POST['submit'])) {
                 <span>Female</span>
             </label>
         </p>
-        <p>
-            <label>
-                <input name="gender" type="radio" value="O" <?php if (isset($gender) && $gender == "O") echo "checked"; ?>>
-                <span>Other</span>
-            </label>
-        </p>
         <div class="red-text"><?php echo htmlspecialchars($errors['gender']); ?></div>
 
         <label>Account Type: </label>

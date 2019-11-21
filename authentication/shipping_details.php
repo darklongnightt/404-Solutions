@@ -2,8 +2,7 @@
 include("../config/db_connect.php");
 include("../templates/header.php");
 
-$country1 = $country2 = $addr1 = $addr2 = '';
-$postal1 = $postal2 = 0;
+$country1 = $country2 = $addr1 = $addr2 = $postal1 = $postal2 ='';
 $errors = array('addr1' => '', 'postal1' => '', 'postal2' => '');
 
 // If redirect to register page if user is not logged in
