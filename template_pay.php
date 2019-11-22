@@ -14,7 +14,7 @@ if (isset($_SESSION['LASTACTION'])) {
 }
 
 $totalPrice = $totalQty = 0;
-$totalName = $tid = $token = $error = '';
+$totalName = $tid = $token = $error = $oid = '';
 
 // Checks if payment var in url is set
 if (isset($_GET['price'])) {
@@ -31,6 +31,10 @@ if (isset($_GET['name'])) {
 
 if (isset($_GET['tid'])) {
   $tid = $_GET['tid'];
+}
+
+if (isset($_GET['oid'])) {
+  $oid = $_GET['oid'];
 }
 
 if (isset($_GET['token'])) {
@@ -54,7 +58,7 @@ if (isset($_POST['submit'])) {
   // Specify URLs
   $query['notify_url'] = PAYPAL_NOTIFY_URL;
   $query['rm'] = 2;
-  $query['return'] = 'https://super-data-fyp.appspot.com/paypal/success.php?tid=' . $tid;
+  $query['return'] = 'https://super-data-fyp.appspot.com/paypal/success.php?tid=' . $tid . '&oid=' . $oid;
   $query['cancel_return'] = PAYPAL_CANCEL_URL;
 
   // Security validation: rebuild hash from the query for integrity check

@@ -8,7 +8,7 @@ $uid = mysqli_real_escape_string($conn, $_SESSION['U_UID']);
 $currDir = "paypal/success.php";
 
 // Get transaction data from returning url
-$payment_gross = $item_number = $tid = $txn_id = $payment_gross = $currency_code = $payment_status = '';
+$payment_gross = $item_number = $tid = $txn_id = $payment_gross = $currency_code = $payment_status = $oid = '';
 
 if (!empty($_GET['tid']) && !empty($_GET['item_number']) && !empty($_GET['tx']) && !empty($_GET['amt']) && !empty($_GET['cc']) && !empty($_GET['st'])) {
 	// Get transaction information from URL 
@@ -20,13 +20,24 @@ if (!empty($_GET['tid']) && !empty($_GET['item_number']) && !empty($_GET['tx']) 
 	$payment_status = $_GET['st'];
 }
 
+if (!empty($_GET['oid'])) {
+	// Get order id for single item payment out of multi item transaction
+	$oid = $_GET['oid'];
+	// Change status of an order entry to 'Confirmed Payment'
+	$status = 'Confirmed Payment';
+	$sql = "UPDATE orders SET STATUS = '$status' WHERE ORDERID = '$oid'";
+	if (mysqli_query($conn, $sql)) {
+		$_SESSION['LASTACTION'] = 'PAYCONFIRM';
+		echo "<script type='text/javascript'>window.top.location='/my_orders.php';</script>";
+	} else {
+		echo 'Query Error: ' . mysqli_error($conn);
+	}
 
-if (!empty($_GET['tid'])) {
+} else if (!empty($_GET['tid'])) {
 	// Change status of an order entry to 'Confirmed Payment'
 	$status = 'Confirmed Payment';
 	$sql = "UPDATE orders SET STATUS = '$status' WHERE TRANSACTIONID = '$tid'";
 	if (mysqli_query($conn, $sql)) {
-		sleep(7);
 		$_SESSION['LASTACTION'] = 'PAYCONFIRM';
 		echo "<script type='text/javascript'>window.top.location='/my_orders.php';</script>";
 	} else {

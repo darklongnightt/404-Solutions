@@ -204,10 +204,11 @@ mysqli_close($conn);
                                         $payPrice = number_format($order['NETPRICE'], 2, '.', '');
                                         $payQty = $order['ORDERQTY'];
                                         $tid = $order['TRANSACTIONID'];
+                                        $oid = $order['ORDERID'];
 
                                         // Calculate hash for payment integrity check using server secret
                                         $token = hash('sha256', $payName . $payPrice . $payQty . $_SESSION['SERVERSECRET']);
-                                        $location = "/template_pay.php?price=$payPrice&qty=$payQty&name=$payName&tid=$tid&token=$token";
+                                        $location = "/template_pay.php?price=$payPrice&qty=$payQty&name=$payName&tid=$tid&oid=$oid&token=$token";
                                         ?>
                                 <a href="<?php echo $location; ?>" class="btn-small brand" style="width: 250px;">Make Payment</a>
                             <?php } ?>
