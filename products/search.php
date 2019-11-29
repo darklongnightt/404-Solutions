@@ -174,7 +174,7 @@ if (isset($_GET['delete'])) {
 	if (mysqli_query($conn, $sql)) {
 		$_SESSION['LASTACTION'] = 'DELETEPDT';
 
-		echo "<script type='text/javascript'>window.top.location='$link';</script>";
+		echo "<script type='text/javascript'>window.top.location='/products/search.php';</script>";
 	} else {
 		echo 'Query Error' . mysqli_error($conn);
 	}
